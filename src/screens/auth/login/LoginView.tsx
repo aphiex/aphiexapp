@@ -1,56 +1,78 @@
 import React from 'react'
-import { View, Text, Pressable } from 'react-native';
-import { getSecureStoreItem, setSecureStoreItem } from '../../../utils';
+import { View, Text, ActivityIndicator } from 'react-native';
+import { Logo } from '../../../assets/icons';
+import { CommonButton, CustomInput } from '../../../components';
+import { deleteSecureStoreItem } from '../../../utils';
 
 type TLogin = {
   styles: any;
   password: string;
-  secureStore: string | undefined;
-  onPressHandler: () => void;
-  resetSecureStore(): Promise<void>;
-  setSecureStore: React.Dispatch<React.SetStateAction<string | undefined>>;
-  encryptData(value: string): Promise<void>;
-  decryptData(value: string): Promise<void>;
+  handleOnChange: (value: string) => void;
+  handleSignIn: (password: string) => void;
+  error: string;
+  loading: boolean;
+  goToRegister: () => void;
+  hasPassword: boolean;
 };
 
-export function LoginView({ onPressHandler, password, secureStore, decryptData, encryptData, resetSecureStore,setSecureStore,styles }: TLogin) {
+export function LoginView({
+  password,
+  handleOnChange,
+  styles,
+  handleSignIn,
+  error,
+  loading,
+  goToRegister,
+  hasPassword,
+}: TLogin) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
-      <View style={styles.separator} />
+    <View style={[styles?.container, { justifyContent: 'center' }]}>
+      {loading && (<ActivityIndicator size="large" color="#0000ff" />)}
+      {!loading && (
+        <>
+          <Logo />
+          <Text style={styles.title}>Entre no <Text style={styles.titleBlue}>Aphiex</Text> e tenha acesso ao seu histórico de exames</Text>
 
-      <Pressable onPress={onPressHandler}>
+          {hasPassword && (
+            <>
+              <View style={{ marginVertical: 30, width: '100%' }}>
+                <CustomInput
+                  placeholder='Senha'
+                  value={password}
+                  secureTextEntry
+                  onChangeText={(value) => handleOnChange(value)}
+                />
+                <Text style={styles.error}>{error}</Text>
+              </View>
 
-        <Text style={styles.title}>Go to Create Password</Text>
-      </Pressable>
+              <View style={{ marginBottom: 20 }}>
+                <CommonButton
+                  title='Entrar'
+                  onPress={() => handleSignIn(password)}
+                />
+              </View>
 
-      <Pressable onPress={() => setSecureStoreItem('Password', password)}>
-        <Text style={styles.title}>(Setar palavra secreta)</Text>
-      </Pressable>
-
-      <Pressable onPress={async () => {
-        const password = await getSecureStoreItem('Password')
-        if (password) setSecureStore(password)
-        else alert('No values stored under that key.');
-      }}
-      >
-        <Text style={styles.title}>(Pegar palavra secreta)</Text>
-      </Pressable>
-
-      <Pressable onPress={() => encryptData(password)}>
-        <Text style={styles.title}>(Encriptar palavra secreta)</Text>
-      </Pressable>
-
-      <Pressable onPress={() => decryptData(password)}>
-        <Text style={styles.title}>(Desencriptar palavra secreta)</Text>
-      </Pressable>
-
-      <Pressable onPress={resetSecureStore}>
-        <Text style={styles.title}>(Resetar SecureStore)</Text>
-      </Pressable>
-
-      <Text style={styles.title}>{`PassWord: ${password}`}</Text>
-      <Text style={styles.title}>{`PassWord do SecureStore: ${secureStore || ''}`}</Text>
+              <CommonButton
+                title='Remover senha'
+                onPress={() => {
+                  deleteSecureStoreItem('Password');
+                  deleteSecureStoreItem('SystemKey');
+                  deleteSecureStoreItem('SystemIv');
+                }}
+              />
+            </>
+          )}
+          {!hasPassword && (
+            <>
+              <Text style={styles.greyText}>Não tem perfil registrado?</Text>
+              <CommonButton
+                title='Criar Perfil'
+                onPress={goToRegister}
+              />
+            </>
+          )}
+        </>
+      )}
     </View>
   )
 }

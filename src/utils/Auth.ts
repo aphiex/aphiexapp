@@ -11,7 +11,7 @@ function stringGenerator(length: number) {
   return string;
 }
 
-export async function checkSystemKey() {
+export async function checkSystemKey(): Promise<string> {
   let systemKey = await getSecureStoreItem('SystemKey');
 
   if (systemKey) return systemKey;
@@ -21,7 +21,7 @@ export async function checkSystemKey() {
   return systemKey;
 }
 
-export async function checkSystemIv() {
+export async function checkSystemIv(): Promise<string> {
   let systemIv = await getSecureStoreItem('SystemIv');
 
   if (systemIv) return systemIv;

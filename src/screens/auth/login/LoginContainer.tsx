@@ -1,11 +1,9 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
-
-import { getCitiesFromDatabase, openDatabase } from '../../../utils/Database';
-import CryptoES from 'crypto-es';
-import { deleteSecureStoreItem } from '../../../utils/SecureStore';
-import { checkSystemIv, checkSystemKey } from '../../../utils/Auth';
+import { useAuth } from '../../../context';
+import theme from '../../../styles/theme';
+import { getSecureStoreItem } from '../../../utils';
 import { LoginView } from './LoginView';
 
 const styles = StyleSheet.create({
@@ -13,72 +11,81 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 10,
   },
   title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
+    fontSize: 23,
+    fontFamily: `${theme.fonts.regular400}`,
+    color: `${theme.colors.black}`,
+    textAlign: 'center',
     marginVertical: 30,
-    height: 1,
-    width: '80%',
+  },
+  titleBlue: {
+    fontSize: 23,
+    fontFamily: `${theme.fonts.exoRegular400}`,
+    color: `${theme.colors.primary}`,
+  },
+  greyText: {
+    fontFamily: `${theme.fonts.regular400}`,
+    color: `${theme.colors.grey}`,
+    fontSize: 23,
+    marginBottom: 30,
+    marginTop: 30,
+  },
+  error: {
+    fontFamily: `${theme.fonts.regular400}`,
+    color: `${theme.colors.red}`,
+    fontSize: 12,
+    textAlign: 'left',
+    marginLeft: 10,
+    marginTop: 4,
   },
 });
 
-const db = openDatabase();
-
 export function LoginContainer({ navigation }: NativeStackScreenProps<any, any>) {
+  const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(true);
+  const [hasPassword, setHasPassword] = useState<boolean>(true);
+  const { signIn } = useAuth();
 
-  const [password, setPassword] = useState<string>('SuperSenha');
-  const [secureStore, setSecureStore] = useState<string>();
-  const [key, setKey] = useState<CryptoES.lib.WordArray>();
-  const [iv, setIv] = useState<CryptoES.lib.WordArray>();
-
-  async function handleSetKeyAndIv() {
-    const systemKey = await checkSystemKey();
-    const systemIv = await checkSystemIv();
-    setKey(CryptoES.enc.Base64.parse(systemKey))
-    setIv(CryptoES.enc.Base64.parse(systemIv))
+  const checkStoragePassword = async () => {
+    setLoading(true);
+    const passwordStored = await getSecureStoreItem('Password');
+    if (passwordStored) setHasPassword(true);
+    else setHasPassword(false)
+    setLoading(false);
+  }
+  
+  const goToRegister = () => {
+    navigation.navigate('Register');
   }
 
-  async function resetSecureStore() {
-    deleteSecureStoreItem('Password');
-    deleteSecureStoreItem('SystemKey');
-    deleteSecureStoreItem('SystemIv');
+  const handleSignIn = async (password: string) => {
+    if (password) {
+      await signIn(password, setError);
+    } else setError('Informe uma senha');
   }
 
-  const onPressHandler = () => {
-    navigation.navigate('CreatePassword');
-    // navigation.replace('CreatePassword'); Cria um novo stack de telas e apaga a anterior. Usar sempre que mudar de contexto
-  }
-
-  async function encryptData(value: string) {
-    setPassword(CryptoES.AES.encrypt(value, key, { iv: iv }).toString())
-    alert('Encripografou');
-  }
-
-  async function decryptData(value: string) {
-    setPassword(CryptoES.AES.decrypt(value, key, { iv: iv }).toString(CryptoES.enc.Utf8))
-    alert('Desencripografou');
-
+  const handleOnChange = (value: string) => {
+    setPassword(value);
+    if (error) setError('');
   }
 
   useEffect(() => {
-    // if (db)
-    //   getCitiesFromDatabase(db, 'RO');
-    handleSetKeyAndIv();
+    checkStoragePassword();
   }, []);
 
   return (
     <LoginView
-      decryptData={decryptData}
-      encryptData={encryptData}
-      onPressHandler={onPressHandler}
       password={password}
-      resetSecureStore={resetSecureStore}
-      secureStore={secureStore}
-      setSecureStore={setSecureStore}
+      handleOnChange={handleOnChange}
       styles={styles}
+      handleSignIn={handleSignIn}
+      error={error}
+      loading={loading}
+      goToRegister={goToRegister}
+      hasPassword={hasPassword}
     />
   );
 }

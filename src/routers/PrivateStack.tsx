@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react'
-import { RegisterContainer } from '../screens/auth';
+import {Menu} from '../screens/menu';
 
 const Stack = createNativeStackNavigator();
 
@@ -11,7 +11,7 @@ export default function PrivateStack() {
       header: () => null
     }}
   >
-    <Stack.Screen name='Register' component={RegisterContainer} />
+    <Stack.Screen name='Menu' component={Menu} />
   </Stack.Navigator>
   )
 }

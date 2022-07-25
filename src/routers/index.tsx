@@ -1,12 +1,14 @@
 import { NavigationContainer } from "@react-navigation/native";
+import { useAuth } from "../context";
 import PrivateStack from "./PrivateStack";
 import PublicStack from "./PublicStack";
 
 export function Router(){
-  const auth: boolean = true;
+  const {auth}= useAuth();
+
   return(
     <NavigationContainer>
-     {auth ? <PrivateStack/> : <PublicStack/>}
+     {auth && auth?.authorized ? <PrivateStack/> : <PublicStack/>}
     </NavigationContainer>
   );
 }
