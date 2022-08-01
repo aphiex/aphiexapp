@@ -1,16 +1,16 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
-import { Alert, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { FooterContainer, ScreenContainer } from '../../../components';
 import { authService } from '../../../services';
 import theme from '../../../styles/theme';
+import { hasInvalidCharactersPassword, hasInvalidLegthPassword } from '../../../utils';
 import { RegisterView } from './RegisterView';
 
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 12,
-    paddingTop: 40,
   },
   title: {
     fontFamily: `${theme.fonts.regular400}`,
@@ -38,50 +38,65 @@ const styles = StyleSheet.create({
   },
 });
 
-export function RegisterContainer({ navigation }: NativeStackScreenProps<any, any>) {
+export function RegisterContainer(
+  { navigation }: NativeStackScreenProps<any, any>
+) {
   const [password, setPassword] = useState<string>('');
   const [passwordConfirm, setPasswordConfirm] = useState<string>('');
   const [error, setError] = useState<string>('');
+  const [errorConfirm, setErrorConfirm] = useState<string>('');
 
   const handleChangePassword = (value: string) => {
     setPassword(value);
     if (error) setError('');
+    if (errorConfirm) setErrorConfirm('');
   }
 
   const handleChangePasswordConfirm = (value: string) => {
     setPasswordConfirm(value);
     if (error) setError('');
+    if (errorConfirm) setErrorConfirm('');
   }
 
   const handleSavePassword = async () => {
-    if (password.length < 4) setError('Sua senha deve possuir ao menos 4 caracteres');
+    if (hasInvalidCharactersPassword(password))
+      setError('Digite apenas letras e números');
+    else if (hasInvalidLegthPassword(password))
+      setError('Sua senha deve possuir ao menos 4 caracteres');
     else if (password === passwordConfirm) {
-
       try {
-
         const passwordFromService = await authService.savePassword(password);
         if (passwordFromService) navigation.replace('Login');
-
       } catch (error: any) {
-
         setError(error.message)
-        Alert.alert(error.message, 'Tente novamente')
-
       }
-
-    } else setError('As senhas informadas não são iguais');
+    } else setErrorConfirm('As senhas informadas não são iguais');
   }
 
   return (
-      <RegisterView
-        password={password}
-        passwordConfirm={passwordConfirm}
-        styles={styles}
-        handleChangePassword={handleChangePassword}
-        handleChangePasswordConfirm={handleChangePasswordConfirm}
-        error={error}
-        handleSavePassword={handleSavePassword}
+    <>
+      <ScreenContainer>
+        <RegisterView
+          password={password}
+          passwordConfirm={passwordConfirm}
+          styles={styles}
+          handleChangePassword={handleChangePassword}
+          handleChangePasswordConfirm={handleChangePasswordConfirm}
+          error={error}
+          errorConfirm={errorConfirm}
+          handleSavePassword={handleSavePassword}
+        />
+      </ScreenContainer>
+      <FooterContainer
+        btnLeftTitle='Voltar'
+        btnLeftVariant='secondary'
+        btnLeftOnPress={() => navigation.goBack()}
+
+        btnRightTitle='Avançar'
+        btnRightVariant='primary'
+        btnRightOnPress={handleSavePassword}
       />
+    </>
   );
 }
 

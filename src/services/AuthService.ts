@@ -1,47 +1,52 @@
 import CryptoES from 'crypto-es';
-import { TAuthData } from '../context/Auth'
-import { checkSystemIv, checkSystemKey, getSecureStoreItem, setSecureStoreItem } from '../utils';
+import { TAuthData } from '../context/Auth';
+import { createSettingsTable, getPassWord, setPassword } from '../utils';
 
-async function signIn(password: string): Promise<TAuthData> {
-  return new Promise(async (resolve, reject) => {
-    const systemKey = await getSecureStoreItem('SystemKey');
-    const systemIv = await getSecureStoreItem('SystemIv');
-    const passwordStored = await getSecureStoreItem('Password');
-
-    if (systemKey && systemIv && passwordStored) {
-      const key = CryptoES.enc.Base64.parse(systemKey);
-      const iv = CryptoES.enc.Base64.parse(systemIv);
-
-      const encryptPassword = CryptoES.AES.encrypt(password, key, { iv: iv }).toString();
-
-      if (passwordStored === encryptPassword) {
-        resolve({ key: password, authorized: true });
-      } else {
-        reject(new Error('Senha inválida'))
-      }
-    } else {
-      reject(new Error('Não existe senha cadastrada'))
-    }
-  });
+async function hasPassword(): Promise<boolean> {
+	return new Promise(async (resolve, reject) => {
+		getPassWord()
+			.then(result => {
+				if (result) resolve(true);
+				else reject(false);
+			})
+			.catch(() => reject(false));
+	});
 }
 
 async function savePassword(password: string): Promise<string> {
-  return new Promise(async (resolve, reject) => {
-    const systemKey = await checkSystemKey();
-    const systemIv = await checkSystemIv();
-    const key = CryptoES.enc.Base64.parse(systemKey);
-    const iv = CryptoES.enc.Base64.parse(systemIv);
-
-    const encryptedPassword = CryptoES.AES.encrypt(password, key, { iv: iv }).toString()
-
-    const newPassword = await setSecureStoreItem('Password', encryptedPassword);
-
-    if (newPassword) {
-      resolve(password);
-    } else {
-      reject(new Error('Erro ao salvar senha'))
-    }
-  });
+	return new Promise(async (resolve, reject) => {
+		createSettingsTable()
+			.then(() => {
+				const encryptedPassword = CryptoES.AES.encrypt(
+					password,
+					password
+				).toString();
+				setPassword(encryptedPassword)
+					.then(() => resolve(password))
+					.catch(() => reject(new Error('Falha ao salvar senha')));
+			})
+			.catch(() =>
+				reject(new Error('Falha ao criar a tabela de configuracoes'))
+			);
+	});
 }
 
-export const authService = { signIn, savePassword }
+async function signIn(password: string): Promise<TAuthData> {
+	return new Promise(async (resolve, reject) => {
+		getPassWord()
+			.then(result => {
+				if (result) {
+					const decryptedPassword = CryptoES.AES.decrypt(
+						result,
+						password
+					).toString(CryptoES.enc.Utf8);
+					if (password === decryptedPassword)
+						resolve({ authorized: true, key: password });
+					else reject(new Error('Senha inválida'));
+				} else reject(new Error('Falha ao obter senha'));
+			})
+			.catch(() => reject(new Error('Falha ao obter senha')));
+	});
+}
+
+export const authService = { signIn, savePassword, hasPassword };

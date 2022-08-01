@@ -11,13 +11,6 @@ import React from 'react';
 import { useFonts } from 'expo-font';
 import { ActivityIndicator, View } from 'react-native';
 
-// const db = openDatabase();
-
-// useEffect(() => {
-//   // if (db)
-//   //   getCitiesFromDatabase(db, 'RO');
-// }, []);
-
 export default function App() {
   const [fontsLoaded] = useFonts({
     Roboto_500Medium,

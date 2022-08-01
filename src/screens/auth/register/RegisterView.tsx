@@ -1,13 +1,15 @@
 import React from 'react'
-import { View, Text, Pressable } from 'react-native';
+import { View, Text } from 'react-native';
 import { Lock } from '../../../assets/icons';
-import { CommonButton, CustomInput } from '../../../components';
+import { CustomButton, CustomInput, PasswordInput } from '../../../components';
 import { PageTitle } from '../../../components';
+import { deleteDatabase } from '../../../utils';
 
 type TRegister = {
   styles: any;
   handleSavePassword: () => void;
   error: string;
+  errorConfirm: string;
   password: string;
   passwordConfirm: string;
   handleChangePassword: (value: string) => void;
@@ -17,6 +19,7 @@ type TRegister = {
 export function RegisterView({
   handleSavePassword,
   error,
+  errorConfirm,
   styles,
   password,
   passwordConfirm,
@@ -39,29 +42,26 @@ export function RegisterView({
         </Text>
       </View>
 
-      <View style={{ marginBottom: 26, width: '100%' }}>
-        <CustomInput
-          placeholder='Senha'
+      <View style={{ marginBottom: 5, width: '100%' }}>
+        <PasswordInput
+          label='Senha*'
           value={password}
-          secureTextEntry
-          onChangeText={(value) => handleChangePassword(value)}
+          error={error}
+          onChangeText={(value: string) => handleChangePassword(value)}
+          placeholder='Digite sua senha'
         />
+
       </View>
 
-      <View style={{marginBottom: 50, width: '100%' }}>
-        <CustomInput
-          placeholder='Confirme sua senha'
+      <View style={{ marginBottom: 30, width: '100%' }}>
+        <PasswordInput
+          label='Confirmar senha*'
           value={passwordConfirm}
-          secureTextEntry
-          onChangeText={(value) => handleChangePasswordConfirm(value)}
+          onChangeText={(value: string) => handleChangePasswordConfirm(value)}
+          error={errorConfirm}
+          placeholder='Confirme sua senha'
         />
-        <Text style={styles.error}>{error}</Text>
       </View>
-
-      <CommonButton
-        title='Salvar senha'
-        onPress={handleSavePassword}
-      />
     </View>
   )
 }

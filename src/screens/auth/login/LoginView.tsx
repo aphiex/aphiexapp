@@ -1,8 +1,8 @@
 import React from 'react'
 import { View, Text, ActivityIndicator } from 'react-native';
 import { Logo } from '../../../assets/icons';
-import { CommonButton, CustomInput } from '../../../components';
-import { deleteSecureStoreItem } from '../../../utils';
+import { CustomButton, PasswordInput } from '../../../components';
+import { deleteDatabase } from '../../../utils';
 
 type TLogin = {
   styles: any;
@@ -31,41 +31,36 @@ export function LoginView({
       {!loading && (
         <>
           <Logo />
-          <Text style={styles.title}>Entre no <Text style={styles.titleBlue}>Aphiex</Text> e tenha acesso ao seu histórico de exames</Text>
+          <Text style={styles.title}>
+            Entre no {''}
+            <Text style={styles.titleBlue}>Aphiex</Text>
+            {''} e tenha acesso ao seu histórico de exames
+          </Text>
 
           {hasPassword && (
             <>
               <View style={{ marginVertical: 30, width: '100%' }}>
-                <CustomInput
-                  placeholder='Senha'
+                <PasswordInput
+                  label='Senha*'
+                  placeholder='Digite sua senha'
                   value={password}
-                  secureTextEntry
+                  error={error}
                   onChangeText={(value) => handleOnChange(value)}
                 />
-                <Text style={styles.error}>{error}</Text>
               </View>
 
               <View style={{ marginBottom: 20 }}>
-                <CommonButton
+                <CustomButton
                   title='Entrar'
                   onPress={() => handleSignIn(password)}
                 />
               </View>
-
-              <CommonButton
-                title='Remover senha'
-                onPress={() => {
-                  deleteSecureStoreItem('Password');
-                  deleteSecureStoreItem('SystemKey');
-                  deleteSecureStoreItem('SystemIv');
-                }}
-              />
             </>
           )}
           {!hasPassword && (
             <>
               <Text style={styles.greyText}>Não tem perfil registrado?</Text>
-              <CommonButton
+              <CustomButton
                 title='Criar Perfil'
                 onPress={goToRegister}
               />

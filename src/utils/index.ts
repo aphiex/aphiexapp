@@ -1,3 +1,3 @@
 export * from './Auth';
 export * from './Database';
-export * from './SecureStore';
+export * from './PasswordValidation';

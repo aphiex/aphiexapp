@@ -3,12 +3,12 @@ import { useAuth } from "../context";
 import PrivateStack from "./PrivateStack";
 import PublicStack from "./PublicStack";
 
-export function Router(){
-  const {auth}= useAuth();
+export function Router() {
+  const { auth } = useAuth();
 
-  return(
+  return (
     <NavigationContainer>
-     {auth && auth?.authorized ? <PrivateStack/> : <PublicStack/>}
+      {auth && auth?.authorized ? <PrivateStack /> : <PublicStack />}
     </NavigationContainer>
   );
 }

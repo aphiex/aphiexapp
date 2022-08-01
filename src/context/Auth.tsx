@@ -11,7 +11,7 @@ type TAuthContext = {
   signIn: (
     password: string,
     setError: React.Dispatch<React.SetStateAction<string>>
-    ) => Promise<TAuthData | undefined>;
+  ) => Promise<TAuthData | undefined>;
   signOut: () => void;
 };
 
@@ -31,10 +31,10 @@ export const AuthProvider: React.FC = ({ children }) => {
       return authFromService;
 
     } catch (error: any) {
-      
+
       setError(error.message);
       return undefined;
-      
+
     }
   }
 

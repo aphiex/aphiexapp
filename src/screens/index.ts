@@ -1,4 +1,4 @@
-export * from './auth'
+export * from './auth';
 // export * from './doctor'
 // export * from './exam'
 // export * from './menu'

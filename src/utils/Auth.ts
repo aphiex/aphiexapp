@@ -1,32 +1,43 @@
-import { getSecureStoreItem, setSecureStoreItem } from "./SecureStore";
+import { database } from './Database';
 
-const stringLength = 22;
+export const createSettingsTable = async () => {
+	try {
+		(await database).transaction(tx => {
+			tx.executeSql(
+				'CREATE TABLE IF NOT EXISTS ' +
+					'settings ' +
+					'(id INTEGER PRIMARY KEY AUTOINCREMENT, value TEXT);'
+			);
+		});
+	} catch (error) {
+		return error;
+	}
+};
 
-function stringGenerator(length: number) {
-  let string = '';
-  const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  for (let i = 0; i < length; i++) {
-    string += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
-  }
-  return string;
+export async function getPassWord(): Promise<string | null> {
+	return new Promise(async (resolve, reject) => {
+		(await database).transaction(tx => {
+			tx.executeSql(
+				'SELECT value FROM settings',
+				[],
+				(txObj, { rows: { _array } }) => {
+					resolve(_array[0].value);
+				},
+				(txObj, error) => {
+					reject(null);
+					return false;
+				}
+			);
+		});
+	});
 }
 
-export async function checkSystemKey(): Promise<string> {
-  let systemKey = await getSecureStoreItem('SystemKey');
-
-  if (systemKey) return systemKey;
-
-  const newKey = stringGenerator(stringLength); // generate a random key with 22 characteres
-  systemKey = await setSecureStoreItem('SystemKey', newKey);
-  return systemKey;
-}
-
-export async function checkSystemIv(): Promise<string> {
-  let systemIv = await getSecureStoreItem('SystemIv');
-
-  if (systemIv) return systemIv;
-
-  const newIv = stringGenerator(stringLength); // generate a random iv with 22 characteres
-  systemIv = await setSecureStoreItem('SystemIv', newIv);
-  return systemIv;
+export async function setPassword(password: string) {
+	try {
+		(await database).transaction(tx => {
+			tx.executeSql(`INSERT INTO settings (value) VALUES (?)`, [password]);
+		});
+	} catch (error) {
+		return error;
+	}
 }
