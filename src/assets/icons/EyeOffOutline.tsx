@@ -1,13 +1,9 @@
 import React from "react";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import theme from "../../styles/theme";
+import { TIconProps } from ".";
 
-type TLock = {
-  size?: number;
-  color?: string;
-}
-
-export const EyeOffOutline: React.FC<TLock> = ({
+export const EyeOffOutline: React.FC<TIconProps> = ({
   size = 64,
   color = `${theme.colors.primary}`,
 }) => {

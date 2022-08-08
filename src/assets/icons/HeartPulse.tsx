@@ -3,13 +3,13 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import theme from "../../styles/theme";
 import { TIconProps } from ".";
 
-export const Lock: React.FC<TIconProps> = ({
+export const HeartPulse: React.FC<TIconProps> = ({
   size = 64,
   color = `${theme.colors.primary}`,
 }) => {
   return (
     <MaterialCommunityIcons
-      name='lock'
+      name="heart-pulse"
       size={size}
       color={color}
     />

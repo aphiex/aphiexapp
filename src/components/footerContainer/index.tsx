@@ -11,11 +11,11 @@ type TFooterContainer = {
   btnLeftIcon?: ReactElement;
   btnLeftDisabled?: boolean;
 
-  btnMidleTitle?: string;
-  btnMidleOnPress?: () => void;
-  btnMidleVariant?: 'primary' | 'secondary';
-  btnMidleIcon?: ReactElement;
-  btnMidleDisabled?: boolean;
+  btnMiddleTitle?: string;
+  btnMiddleOnPress?: () => void;
+  btnMiddleVariant?: 'primary' | 'secondary';
+  btnMiddleIcon?: ReactElement;
+  btnMiddleDisabled?: boolean;
 
   btnRightTitle?: string;
   btnRightOnPress?: () => void;
@@ -52,11 +52,11 @@ export function FooterContainer({
   btnLeftIcon,
   btnLeftDisabled = false,
   btnLeftOnPress,
-  btnMidleTitle,
-  btnMidleVariant,
-  btnMidleIcon,
-  btnMidleDisabled = false,
-  btnMidleOnPress,
+  btnMiddleTitle,
+  btnMiddleVariant,
+  btnMiddleIcon,
+  btnMiddleDisabled = false,
+  btnMiddleOnPress,
   btnRightTitle,
   btnRightVariant,
   btnRightIcon,
@@ -89,7 +89,7 @@ export function FooterContainer({
     <View style={[styles.container, {
       display: keyboardVisible ? 'none' : 'flex',
     }]}>
-      {btnLeftTitle && (
+      {btnLeftTitle ? (
         <CustomButton
           title={btnLeftTitle}
           onPress={btnLeftOnPress}
@@ -97,17 +97,17 @@ export function FooterContainer({
           disabled={btnLeftDisabled}
           icon={btnLeftIcon}
         />
-      )}
-      {btnMidleTitle && btnMidleIcon && (
+      ) : (<View />)}
+      {btnMiddleTitle && btnMiddleIcon && (
         <IconButton
-          title={btnMidleTitle}
-          onPress={btnMidleOnPress}
-          variant={btnMidleVariant}
-          disabled={btnMidleDisabled}
-          icon={btnMidleIcon}
+          title={btnMiddleTitle}
+          onPress={btnMiddleOnPress}
+          variant={btnMiddleVariant}
+          disabled={btnMiddleDisabled}
+          icon={btnMiddleIcon}
         />
       )}
-      {btnRightTitle && (
+      {btnRightTitle ? (
         <CustomButton
           title={btnRightTitle}
           onPress={btnRightOnPress}
@@ -115,7 +115,7 @@ export function FooterContainer({
           disabled={btnRightDisabled}
           icon={btnRightIcon}
         />
-      )}
+      ) : (<View />)}
     </View>
   )
 }

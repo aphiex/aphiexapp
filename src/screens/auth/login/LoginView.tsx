@@ -55,6 +55,13 @@ export function LoginView({
                   onPress={() => handleSignIn(password)}
                 />
               </View>
+
+              {/* <CustomButton
+                title='Deletar Banco de Dados'
+                onPress={() => {
+                  deleteDatabase();
+                }}
+              /> */}
             </>
           )}
           {!hasPassword && (
