@@ -1,42 +1,129 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { HeartPulse } from '../../assets/icons';
+import { Plus } from '../../assets/icons';
 import { FooterContainer, ScreenContainer } from '../../components';
+import { useAuth, useProfile } from '../../context';
+import { profileService } from '../../services';
 import theme from '../../styles/theme';
+import { Profile } from '../../utils/Types';
 import { ProfileView } from './ProfileView';
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontFamily: `${theme.fonts.regular400}`,
-    color: `${theme.colors.black}`,
-    fontSize: 30,
-    marginTop: 10,
-  },
-
+	container: {
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	button: {
+		marginTop: '50%',
+	},
+	listContainer: {
+		marginTop: 18,
+		width: '100%',
+	},
+	listItem: {
+		borderBottomColor: theme.colors.softGray,
+		borderBottomWidth: 2,
+		paddingHorizontal: 16,
+		paddingVertical: 12,
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+		width: '100%',
+	},
+	title: {
+		fontSize: 30,
+		fontFamily: theme.fonts.regular400,
+		color: theme.colors.black,
+		textAlign: 'center',
+		marginTop: 10,
+	},
+	icon: {
+		backgroundColor: theme.colors.primary,
+		height: 40,
+		width: 40,
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		borderRadius: 180,
+	},
+	text: {
+		fontSize: 16,
+		fontFamily: theme.fonts.regular400,
+		color: theme.colors.black,
+	},
+	textIcon: {
+		fontSize: 14,
+		fontFamily: theme.fonts.medium500,
+		color: theme.colors.white,
+	},
+	description: {
+		fontSize: 14,
+		fontFamily: theme.fonts.regular400,
+		color: theme.colors.grey,
+		marginTop: 2,
+	},
+	textContainer: {
+		marginLeft: 14,
+		display: 'flex',
+		flexDirection: 'column',
+	},
 });
 
-export function ProfileContainer(
-  { navigation }: NativeStackScreenProps<any, any>
-) {
-  return (
-    <>
-      <ScreenContainer>
-        <ProfileView
-          styles={styles}
-        />
-      </ScreenContainer>
-      <FooterContainer
-        btnMiddleTitle='Menu Principal'
-        btnMiddleOnPress={() => navigation.navigate('Menu')}
-        btnMiddleIcon={<HeartPulse size={24} color={theme.colors.softBlack} />}
-        btnMiddleVariant='secondary'
-      />
-    </>
-  );
-}
+export function ProfileContainer({
+	navigation,
+}: NativeStackScreenProps<any, any>) {
+	const [profiles, setProfiles] = useState<Profile[]>();
+	const [loading, setLoading] = useState<boolean>(true);
+	const [test, setTest] = useState<number>(0);
+	const { auth } = useAuth();
+	const { loadProfile } = useProfile();
 
+	const selectProfile = (profile: Profile) => {
+		setLoading(true);
+		loadProfile(profile);
+		navigation.replace('Menu');
+		setLoading(false);
+	};
+
+	const getProfiles = async () => {
+		setLoading(true);
+		profileService
+			.getProfiles(auth?.key || '')
+			.then(result => {
+				setProfiles(result);
+			})
+			.catch(() => {
+				setProfiles([]);
+			});
+		setLoading(false);
+	};
+
+	useEffect(() => {
+		getProfiles();
+	}, [test]);
+
+	return (
+		<>
+			<ScreenContainer hasFooter>
+				<ProfileView
+					styles={styles}
+					profiles={profiles}
+					loading={loading}
+					setTest={setTest}
+					test={test}
+					auth={auth}
+					selectProfile={selectProfile}
+				/>
+			</ScreenContainer>
+			{!loading && (
+				<FooterContainer
+					btnMiddleTitle="Criar Perfil"
+					btnMiddleOnPress={() => navigation.navigate('Menu')}
+					btnMiddleIcon={<Plus size={24} color={theme.colors.primary} />}
+					btnMiddleVariant="primary"
+				/>
+			)}
+		</>
+	);
+}

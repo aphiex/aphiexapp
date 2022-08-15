@@ -13,3 +13,4 @@ export * from './FolderPlus';
 export * from './HospitalBuilding';
 export * from './CardAccountDetails';
 export * from './Settings';
+export * from './Plus';

@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, ActivityIndicator } from 'react-native';
 import { Logo } from '../../../assets/icons';
-import { CustomButton, PasswordInput } from '../../../components';
+import { CustomButton, LoadingState, PasswordInput } from '../../../components';
 import { deleteDatabase } from '../../../utils';
 
 type TLogin = {
@@ -27,7 +27,7 @@ export function LoginView({
 }: TLogin) {
   return (
     <View style={[styles?.container, { justifyContent: 'center' }]}>
-      {loading && (<ActivityIndicator size="large" color="#0000ff" />)}
+      {loading && (<LoadingState />)}
       {!loading && (
         <>
           <Logo />

@@ -7,36 +7,32 @@ import theme from '../../styles/theme';
 import { DoctorView } from './DoctorView';
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontFamily: `${theme.fonts.regular400}`,
-    color: `${theme.colors.black}`,
-    fontSize: 30,
-    marginTop: 10,
-  },
-
+	container: {
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	title: {
+		fontFamily: `${theme.fonts.regular400}`,
+		color: `${theme.colors.black}`,
+		fontSize: 30,
+		marginTop: 10,
+	},
 });
 
-export function DoctorContainer(
-  { navigation }: NativeStackScreenProps<any, any>
-) {
-  return (
-    <>
-      <ScreenContainer>
-        <DoctorView
-          styles={styles}
-        />
-      </ScreenContainer>
-      <FooterContainer
-        btnMiddleTitle='Menu Principal'
-        btnMiddleOnPress={() => navigation.navigate('Menu')}
-        btnMiddleIcon={<HeartPulse size={24} color={theme.colors.softBlack} />}
-        btnMiddleVariant='secondary'
-      />
-    </>
-  );
+export function DoctorContainer({
+	navigation,
+}: NativeStackScreenProps<any, any>) {
+	return (
+		<>
+			<ScreenContainer hasFooter>
+				<DoctorView styles={styles} />
+			</ScreenContainer>
+			<FooterContainer
+				btnMiddleTitle="Menu Principal"
+				btnMiddleOnPress={() => navigation.navigate('Menu')}
+				btnMiddleIcon={<HeartPulse size={24} color={theme.colors.primary} />}
+				btnMiddleVariant="primary"
+			/>
+		</>
+	);
 }
-
