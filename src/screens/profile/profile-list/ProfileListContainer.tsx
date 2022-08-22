@@ -1,13 +1,13 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { Plus } from '../../assets/icons';
-import { FooterContainer, ScreenContainer } from '../../components';
-import { useAuth, useProfile } from '../../context';
-import { profileService } from '../../services';
-import theme from '../../styles/theme';
-import { Profile } from '../../utils/Types';
-import { ProfileView } from './ProfileView';
+import { Plus } from '../../../assets/icons';
+import { FooterContainer, ScreenContainer } from '../../../components';
+import { useAuth, useProfile } from '../../../context';
+import { profileService } from '../../../services';
+import theme from '../../../styles/theme';
+import { Profile } from '../../../utils/Types';
+import { ProfileListView } from './ProfileListView';
 
 const styles = StyleSheet.create({
 	container: {
@@ -70,12 +70,11 @@ const styles = StyleSheet.create({
 	},
 });
 
-export function ProfileContainer({
+export function ProfileListContainer({
 	navigation,
 }: NativeStackScreenProps<any, any>) {
 	const [profiles, setProfiles] = useState<Profile[]>();
 	const [loading, setLoading] = useState<boolean>(true);
-	const [test, setTest] = useState<number>(0);
 	const { auth } = useAuth();
 	const { loadProfile } = useProfile();
 
@@ -86,10 +85,14 @@ export function ProfileContainer({
 		setLoading(false);
 	};
 
+	const goToCreateProfile = () => {
+		navigation.navigate('ProfileCreate');
+	};
+
 	const getProfiles = async () => {
 		setLoading(true);
 		profileService
-			.getProfiles(auth?.key || '')
+			.handleGetProfiles(auth?.key || '')
 			.then(result => {
 				setProfiles(result);
 			})
@@ -101,25 +104,23 @@ export function ProfileContainer({
 
 	useEffect(() => {
 		getProfiles();
-	}, [test]);
+	}, []);
 
 	return (
 		<>
 			<ScreenContainer hasFooter>
-				<ProfileView
+				<ProfileListView
 					styles={styles}
 					profiles={profiles}
 					loading={loading}
-					setTest={setTest}
-					test={test}
-					auth={auth}
 					selectProfile={selectProfile}
+					goToCreateProfile={goToCreateProfile}
 				/>
 			</ScreenContainer>
 			{!loading && (
 				<FooterContainer
 					btnMiddleTitle="Criar Perfil"
-					btnMiddleOnPress={() => navigation.navigate('Menu')}
+					btnMiddleOnPress={() => goToCreateProfile()}
 					btnMiddleIcon={<Plus size={24} color={theme.colors.primary} />}
 					btnMiddleVariant="primary"
 				/>

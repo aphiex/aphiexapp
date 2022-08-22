@@ -87,7 +87,6 @@ export function RegisterContainer({
 					handleChangePasswordConfirm={handleChangePasswordConfirm}
 					error={error}
 					errorConfirm={errorConfirm}
-					handleSavePassword={handleSavePassword}
 				/>
 			</ScreenContainer>
 			<FooterContainer

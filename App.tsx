@@ -5,6 +5,9 @@ import { Exo2_400Regular } from '@expo-google-fonts/exo-2';
 import React from 'react';
 import { useFonts } from 'expo-font';
 import { LoadingState } from './src/components';
+import DropDownPicker from 'react-native-dropdown-picker';
+
+DropDownPicker.setListMode('SCROLLVIEW');
 
 export default function App() {
 	const [fontsLoaded] = useFonts({

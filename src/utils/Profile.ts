@@ -19,6 +19,24 @@ export async function getAllProfiles(): Promise<Profile[] | null> {
 	});
 }
 
+export async function getProfileById(id: number): Promise<Profile | null> {
+	return new Promise(async (resolve, reject) => {
+		(await database).transaction(tx => {
+			tx.executeSql(
+				'SELECT * FROM profile WHERE id = (?)',
+				[id],
+				(txObj, { rows: { _array } }) => {
+					resolve(_array[0]);
+				},
+				(txObj, error) => {
+					reject(null);
+					return false;
+				}
+			);
+		});
+	});
+}
+
 export const createProfileTable = async () => {
 	try {
 		(await database).transaction(tx => {

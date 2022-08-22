@@ -1,30 +1,24 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { Logo } from '../../assets/icons';
-import { CustomButton, LoadingState, PageTitle } from '../../components';
-import { TAuthData } from '../../context';
-import { profileService } from '../../services';
-import { Profile } from '../../utils/Types';
+import { Logo } from '../../../assets/icons';
+import { CustomButton, LoadingState } from '../../../components';
+import { Profile } from '../../../utils/Types';
 
-type TProfile = {
+type TProfileList = {
 	styles: any;
 	profiles: Profile[] | undefined;
 	loading: boolean;
-	setTest: React.Dispatch<React.SetStateAction<number>>;
-	test: number;
-	auth: TAuthData | undefined;
 	selectProfile: (profile: Profile) => void;
+	goToCreateProfile: () => void;
 };
 
-export function ProfileView({
+export function ProfileListView({
 	styles,
 	loading,
 	profiles,
-	setTest,
-	test,
-	auth,
 	selectProfile,
-}: TProfile) {
+	goToCreateProfile,
+}: TProfileList) {
 	return (
 		<View style={styles.container}>
 			<Logo />
@@ -35,7 +29,10 @@ export function ProfileView({
 
 			{!loading && (!profiles || profiles?.length === 0) && (
 				<View style={styles.button}>
-					<CustomButton title="Criar Perfil" />
+					<CustomButton
+						title="Criar Perfil"
+						onPress={() => goToCreateProfile()}
+					/>
 				</View>
 			)}
 
@@ -54,39 +51,20 @@ export function ProfileView({
 							</View>
 							<View style={styles.textContainer}>
 								<Text numberOfLines={1} style={styles.text}>
-									{profile?.name}
+									{profile?.name || ''}
 								</Text>
-								{profile?.description && (
+								{profile?.description ? (
 									<Text numberOfLines={1} style={styles.description}>
-										{profile?.description}
+										{profile?.description || ''}
 									</Text>
+								) : (
+									<View />
 								)}
 							</View>
 						</Pressable>
 					))}
 				</View>
 			)}
-			<View style={{ marginTop: 10 }}>
-				<CustomButton
-					title="Gerar Perfil"
-					onPress={() => {
-						profileService
-							.createProfile(
-								{
-									name: 'Daniel Pádua',
-									description: 'Filho',
-									gender: 'M',
-									birthdate: '31/03/1998',
-								},
-								auth?.key || ''
-							)
-							.then(result => {
-								setTest(test + 1);
-							})
-							.catch(error => console.log(error));
-					}}
-				/>
-			</View>
 		</View>
 	);
 }

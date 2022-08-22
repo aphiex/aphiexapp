@@ -1,17 +1,21 @@
-import React, { useState } from 'react';
-import {
-	StyleSheet,
-	TextInput,
-	Text,
-	TextInputProps,
-	View,
-} from 'react-native';
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import DropDownPicker from 'react-native-dropdown-picker';
 import theme from '../../styles/theme';
 
-interface ICustomInput extends TextInputProps {
+type TCustomSelectInput = {
 	error?: string;
 	label?: string;
-}
+	open: boolean;
+	value: string | null;
+	items: {
+		label: string;
+		value: string;
+	}[];
+	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	setValue: React.Dispatch<React.SetStateAction<string | null>>;
+	placeholder?: string;
+};
 
 const styles = StyleSheet.create({
 	input: {
@@ -47,12 +51,18 @@ const styles = StyleSheet.create({
 	},
 });
 
-export function CustomInput({ error, label, ...rest }: ICustomInput) {
-	const [isFocused, setIsFocused] = useState<boolean>(false);
-
+export function CustomSelectInput({
+	error,
+	label,
+	items,
+	open,
+	setOpen,
+	setValue,
+	value,
+	placeholder,
+}: TCustomSelectInput) {
 	function handleSetColor() {
 		if (error) return theme.colors.red;
-		if (isFocused) return theme.colors.primary;
 		return theme.colors.grey;
 	}
 
@@ -60,12 +70,21 @@ export function CustomInput({ error, label, ...rest }: ICustomInput) {
 		<View style={styles.container}>
 			<Text style={[styles.label, { color: handleSetColor() }]}>{label}</Text>
 
-			<TextInput
-				{...rest}
-				onFocus={() => setIsFocused(true)}
-				onBlur={() => setIsFocused(false)}
-				placeholderTextColor={theme.colors.grey}
+			<DropDownPicker
+				open={open}
+				value={value}
+				items={items}
+				setOpen={setOpen}
+				setValue={setValue}
+				placeholder={placeholder}
+				placeholderStyle={{
+					color: theme.colors.grey,
+				}}
+				dropDownDirection="AUTO"
 				style={[styles.input, { borderColor: handleSetColor() }]}
+				labelStyle={{
+					color: theme.colors.softBlack,
+				}}
 			/>
 
 			<Text style={styles.error}>{error}</Text>

@@ -1,5 +1,5 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add expo-font@~10.1.0 @expo-google-fonts/exo2
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add @types/react-native-dropdown-picker
 
 PATH: 
   C:\Users\Usuario\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\local\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\Usuario\bin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;C:\Windows\System32\OpenSSH;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\Git\cmd;C:\ProgramData\chocolatey\bin;C:\Program Files (x86)\Yarn\bin;C:\Program Files\nodejs;C:\Program Files\OpenJDK\openjdk-11.0.15_10\bin;C:\Users\Usuario\AppData\Local\Microsoft\WindowsApps;C:\Users\Usuario\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Usuario\AppData\Local\Yarn\bin;C:\Users\Usuario\AppData\Roaming\npm;C:\Program Files\Git\usr\bin\vendor_perl;C:\Program Files\Git\usr\bin\core_perl
@@ -14,7 +14,7 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@expo-google-fonts%2fexo2: Not found
+  Error: https://registry.yarnpkg.com/@types%2freact-native-dropdown-picker: Not found
       at Request.params.callback [as _callback] (C:\Program Files (x86)\Yarn\lib\cli.js:66145:18)
       at Request.self.callback (C:\Program Files (x86)\Yarn\lib\cli.js:140890:22)
       at Request.emit (node:events:527:28)
@@ -39,18 +39,19 @@ npm manifest:
       "eject": "expo eject"
     },
     "dependencies": {
+      "@expo-google-fonts/exo-2": "^0.2.2",
       "@expo-google-fonts/roboto": "^0.2.2",
       "@react-navigation/native": "^6.0.11",
       "@react-navigation/native-stack": "^6.7.0",
       "crypto-es": "^1.2.7",
       "expo": "~45.0.0",
       "expo-font": "~10.1.0",
-      "expo-secure-store": "~11.2.0",
       "expo-sqlite": "~10.2.0",
       "expo-status-bar": "~1.3.0",
       "react": "17.0.2",
       "react-dom": "17.0.2",
       "react-native": "0.68.2",
+      "react-native-dropdown-picker": "^5.4.2",
       "react-native-safe-area-context": "4.2.4",
       "react-native-screens": "~3.11.1",
       "react-native-web": "0.17.7"
@@ -1125,6 +1126,11 @@ Lockfile:
     dependencies:
       "@babel/helper-validator-identifier" "^7.18.6"
       to-fast-properties "^2.0.0"
+  
+  "@expo-google-fonts/exo-2@^0.2.2":
+    version "0.2.2"
+    resolved "https://registry.yarnpkg.com/@expo-google-fonts/exo-2/-/exo-2-0.2.2.tgz#fe1a28b5f2451e1121923d1f3d5320c8c3c8e1da"
+    integrity sha512-XR05xY/1jAHmzUSLVfw+xCHaJ4zDMape/KFIowRmWMo7/StE3d7xkjX7IB2UxRRhYvNSPR6jREw5oMLPBeIYkA==
   
   "@expo-google-fonts/roboto@^0.2.2":
     version "0.2.2"
@@ -3233,11 +3239,6 @@ Lockfile:
     dependencies:
       compare-versions "^3.4.0"
       invariant "^2.2.4"
-  
-  expo-secure-store@~11.2.0:
-    version "11.2.0"
-    resolved "https://registry.yarnpkg.com/expo-secure-store/-/expo-secure-store-11.2.0.tgz#c2c8fdcac39c5e1828a8fea45765028a11625575"
-    integrity sha512-PlmDplx9QNqaTVKNLgqSurRhzYf6YbVTTiSKX5JlEMWgOiBTz77Nh6mpMMjI1jwrvtz9grD+CT2AlDEGXe+Ovg==
   
   expo-sqlite@~10.2.0:
     version "10.2.0"
@@ -5587,6 +5588,11 @@ Lockfile:
       flow-parser "^0.121.0"
       jscodeshift "^0.13.1"
       nullthrows "^1.1.1"
+  
+  react-native-dropdown-picker@^5.4.2:
+    version "5.4.2"
+    resolved "https://registry.yarnpkg.com/react-native-dropdown-picker/-/react-native-dropdown-picker-5.4.2.tgz#3d17de3d8a84cb8e74a2ffda6be417d287245b81"
+    integrity sha512-cZBPyN+k52jA9XguFnKoF5tLf31z6gjZ8GijO/pfVNSSEtPwZ14UTUrr87JiiOnMh5K/O2kRzZ/jZN8D0MmUMA==
   
   react-native-gradle-plugin@^0.0.6:
     version "0.0.6"

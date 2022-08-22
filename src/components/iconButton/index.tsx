@@ -36,7 +36,7 @@ export function IconButton({
 	...rest
 }: IIconButton) {
 	return (
-		<TouchableOpacity {...rest} style={styles.button}>
+		<TouchableOpacity {...rest} style={styles.button} disabled={disabled}>
 			{icon}
 			<Text
 				style={[

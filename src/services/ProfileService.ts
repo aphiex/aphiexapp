@@ -1,8 +1,13 @@
 import CryptoES from 'crypto-es';
-import { createProfileTable, getAllProfiles, setProfile } from '../utils';
+import {
+	createProfileTable,
+	getAllProfiles,
+	getProfileById,
+	setProfile,
+} from '../utils';
 import { Profile } from '../utils';
 
-async function getProfiles(key: string): Promise<Profile[]> {
+async function handleGetProfiles(key: string): Promise<Profile[]> {
 	return new Promise(async (resolve, reject) => {
 		getAllProfiles()
 			.then(result => {
@@ -42,7 +47,46 @@ async function getProfiles(key: string): Promise<Profile[]> {
 	});
 }
 
-async function createProfile(profile: Profile, key: string): Promise<boolean> {
+async function handleGetProfileById(key: string, id: number): Promise<Profile> {
+	return new Promise(async (resolve, reject) => {
+		getProfileById(id)
+			.then(result => {
+				if (result) {
+					const decryptedData: Profile = {
+						id: result?.id,
+						name: result?.name
+							? CryptoES.AES.decrypt(result?.name, key).toString(
+									CryptoES.enc.Utf8
+							  )
+							: '',
+						birthdate: result?.birthdate
+							? CryptoES.AES.decrypt(result?.birthdate, key).toString(
+									CryptoES.enc.Utf8
+							  )
+							: '',
+						description: result?.description
+							? CryptoES.AES.decrypt(result?.description, key).toString(
+									CryptoES.enc.Utf8
+							  )
+							: '',
+						gender: result?.gender
+							? CryptoES.AES.decrypt(result?.gender, key).toString(
+									CryptoES.enc.Utf8
+							  )
+							: '',
+					};
+
+					resolve(decryptedData);
+				} else reject(new Error('Falha ao obter perfil'));
+			})
+			.catch(() => reject(new Error('Falha ao obter perfil')));
+	});
+}
+
+async function handleCreateProfile(
+	profile: Profile,
+	key: string
+): Promise<boolean> {
 	return new Promise(async (resolve, reject) => {
 		createProfileTable()
 			.then(() => {
@@ -69,4 +113,8 @@ async function createProfile(profile: Profile, key: string): Promise<boolean> {
 	});
 }
 
-export const profileService = { getProfiles, createProfile };
+export const profileService = {
+	handleGetProfiles,
+	handleCreateProfile,
+	handleGetProfileById,
+};
