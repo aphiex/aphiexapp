@@ -24,7 +24,6 @@ export function ProfileCreateContainer({
 }: NativeStackScreenProps<any, any>) {
 	const [name, setName] = useState<string>('');
 	const [nameError, setNameError] = useState<string>('');
-	const [lastName, setLastName] = useState<string>('');
 	const [description, setDescription] = useState<string>('');
 	const [loading, setLoading] = useState<boolean>(false);
 	const [gender, setGender] = useState<string | null>(null);
@@ -35,10 +34,6 @@ export function ProfileCreateContainer({
 	const handleChangeName = (value: string) => {
 		setName(value);
 		if (nameError) setNameError('');
-	};
-
-	const handleChangeLastName = (value: string) => {
-		setLastName(value);
 	};
 
 	const handleChangeDescription = (value: string) => {
@@ -55,13 +50,12 @@ export function ProfileCreateContainer({
 	};
 
 	const isFormDust = () => {
-		return Boolean(name || lastName || description || gender || birthdate);
+		return Boolean(name || description || gender || birthdate);
 	};
 
 	const clearForm = () => {
 		setName('');
 		setNameError('');
-		setLastName('');
 		setDescription('');
 		setGender(null);
 		setBirthdate(undefined);
@@ -97,7 +91,7 @@ export function ProfileCreateContainer({
 				profileService
 					.handleCreateProfile(
 						{
-							name: name && lastName ? `${name} ${lastName}` : name ? name : '',
+							name: name || '',
 							description: description || '',
 							gender: gender || '',
 							birthdate: birthdate?.toString() || '',
@@ -107,10 +101,13 @@ export function ProfileCreateContainer({
 					.then(() => {
 						navigation.replace('ProfileList');
 					})
-					.catch(error => console.log(error));
-			} catch (error) {
+					.catch(error => {
+						Alert.alert(error, 'Reinicie o aplicativo e tente novamente.');
+						setLoading(false);
+					});
+			} catch (error: any) {
+				Alert.alert(error, 'Reinicie o aplicativo e tente novamente.');
 				setLoading(false);
-				console.log(error);
 			}
 		}
 	};
@@ -121,10 +118,8 @@ export function ProfileCreateContainer({
 				<ProfileCreateView
 					styles={styles}
 					handleChangeName={handleChangeName}
-					handleChangeLastName={handleChangeLastName}
 					handleChangeDescription={handleChangeDescription}
 					name={name}
-					lastName={lastName}
 					description={description}
 					gender={gender}
 					setGender={setGender}
@@ -154,7 +149,7 @@ export function ProfileCreateContainer({
 				btnRightTitle="Criar"
 				btnRightVariant="primary"
 				btnRightOnPress={() => handleSubmit()}
-				btnRightDisabled={loading}
+				btnRightDisabled={loading || !isFormDust()}
 			/>
 		</>
 	);

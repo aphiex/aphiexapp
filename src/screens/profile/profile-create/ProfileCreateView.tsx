@@ -12,7 +12,6 @@ import {
 type TProfileCreate = {
 	styles: any;
 	name: string;
-	lastName: string;
 	description: string;
 	gender: string | null;
 	setGender: React.Dispatch<React.SetStateAction<string | null>>;
@@ -23,7 +22,6 @@ type TProfileCreate = {
 	birthdate?: Date;
 	setBirthdate: React.Dispatch<React.SetStateAction<Date | undefined>>;
 	handleChangeName: (value: string) => void;
-	handleChangeLastName: (value: string) => void;
 	handleChangeDescription: (value: string) => void;
 };
 
@@ -31,9 +29,7 @@ export function ProfileCreateView({
 	styles,
 	description,
 	handleChangeDescription,
-	handleChangeLastName,
 	handleChangeName,
-	lastName,
 	name,
 	nameError,
 	loading,
@@ -56,12 +52,6 @@ export function ProfileCreateView({
 						error={nameError}
 						onChangeText={(value: string) => handleChangeName(value)}
 						placeholder="Digite o nome"
-					/>
-					<CustomInput
-						label="Sobrenome"
-						value={lastName}
-						onChangeText={(value: string) => handleChangeLastName(value)}
-						placeholder="Digite o sobrenome"
 					/>
 					<CustomInput
 						label="Descrição"
@@ -87,8 +77,8 @@ export function ProfileCreateView({
 								]}
 								setOpen={setOpenDropdown}
 								setValue={setGender}
-								placeholder="Selecione um gênero"
-								label="Gênero"
+								placeholder="Selecionar sexo"
+								label="Sexo"
 							/>
 						</View>
 						<View style={{ width: '48%' }}>

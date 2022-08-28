@@ -18,3 +18,4 @@ export * from './Settings';
 export * from './Plus';
 export * from './Restart';
 export * from './Calendar';
+export * from './TrashCan';

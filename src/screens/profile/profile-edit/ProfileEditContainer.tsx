@@ -1,12 +1,13 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Alert, StyleSheet } from 'react-native';
 import { Restart } from '../../../assets/icons';
 import { FooterContainer, ScreenContainer } from '../../../components';
-import { useAuth } from '../../../context';
+import { useAuth, useProfile } from '../../../context';
+import { RootStackParamList } from '../../../routers/PrivateStack';
 import { profileService } from '../../../services';
 import theme from '../../../styles/theme';
-import { Profile } from '../../../utils';
+import { fixDateTimezone } from '../../../utils';
 import { ProfileEditView } from './ProfileEditView';
 
 const styles = StyleSheet.create({
@@ -21,31 +22,29 @@ const styles = StyleSheet.create({
 });
 
 export function ProfileEditContainer({
-	route,
 	navigation,
-}: NativeStackScreenProps<any, any>) {
-	// const { profileId } = route.params; // DEFINIR NAVEGAÇÃO PASSANDO COMO PARAMETRO O ID DO PERFIL
-	// Set and Pass Param: https://remotestack.io/how-to-pass-and-get-params-to-route-in-react-native/
-	// Testar se o getProfileById está funcionando e setar a resposta como valores iniciais
-	// Criar o update do profile
-	const [name, setName] = useState<string>('');
+}: NativeStackScreenProps<RootStackParamList, 'ProfileEdit'>) {
+	const { currentProfile, loadProfile } = useProfile();
+	const [name, setName] = useState<string>(currentProfile?.name || '');
 	const [nameError, setNameError] = useState<string>('');
-	const [lastName, setLastName] = useState<string>('');
-	const [description, setDescription] = useState<string>('');
-	const [loading, setLoading] = useState<boolean>(false);
-	const [gender, setGender] = useState<string | null>(null);
-	const [openDropdown, setOpenDropdown] = useState<boolean>(false);
-	const [birthdate, setBirthdate] = useState<Date | undefined>(undefined);
-	const [profile, setProfile] = useState<Profile | null>(null);
+	const [description, setDescription] = useState<string>(
+		currentProfile?.description || ''
+	);
+	const [gender, setGender] = useState<string | null>(
+		currentProfile?.gender || null
+	);
+	const [birthdate, setBirthdate] = useState<Date | undefined>(
+		currentProfile?.birthdate
+			? fixDateTimezone(new Date(currentProfile.birthdate))
+			: undefined
+	);
 	const { auth } = useAuth();
+	const [openDropdown, setOpenDropdown] = useState<boolean>(false);
+	const [loading, setLoading] = useState<boolean>(false);
 
 	const handleChangeName = (value: string) => {
 		setName(value);
 		if (nameError) setNameError('');
-	};
-
-	const handleChangeLastName = (value: string) => {
-		setLastName(value);
 	};
 
 	const handleChangeDescription = (value: string) => {
@@ -62,23 +61,34 @@ export function ProfileEditContainer({
 	};
 
 	const isFormDust = () => {
-		return Boolean(name || lastName || description || gender || birthdate);
+		return Boolean(
+			(currentProfile?.name && name !== currentProfile.name) ||
+				(currentProfile?.description &&
+					description !== currentProfile.description) ||
+				(currentProfile?.gender && gender !== currentProfile.gender) ||
+				(currentProfile?.birthdate &&
+					birthdate &&
+					birthdate?.toString() !== currentProfile.birthdate)
+		);
 	};
 
-	const clearForm = () => {
-		setName('');
+	const resetForm = () => {
+		setName(currentProfile?.name || '');
 		setNameError('');
-		setLastName('');
-		setDescription('');
-		setGender(null);
-		setBirthdate(undefined);
+		setDescription(currentProfile?.description || '');
+		setGender(currentProfile?.gender || null);
+		setBirthdate(
+			currentProfile?.birthdate
+				? fixDateTimezone(new Date(currentProfile.birthdate))
+				: undefined
+		);
 	};
 
 	const handleCancel = () => {
 		if (isFormDust()) {
 			Alert.alert(
-				'Criação em andamento',
-				'Todas as informações inseridas serão perdidas. Deseja voltar mesmo assim?',
+				'Edição em andamento',
+				'Todas as informações alteradas serão perdidas. Deseja voltar mesmo assim?',
 				[
 					{
 						text: 'Cancelar',
@@ -88,13 +98,13 @@ export function ProfileEditContainer({
 					{
 						text: 'Sim',
 						onPress: () => {
-							clearForm();
-							navigation.navigate('ProfileList');
+							resetForm();
+							navigation.navigate('ProfileDetail');
 						},
 					},
 				]
 			);
-		} else navigation.navigate('ProfileList');
+		} else navigation.navigate('ProfileDetail');
 	};
 
 	const handleSubmit = () => {
@@ -102,42 +112,32 @@ export function ProfileEditContainer({
 			setLoading(true);
 			try {
 				profileService
-					.handleCreateProfile(
+					.handleUpdateProfile(
 						{
-							name: name && lastName ? `${name} ${lastName}` : name ? name : '',
-							description: description || '',
-							gender: gender || '',
-							birthdate: birthdate?.toString() || '',
+							id: currentProfile?.id,
+							name: name || currentProfile?.name || '',
+							description: description || currentProfile?.description || '',
+							gender: gender || currentProfile?.gender || '',
+							birthdate:
+								birthdate?.toString() || currentProfile?.birthdate || '',
 						},
 						auth?.key || ''
 					)
-					.then(() => {
-						navigation.replace('ProfileList');
+					.then(profile => {
+						loadProfile(profile);
+						Alert.alert('Perfil atualizado com sucesso!');
+						navigation.replace('ProfileDetail');
 					})
-					.catch(error => console.log(error));
-			} catch (error) {
+					.catch(error => {
+						Alert.alert(error, 'Reinicie o aplicativo e tente novamente.');
+						setLoading(false);
+					});
+			} catch (error: any) {
+				Alert.alert(error.message, 'Reinicie o aplicativo e tente novamente.');
 				setLoading(false);
-				console.log(error);
 			}
 		}
 	};
-
-	const getProfile = async () => {
-		// setLoading(true);
-		// profileService
-		// 	.handleGetProfileById(auth?.key || '', profileId)
-		// 	.then(result => {
-		// 		setProfile(result);
-		// 	})
-		// 	.catch(() => {
-		// 		setProfile(null);
-		// 	});
-		// setLoading(false);
-	};
-
-	useEffect(() => {
-		getProfile();
-	}, []);
 
 	return (
 		<>
@@ -145,10 +145,8 @@ export function ProfileEditContainer({
 				<ProfileEditView
 					styles={styles}
 					handleChangeName={handleChangeName}
-					handleChangeLastName={handleChangeLastName}
 					handleChangeDescription={handleChangeDescription}
 					name={name}
-					lastName={lastName}
 					description={description}
 					gender={gender}
 					setGender={setGender}
@@ -165,8 +163,8 @@ export function ProfileEditContainer({
 				btnLeftVariant="secondary"
 				btnLeftOnPress={() => handleCancel()}
 				btnLeftDisabled={loading}
-				btnMiddleTitle="Limpar"
-				btnMiddleOnPress={() => clearForm()}
+				btnMiddleTitle="Restaurar"
+				btnMiddleOnPress={() => resetForm()}
 				btnMiddleIcon={
 					<Restart
 						size={24}
@@ -175,10 +173,10 @@ export function ProfileEditContainer({
 				}
 				btnMiddleVariant="secondary"
 				btnMiddleDisabled={loading}
-				btnRightTitle="Criar"
+				btnRightTitle="Confirmar"
 				btnRightVariant="primary"
 				btnRightOnPress={() => handleSubmit()}
-				btnRightDisabled={loading}
+				btnRightDisabled={loading || !isFormDust()}
 			/>
 		</>
 	);

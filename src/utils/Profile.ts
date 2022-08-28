@@ -51,7 +51,7 @@ export const createProfileTable = async () => {
 	}
 };
 
-export async function setProfile(profile: Profile) {
+export async function createProfile(profile: Profile) {
 	try {
 		(await database).transaction(tx => {
 			tx.executeSql(
@@ -67,4 +67,41 @@ export async function setProfile(profile: Profile) {
 	} catch (error) {
 		return error;
 	}
+}
+
+export async function updateProfile(profile: Profile) {
+	try {
+		(await database).transaction(tx => {
+			tx.executeSql(
+				`UPDATE profile SET name = (?), description = (?), gender = (?), birthdate = (?) WHERE id = (?)`,
+				[
+					profile?.name || '',
+					profile?.description || '',
+					profile?.gender || '',
+					profile?.birthdate || '',
+					profile?.id || '',
+				]
+			);
+		});
+	} catch (error) {
+		return error;
+	}
+}
+
+export async function deleteProfile(id: number): Promise<boolean | null> {
+	return new Promise(async (resolve, reject) => {
+		(await database).transaction(tx => {
+			tx.executeSql(
+				'DELETE FROM profile WHERE id = (?)',
+				[id],
+				() => {
+					resolve(true);
+				},
+				(txObj, error) => {
+					reject(null);
+					return false;
+				}
+			);
+		});
+	});
 }

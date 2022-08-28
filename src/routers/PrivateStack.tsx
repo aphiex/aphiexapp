@@ -2,16 +2,25 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import {
 	MenuContainer,
-	ProfileListContainer,
-	ProfileCreateContainer,
 	ExamContainer,
 	PlaceContainer,
 	DoctorContainer,
 	SettingsContainer,
 	ProfileEditContainer,
+	ProfileDetailContainer,
 } from '../screens';
 
-const Stack = createNativeStackNavigator();
+export type RootStackParamList = {
+	ProfileEdit: undefined;
+	ProfileDetail: undefined;
+	Menu: undefined;
+	Exam: undefined;
+	Place: undefined;
+	Doctor: undefined;
+	Settings: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function PrivateStack() {
 	return (
@@ -20,14 +29,17 @@ export default function PrivateStack() {
 				header: () => null,
 			}}
 		>
-			<Stack.Screen name="ProfileList" component={ProfileListContainer} />
-			<Stack.Screen name="ProfileCreate" component={ProfileCreateContainer} />
+			<Stack.Screen name="Menu" component={MenuContainer} />
+			<Stack.Screen
+				name="ProfileDetail"
+				component={ProfileDetailContainer}
+				initialParams={{ profileId: 0 }}
+			/>
 			<Stack.Screen
 				name="ProfileEdit"
 				component={ProfileEditContainer}
 				initialParams={{ profileId: 0 }}
 			/>
-			<Stack.Screen name="Menu" component={MenuContainer} />
 			<Stack.Screen name="Exam" component={ExamContainer} />
 			<Stack.Screen name="Place" component={PlaceContainer} />
 			<Stack.Screen name="Doctor" component={DoctorContainer} />

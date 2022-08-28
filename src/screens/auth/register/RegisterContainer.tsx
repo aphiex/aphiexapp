@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { Alert, StyleSheet } from 'react-native';
 import { FooterContainer, ScreenContainer } from '../../../components';
 import { authService } from '../../../services';
 import theme from '../../../styles/theme';
@@ -71,7 +71,7 @@ export function RegisterContainer({
 				const passwordFromService = await authService.savePassword(password);
 				if (passwordFromService) navigation.replace('Login');
 			} catch (error: any) {
-				setError(error.message);
+				Alert.alert(error.message, 'Reinicie o aplicativo e tente novamente.');
 			}
 		} else setErrorConfirm('As senhas informadas não são iguais');
 	};

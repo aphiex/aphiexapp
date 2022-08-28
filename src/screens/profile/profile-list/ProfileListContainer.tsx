@@ -81,7 +81,6 @@ export function ProfileListContainer({
 	const selectProfile = (profile: Profile) => {
 		setLoading(true);
 		loadProfile(profile);
-		navigation.replace('Menu');
 		setLoading(false);
 	};
 

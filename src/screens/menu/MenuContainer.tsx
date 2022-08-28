@@ -3,6 +3,8 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { HeartPulse, Logo } from '../../assets/icons';
 import { FooterContainer, ScreenContainer } from '../../components';
+import { useProfile } from '../../context';
+import { RootStackParamList } from '../../routers/PrivateStack';
 import theme from '../../styles/theme';
 import { MenuView } from './MenuView';
 
@@ -37,11 +39,40 @@ const styles = StyleSheet.create({
 
 export function MenuContainer({
 	navigation,
-}: NativeStackScreenProps<any, any>) {
+}: NativeStackScreenProps<RootStackParamList, 'Menu'>) {
+	const { currentProfile } = useProfile();
+
+	const handleGoToProfile = () => {
+		navigation.navigate('ProfileDetail', { profileId: currentProfile?.id });
+	};
+
+	const handleGoToPlace = () => {
+		navigation.navigate('Place');
+	};
+
+	const handleGoToExam = () => {
+		navigation.navigate('Exam');
+	};
+
+	const handleGoToDoctor = () => {
+		navigation.navigate('Doctor');
+	};
+
+	const handleGoToSettings = () => {
+		navigation.navigate('Settings');
+	};
+
 	return (
 		<>
 			<ScreenContainer hasFooter>
-				<MenuView navigation={navigation} styles={styles} />
+				<MenuView
+					styles={styles}
+					handleGoToProfile={handleGoToProfile}
+					handleGoToPlace={handleGoToPlace}
+					handleGoToExam={handleGoToExam}
+					handleGoToDoctor={handleGoToDoctor}
+					handleGoToSettings={handleGoToSettings}
+				/>
 			</ScreenContainer>
 			<FooterContainer
 				btnMiddleTitle="Menu Principal"

@@ -1,4 +1,3 @@
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React from 'react';
 import { View, Text } from 'react-native';
 import {
@@ -13,10 +12,21 @@ import { IconButton } from '../../components';
 
 type TMenu = {
 	styles: any;
-	navigation: NativeStackNavigationProp<any, any, undefined>;
+	handleGoToProfile: () => void;
+	handleGoToPlace: () => void;
+	handleGoToExam: () => void;
+	handleGoToDoctor: () => void;
+	handleGoToSettings: () => void;
 };
 
-export function MenuView({ navigation, styles }: TMenu) {
+export function MenuView({
+	styles,
+	handleGoToDoctor,
+	handleGoToExam,
+	handleGoToPlace,
+	handleGoToProfile,
+	handleGoToSettings,
+}: TMenu) {
 	return (
 		<View style={styles.container}>
 			<Logo />
@@ -27,20 +37,20 @@ export function MenuView({ navigation, styles }: TMenu) {
 						<IconButton
 							title="Perfil"
 							icon={<Account size={70} />}
-							onPress={() => navigation.navigate('ProfileList')}
+							onPress={handleGoToProfile}
 						/>
 					</View>
 					<View style={styles.columnSpace}>
 						<IconButton
 							title="Locais"
 							icon={<HospitalBuilding size={70} />}
-							onPress={() => navigation.navigate('Place')}
+							onPress={handleGoToPlace}
 						/>
 					</View>
 					<IconButton
 						title="Configurações"
 						icon={<Settings size={70} />}
-						onPress={() => navigation.navigate('Settings')}
+						onPress={handleGoToSettings}
 					/>
 				</View>
 				<View style={styles.column}>
@@ -48,13 +58,13 @@ export function MenuView({ navigation, styles }: TMenu) {
 						<IconButton
 							title="Exames"
 							icon={<FolderPlus size={70} />}
-							onPress={() => navigation.navigate('Exam')}
+							onPress={handleGoToExam}
 						/>
 					</View>
 					<IconButton
 						title="Médicos"
 						icon={<CardAccountDetails size={70} />}
-						onPress={() => navigation.navigate('Doctor')}
+						onPress={handleGoToDoctor}
 					/>
 				</View>
 			</View>

@@ -12,6 +12,7 @@ interface IIconButton extends TouchableOpacityProps {
 	icon: ReactElement;
 	variant?: 'primary' | 'secondary';
 	disabled?: boolean;
+	color?: string;
 }
 
 const styles = StyleSheet.create({
@@ -33,6 +34,7 @@ export function IconButton({
 	icon,
 	variant = 'secondary',
 	disabled,
+	color,
 	...rest
 }: IIconButton) {
 	return (
@@ -44,6 +46,8 @@ export function IconButton({
 					{
 						color: disabled
 							? theme.colors.grey
+							: color
+							? color
 							: variant === 'primary'
 							? theme.colors.primary
 							: theme.colors.softBlack,

@@ -1,9 +1,11 @@
 import CryptoES from 'crypto-es';
 import {
+	createProfile,
 	createProfileTable,
+	deleteProfile,
 	getAllProfiles,
 	getProfileById,
-	setProfile,
+	updateProfile,
 } from '../utils';
 import { Profile } from '../utils';
 
@@ -105,11 +107,45 @@ async function handleCreateProfile(
 						: '',
 				};
 
-				setProfile(encryptedProfile)
+				createProfile(encryptedProfile)
 					.then(() => resolve(true))
 					.catch(() => reject(new Error('Falha ao criar perfil')));
 			})
-			.catch(() => reject(new Error('Falha ao criar a tabela de perfis')));
+			.catch(() => reject(new Error('Falha ao criar perfil')));
+	});
+}
+
+async function handleUpdateProfile(
+	profile: Profile,
+	key: string
+): Promise<Profile> {
+	return new Promise(async (resolve, reject) => {
+		const encryptedProfile: Profile = {
+			name: profile?.name
+				? CryptoES.AES.encrypt(profile?.name, key).toString()
+				: '',
+			description: profile?.description
+				? CryptoES.AES.encrypt(profile?.description, key).toString()
+				: '',
+			birthdate: profile?.birthdate
+				? CryptoES.AES.encrypt(profile?.birthdate, key).toString()
+				: '',
+			gender: profile?.gender
+				? CryptoES.AES.encrypt(profile?.gender, key).toString()
+				: '',
+		};
+
+		updateProfile(encryptedProfile)
+			.then(() => resolve(profile))
+			.catch(() => reject(new Error('Falha ao editar perfil')));
+	});
+}
+
+async function handleDeleteProfile(profileId: number): Promise<boolean> {
+	return new Promise(async (resolve, reject) => {
+		deleteProfile(profileId)
+			.then(() => resolve(true))
+			.catch(() => reject(new Error('Falha ao deletar perfil')));
 	});
 }
 
@@ -117,4 +153,6 @@ export const profileService = {
 	handleGetProfiles,
 	handleCreateProfile,
 	handleGetProfileById,
+	handleDeleteProfile,
+	handleUpdateProfile,
 };

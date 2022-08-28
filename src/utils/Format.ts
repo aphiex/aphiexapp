@@ -28,3 +28,9 @@ export function getToday() {
 	const newDate = new Date();
 	return fixDateTimezone(newDate);
 }
+
+export function formatGender(gender: string) {
+	if (gender === 'M') return 'Masculino';
+	if (gender === 'F') return 'Feminino';
+	return '';
+}
