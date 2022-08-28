@@ -81,7 +81,7 @@ export function CustomDateInput({
 	const [isPickerShow, setIsPickerShow] = useState<boolean>(false);
 
 	const onDateChange = (event: any, value: any) => {
-		setValue(value);
+		if (event.type === 'set') setValue(value);
 		if (Platform.OS === 'android') {
 			setIsPickerShow(false);
 		}
@@ -101,6 +101,7 @@ export function CustomDateInput({
 					display={Platform.OS === 'ios' ? 'spinner' : 'default'}
 					is24Hour={true}
 					onChange={onDateChange}
+					onTouchCancel={() => {}}
 					style={styles.datePicker}
 					maximumDate={getToday()}
 				/>
