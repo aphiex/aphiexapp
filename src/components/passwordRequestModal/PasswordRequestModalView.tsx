@@ -1,8 +1,7 @@
 import React from 'react';
-import { Modal, Pressable, View, Text, ActivityIndicator } from 'react-native';
+import { Modal, View, Text, ActivityIndicator } from 'react-native';
 import theme from '../../styles/theme';
 import { CustomButton } from '../customButton';
-import { LoadingState } from '../loadingState';
 import { PasswordInput } from '../passwordInput';
 import { styles } from './styles';
 

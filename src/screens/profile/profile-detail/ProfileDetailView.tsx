@@ -8,9 +8,9 @@ import {
 } from '../../../components';
 import theme from '../../../styles/theme';
 import { dateMask, formatGender, Profile } from '../../../utils';
+import { styles } from './styles';
 
 type TProfileDetail = {
-	styles: any;
 	profile?: Profile;
 	handleDelete: () => void;
 	setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -19,7 +19,6 @@ type TProfileDetail = {
 };
 
 export function ProfileDetailView({
-	styles,
 	profile,
 	handleDelete,
 	modalVisible,

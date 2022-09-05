@@ -8,9 +8,9 @@ import {
 	LoadingState,
 	PageTitle,
 } from '../../../components';
+import { styles } from './styles';
 
 type TProfileEdit = {
-	styles: any;
 	name: string;
 	description: string;
 	gender: string | null;
@@ -26,7 +26,6 @@ type TProfileEdit = {
 };
 
 export function ProfileEditView({
-	styles,
 	description,
 	handleChangeDescription,
 	handleChangeName,

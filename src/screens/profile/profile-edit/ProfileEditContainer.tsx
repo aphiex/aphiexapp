@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
-import { Alert, StyleSheet } from 'react-native';
+import { Alert } from 'react-native';
 import { Restart } from '../../../assets/icons';
 import { FooterContainer, ScreenContainer } from '../../../components';
 import { useAuth, useProfile } from '../../../context';
@@ -9,17 +9,6 @@ import { profileService } from '../../../services';
 import theme from '../../../styles/theme';
 import { fixDateTimezone } from '../../../utils';
 import { ProfileEditView } from './ProfileEditView';
-
-const styles = StyleSheet.create({
-	container: {
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
-	form: {
-		marginTop: 40,
-		width: '100%',
-	},
-});
 
 export function ProfileEditContainer({
 	navigation,
@@ -143,7 +132,6 @@ export function ProfileEditContainer({
 		<>
 			<ScreenContainer hasFooter>
 				<ProfileEditView
-					styles={styles}
 					handleChangeName={handleChangeName}
 					handleChangeDescription={handleChangeDescription}
 					name={name}

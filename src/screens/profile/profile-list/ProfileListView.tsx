@@ -3,9 +3,9 @@ import { View, Text, Pressable } from 'react-native';
 import { Logo } from '../../../assets/icons';
 import { CustomButton, LoadingState } from '../../../components';
 import { Profile } from '../../../utils/Types';
+import { styles } from './styles';
 
 type TProfileList = {
-	styles: any;
 	profiles: Profile[] | undefined;
 	loading: boolean;
 	selectProfile: (profile: Profile) => void;
@@ -13,7 +13,6 @@ type TProfileList = {
 };
 
 export function ProfileListView({
-	styles,
 	loading,
 	profiles,
 	selectProfile,

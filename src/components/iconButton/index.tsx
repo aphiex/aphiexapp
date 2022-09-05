@@ -1,11 +1,7 @@
 import React, { ReactElement } from 'react';
-import {
-	TouchableOpacity,
-	StyleSheet,
-	TouchableOpacityProps,
-	Text,
-} from 'react-native';
+import { TouchableOpacity, TouchableOpacityProps, Text } from 'react-native';
 import theme from '../../styles/theme';
+import { styles } from './styles';
 
 interface IIconButton extends TouchableOpacityProps {
 	title: string;
@@ -14,20 +10,6 @@ interface IIconButton extends TouchableOpacityProps {
 	disabled?: boolean;
 	color?: string;
 }
-
-const styles = StyleSheet.create({
-	text: {
-		fontFamily: `${theme.fonts.regular400}`,
-		fontSize: 14,
-		textAlign: 'center',
-	},
-	button: {
-		backgroundColor: `${theme.colors.white}`,
-		alignItems: 'center',
-		justifyContent: 'center',
-		paddingHorizontal: 16,
-	},
-});
 
 export function IconButton({
 	title,

@@ -3,9 +3,9 @@ import { View, Text } from 'react-native';
 import { Lock } from '../../../assets/icons';
 import { PasswordInput } from '../../../components';
 import { PageTitle } from '../../../components';
+import { styles } from './styles';
 
 type TRegister = {
-	styles: any;
 	error: string;
 	errorConfirm: string;
 	password: string;
@@ -17,7 +17,6 @@ type TRegister = {
 export function RegisterView({
 	error,
 	errorConfirm,
-	styles,
 	password,
 	passwordConfirm,
 	handleChangePasswordConfirm,

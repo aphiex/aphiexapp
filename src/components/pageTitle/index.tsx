@@ -1,29 +1,17 @@
-import React from 'react'
-import { View, StyleSheet, Text } from 'react-native';
-import theme from '../../styles/theme';
+import React from 'react';
+import { View, Text } from 'react-native';
+import { styles } from './styles';
 
 type TPageTitle = {
-  title: string;
-  icon?: JSX.Element;
-}
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontFamily: `${theme.fonts.regular400}`,
-    color: `${theme.colors.black}`,
-    fontSize: 30,
-  },
-});
+	title: string;
+	icon?: JSX.Element;
+};
 
 export function PageTitle({ icon, title }: TPageTitle) {
-  return (
-    <View style={styles.container}>
-      {icon}
-      <Text style={styles.title}>{title}</Text>
-    </View>
-  )
+	return (
+		<View style={styles.container}>
+			{icon}
+			<Text style={styles.title}>{title}</Text>
+		</View>
+	);
 }

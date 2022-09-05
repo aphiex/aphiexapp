@@ -3,4 +3,7 @@ export * from './Database';
 export * from './Types';
 export * from './PasswordValidation';
 export * from './Profile';
+export * from './Doctor';
 export * from './Format';
+export * from './States';
+export * from './GeneralValidations';

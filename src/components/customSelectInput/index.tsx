@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import theme from '../../styles/theme';
+import { styles } from './styles';
 
 type TCustomSelectInput = {
 	error?: string;
@@ -15,41 +16,8 @@ type TCustomSelectInput = {
 	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	setValue: React.Dispatch<React.SetStateAction<string | null>>;
 	placeholder?: string;
+	disabled?: boolean;
 };
-
-const styles = StyleSheet.create({
-	input: {
-		borderRadius: 8,
-		backgroundColor: theme.colors.white,
-		fontFamily: theme.fonts.regular400,
-		fontSize: 14,
-		paddingHorizontal: 8,
-		color: theme.colors.softBlack,
-		borderWidth: 1,
-		width: '100%',
-		height: 50,
-	},
-	error: {
-		fontFamily: theme.fonts.regular400,
-		color: theme.colors.red,
-		fontSize: 12,
-		textAlign: 'left',
-		marginLeft: 5,
-		marginTop: 4,
-	},
-	label: {
-		fontFamily: theme.fonts.regular400,
-		fontSize: 12,
-		textAlign: 'left',
-		marginLeft: 5,
-		marginBottom: 4,
-	},
-	container: {
-		display: 'flex',
-		justifyContent: 'flex-start',
-		width: '100%',
-	},
-});
 
 export function CustomSelectInput({
 	error,
@@ -60,8 +28,10 @@ export function CustomSelectInput({
 	setValue,
 	value,
 	placeholder,
+	disabled,
 }: TCustomSelectInput) {
 	function handleSetColor() {
+		if (disabled) return theme.colors.softGray;
 		if (error) return theme.colors.red;
 		return theme.colors.grey;
 	}
@@ -85,6 +55,7 @@ export function CustomSelectInput({
 				labelStyle={{
 					color: theme.colors.softBlack,
 				}}
+				disabled={disabled}
 			/>
 
 			<Text style={styles.error}>{error}</Text>

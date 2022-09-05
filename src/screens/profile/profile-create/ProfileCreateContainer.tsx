@@ -1,23 +1,12 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
-import { Alert, StyleSheet } from 'react-native';
+import { Alert } from 'react-native';
 import { Restart } from '../../../assets/icons';
 import { FooterContainer, ScreenContainer } from '../../../components';
 import { useAuth } from '../../../context';
 import { profileService } from '../../../services';
 import theme from '../../../styles/theme';
 import { ProfileCreateView } from './ProfileCreateView';
-
-const styles = StyleSheet.create({
-	container: {
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
-	form: {
-		marginTop: 40,
-		width: '100%',
-	},
-});
 
 export function ProfileCreateContainer({
 	navigation,
@@ -106,7 +95,7 @@ export function ProfileCreateContainer({
 						setLoading(false);
 					});
 			} catch (error: any) {
-				Alert.alert(error, 'Reinicie o aplicativo e tente novamente.');
+				Alert.alert(error.message, 'Reinicie o aplicativo e tente novamente.');
 				setLoading(false);
 			}
 		}
@@ -116,7 +105,6 @@ export function ProfileCreateContainer({
 		<>
 			<ScreenContainer hasFooter>
 				<ProfileCreateView
-					styles={styles}
 					handleChangeName={handleChangeName}
 					handleChangeDescription={handleChangeDescription}
 					name={name}

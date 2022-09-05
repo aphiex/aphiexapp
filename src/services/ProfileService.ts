@@ -121,6 +121,7 @@ async function handleUpdateProfile(
 ): Promise<Profile> {
 	return new Promise(async (resolve, reject) => {
 		const encryptedProfile: Profile = {
+			id: profile?.id,
 			name: profile?.name
 				? CryptoES.AES.encrypt(profile?.name, key).toString()
 				: '',

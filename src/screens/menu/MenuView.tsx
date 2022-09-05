@@ -9,9 +9,9 @@ import {
 	Settings,
 } from '../../assets/icons';
 import { IconButton } from '../../components';
+import { styles } from './styles';
 
 type TMenu = {
-	styles: any;
 	handleGoToProfile: () => void;
 	handleGoToPlace: () => void;
 	handleGoToExam: () => void;
@@ -20,7 +20,6 @@ type TMenu = {
 };
 
 export function MenuView({
-	styles,
 	handleGoToDoctor,
 	handleGoToExam,
 	handleGoToPlace,

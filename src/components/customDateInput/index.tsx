@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-	StyleSheet,
 	TextInput,
 	Text,
 	View,
@@ -10,7 +9,8 @@ import {
 import { Calendar } from '../../assets/icons';
 import theme from '../../styles/theme';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { dateMask, formatDate, getToday } from '../../utils';
+import { dateMask, getToday } from '../../utils';
+import { styles } from './styles';
 
 type TCustomDateInput = {
 	error?: string;
@@ -18,58 +18,6 @@ type TCustomDateInput = {
 	value?: Date;
 	setValue: React.Dispatch<React.SetStateAction<Date | undefined>>;
 };
-
-const styles = StyleSheet.create({
-	input: {
-		flex: 1,
-		backgroundColor: `${theme.colors.white}`,
-		fontFamily: `${theme.fonts.regular400}`,
-		fontSize: 14,
-		color: `${theme.colors.softBlack}`,
-	},
-	error: {
-		fontFamily: theme.fonts.regular400,
-		color: theme.colors.red,
-		fontSize: 12,
-		textAlign: 'left',
-		marginLeft: 5,
-		marginTop: 4,
-	},
-	label: {
-		fontFamily: theme.fonts.regular400,
-		fontSize: 12,
-		textAlign: 'left',
-		marginLeft: 5,
-		marginBottom: 4,
-	},
-	container: {
-		display: 'flex',
-		justifyContent: 'flex-start',
-		width: '100%',
-	},
-	inputContainer: {
-		borderRadius: 8,
-		paddingHorizontal: 8,
-		borderWidth: 1,
-		width: '100%',
-		height: 50,
-		flexDirection: 'row',
-	},
-	button: {
-		backgroundColor: 'transparent',
-	},
-	icon: {
-		marginLeft: 5,
-		marginTop: 13,
-	},
-	datePicker: {
-		width: 320,
-		height: 260,
-		display: 'flex',
-		justifyContent: 'center',
-		alignItems: 'flex-start',
-	},
-});
 
 export function CustomDateInput({
 	error,

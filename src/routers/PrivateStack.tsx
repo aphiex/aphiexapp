@@ -4,19 +4,28 @@ import {
 	MenuContainer,
 	ExamContainer,
 	PlaceContainer,
-	DoctorContainer,
 	SettingsContainer,
 	ProfileEditContainer,
 	ProfileDetailContainer,
+	DoctorListContainer,
+	DoctorCreateContainer,
+	DoctorDetailContainer,
+	DoctorEditContainer,
 } from '../screens';
 
 export type RootStackParamList = {
+	Menu: undefined;
+
 	ProfileEdit: undefined;
 	ProfileDetail: undefined;
-	Menu: undefined;
+
+	DoctorList: undefined;
+	DoctorCreate: undefined;
+	DoctorDetail: { doctorId: number };
+	DoctorEdit: { doctorId: number };
+
 	Exam: undefined;
 	Place: undefined;
-	Doctor: undefined;
 	Settings: undefined;
 };
 
@@ -30,19 +39,17 @@ export default function PrivateStack() {
 			}}
 		>
 			<Stack.Screen name="Menu" component={MenuContainer} />
-			<Stack.Screen
-				name="ProfileDetail"
-				component={ProfileDetailContainer}
-				initialParams={{ profileId: 0 }}
-			/>
-			<Stack.Screen
-				name="ProfileEdit"
-				component={ProfileEditContainer}
-				initialParams={{ profileId: 0 }}
-			/>
+
+			<Stack.Screen name="ProfileDetail" component={ProfileDetailContainer} />
+			<Stack.Screen name="ProfileEdit" component={ProfileEditContainer} />
+
+			<Stack.Screen name="DoctorList" component={DoctorListContainer} />
+			<Stack.Screen name="DoctorCreate" component={DoctorCreateContainer} />
+			<Stack.Screen name="DoctorDetail" component={DoctorDetailContainer} />
+			<Stack.Screen name="DoctorEdit" component={DoctorEditContainer} />
+
 			<Stack.Screen name="Exam" component={ExamContainer} />
 			<Stack.Screen name="Place" component={PlaceContainer} />
-			<Stack.Screen name="Doctor" component={DoctorContainer} />
 			<Stack.Screen name="Settings" component={SettingsContainer} />
 		</Stack.Navigator>
 	);
