@@ -59,9 +59,9 @@ async function handleGetDoctors(key: string): Promise<Doctor[]> {
 					});
 
 					resolve(decryptedData);
-				} else reject(new Error('Falha ao obter perfis'));
+				} else reject(new Error('Falha ao obter médicos'));
 			})
-			.catch(() => reject(new Error('Falha ao obter perfis')));
+			.catch(() => reject(new Error('Falha ao obter médicos')));
 	});
 }
 

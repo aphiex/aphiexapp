@@ -7,3 +7,4 @@ export * from './Doctor';
 export * from './Format';
 export * from './States';
 export * from './GeneralValidations';
+export * from './Place';

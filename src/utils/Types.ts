@@ -30,6 +30,26 @@ export type DoctorFromBD = {
 	city_id?: number;
 };
 
+export type Place = {
+	id?: number;
+	name?: string;
+	fixedPhone?: string;
+	mobilePhone?: string;
+	email?: string;
+	address?: string;
+	cityId?: number;
+};
+
+export type PlaceFromBD = {
+	id?: number;
+	name?: string;
+	fixed_phone?: string;
+	mobile_phone?: string;
+	email?: string;
+	address?: string;
+	city_id?: number;
+};
+
 export type City = {
 	id?: number;
 	name?: string;

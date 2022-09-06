@@ -14,7 +14,7 @@ export function MenuContainer({
 	};
 
 	const handleGoToPlace = () => {
-		navigation.navigate('Place');
+		navigation.navigate('PlaceList');
 	};
 
 	const handleGoToExam = () => {

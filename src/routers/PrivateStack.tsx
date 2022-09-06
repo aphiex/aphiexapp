@@ -3,7 +3,6 @@ import React from 'react';
 import {
 	MenuContainer,
 	ExamContainer,
-	PlaceContainer,
 	SettingsContainer,
 	ProfileEditContainer,
 	ProfileDetailContainer,
@@ -11,6 +10,10 @@ import {
 	DoctorCreateContainer,
 	DoctorDetailContainer,
 	DoctorEditContainer,
+	PlaceListContainer,
+	PlaceCreateContainer,
+	PlaceDetailContainer,
+	PlaceEditContainer,
 } from '../screens';
 
 export type RootStackParamList = {
@@ -24,8 +27,12 @@ export type RootStackParamList = {
 	DoctorDetail: { doctorId: number };
 	DoctorEdit: { doctorId: number };
 
+	PlaceList: undefined;
+	PlaceCreate: undefined;
+	PlaceDetail: { placeId: number };
+	PlaceEdit: { placeId: number };
+
 	Exam: undefined;
-	Place: undefined;
 	Settings: undefined;
 };
 
@@ -48,8 +55,12 @@ export default function PrivateStack() {
 			<Stack.Screen name="DoctorDetail" component={DoctorDetailContainer} />
 			<Stack.Screen name="DoctorEdit" component={DoctorEditContainer} />
 
+			<Stack.Screen name="PlaceList" component={PlaceListContainer} />
+			<Stack.Screen name="PlaceCreate" component={PlaceCreateContainer} />
+			<Stack.Screen name="PlaceDetail" component={PlaceDetailContainer} />
+			<Stack.Screen name="PlaceEdit" component={PlaceEditContainer} />
+
 			<Stack.Screen name="Exam" component={ExamContainer} />
-			<Stack.Screen name="Place" component={PlaceContainer} />
 			<Stack.Screen name="Settings" component={SettingsContainer} />
 		</Stack.Navigator>
 	);
