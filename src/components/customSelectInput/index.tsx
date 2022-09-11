@@ -6,6 +6,7 @@ import { styles } from './styles';
 
 type TCustomSelectInput = {
 	error?: string;
+	setError?: React.Dispatch<React.SetStateAction<string>>;
 	label?: string;
 	open: boolean;
 	value: string | null;
@@ -17,6 +18,7 @@ type TCustomSelectInput = {
 	setValue: React.Dispatch<React.SetStateAction<string | null>>;
 	placeholder?: string;
 	disabled?: boolean;
+	onChangeValue?: () => void;
 };
 
 export function CustomSelectInput({
@@ -29,6 +31,8 @@ export function CustomSelectInput({
 	value,
 	placeholder,
 	disabled,
+	setError,
+	onChangeValue,
 }: TCustomSelectInput) {
 	function handleSetColor() {
 		if (disabled) return theme.colors.softGray;
@@ -49,6 +53,10 @@ export function CustomSelectInput({
 				placeholder={placeholder}
 				placeholderStyle={{
 					color: theme.colors.grey,
+				}}
+				onChangeValue={() => {
+					if (setError) setError('');
+					if (onChangeValue) onChangeValue();
 				}}
 				dropDownDirection="AUTO"
 				style={[styles.input, { borderColor: handleSetColor() }]}

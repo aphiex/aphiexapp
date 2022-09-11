@@ -35,11 +35,17 @@ export function ProfileDetailContainer({
 						leaveProfile();
 					})
 					.catch(error => {
-						Alert.alert(error, 'Reinicie o aplicativo e tente novamente.');
+						Alert.alert(
+							error?.message || error,
+							'Reinicie o aplicativo e tente novamente.'
+						);
 						setLoading(false);
 					});
 			} catch (error: any) {
-				Alert.alert(error.message, 'Reinicie o aplicativo e tente novamente.');
+				Alert.alert(
+					error?.message || error,
+					'Reinicie o aplicativo e tente novamente.'
+				);
 				setLoading(false);
 			}
 		}

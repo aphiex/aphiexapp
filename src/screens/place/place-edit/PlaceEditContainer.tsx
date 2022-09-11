@@ -16,7 +16,6 @@ export function PlaceEditContainer({
 }: NativeStackScreenProps<RootStackParamList, 'PlaceEdit'>) {
 	const { placeId } = route.params;
 	const [place, setPlace] = useState<Place>();
-	const [initialState, setInitialState] = useState<string | null>(null);
 
 	const [name, setName] = useState<string>('');
 	const [nameError, setNameError] = useState<string>('');
@@ -37,6 +36,7 @@ export function PlaceEditContainer({
 	const [state, setState] = useState<string | null>(null);
 
 	const [city, setCity] = useState<string | null>(null);
+	const [cityError, setCityError] = useState<string>('');
 
 	const [citiesList, setCitiesList] = useState<SelectItem[]>([]);
 
@@ -96,6 +96,11 @@ export function PlaceEditContainer({
 			return false;
 		}
 
+		if (state && !city) {
+			setCityError('Selecione uma cidade');
+			return false;
+		}
+
 		return true;
 	};
 
@@ -108,8 +113,8 @@ export function PlaceEditContainer({
 				address !== (place?.address ? place?.address?.split(', n° ')[0] : '') ||
 				addressNumber !==
 					(place?.address ? place?.address?.split(', n° ')[1] : '') ||
-				state !== initialState ||
-				city !== (place?.cityId ? place?.cityId?.toString() : null)
+				state !== (place?.city?.state ? place?.city?.state : null) ||
+				city !== (place?.city?.id ? place?.city?.id?.toString() : null)
 		);
 	};
 
@@ -124,8 +129,8 @@ export function PlaceEditContainer({
 		setEmailError('');
 		setAddress(place?.address?.split(', n° ')[0] || '');
 		setAddressNumber(place?.address?.split(', n° ')[1] || '');
-		setState(initialState || '');
-		setCity(place?.cityId?.toString() || null);
+		setState(place?.city?.state || null);
+		setCity(place?.city?.id?.toString() || null);
 	};
 
 	const handleCancel = () => {
@@ -168,34 +173,12 @@ export function PlaceEditContainer({
 					setLoadingCities(false);
 				})
 				.catch(error => {
-					Alert.alert(error, 'Tente novamente.');
+					Alert.alert(error?.message || error, 'Tente novamente.');
 					setLoadingCities(false);
 				});
 		} catch (error: any) {
-			Alert.alert(error.message, 'Tente novamente.');
+			Alert.alert(error?.message || error, 'Tente novamente.');
 			setLoadingCities(false);
-		}
-	};
-
-	const handleGetCityById = (id: number) => {
-		try {
-			cityService
-				.handleGetCityById(id)
-				.then(result => {
-					if (result?.state) {
-						setInitialState(result.state);
-						setState(result.state);
-						handleGetCities(result.state);
-					}
-					setLoading(false);
-				})
-				.catch(error => {
-					Alert.alert(error, 'Tente novamente.');
-					setLoading(false);
-				});
-		} catch (error: any) {
-			Alert.alert(error.message, 'Tente novamente.');
-			setLoading(false);
 		}
 	};
 
@@ -213,23 +196,25 @@ export function PlaceEditContainer({
 						setEmail(result?.email || '');
 						setAddress(result?.address?.split(', n° ')[0] || '');
 						setAddressNumber(result?.address?.split(', n° ')[1] || '');
-						setCity(result?.cityId?.toString() || null);
-
-						if (result?.cityId) handleGetCityById(result?.cityId);
-						else {
-							setInitialState(null);
-							setLoading(false);
-						}
+						setCity(result?.city?.id?.toString() || null);
+						setState(result?.city?.state || null);
+						setLoading(false);
 					})
 					.catch(error => {
-						Alert.alert(error, 'Reinicie o aplicativo e tente novamente.');
+						Alert.alert(
+							error?.message || error,
+							'Reinicie o aplicativo e tente novamente.'
+						);
 						setLoading(false);
 					});
 			} else {
 				throw new Error('Não foi possível carregar as informações');
 			}
 		} catch (error: any) {
-			Alert.alert(error.message, 'Reinicie o aplicativo e tente novamente.');
+			Alert.alert(
+				error?.message || error,
+				'Reinicie o aplicativo e tente novamente.'
+			);
 			setLoading(false);
 		}
 	};
@@ -249,7 +234,9 @@ export function PlaceEditContainer({
 									: address
 									? address?.trim()
 									: '',
-							cityId: city ? parseInt(city) : undefined,
+							city: {
+								id: city ? parseInt(city) : undefined,
+							},
 							email: email?.toLowerCase().trim() || '',
 							fixedPhone: fixedPhone || '',
 							mobilePhone: mobilePhone || '',
@@ -261,11 +248,17 @@ export function PlaceEditContainer({
 						navigation.replace('PlaceDetail', { placeId });
 					})
 					.catch(error => {
-						Alert.alert(error, 'Reinicie o aplicativo e tente novamente.');
+						Alert.alert(
+							error?.message || error,
+							'Reinicie o aplicativo e tente novamente.'
+						);
 						setLoading(false);
 					});
 			} catch (error: any) {
-				Alert.alert(error.message, 'Reinicie o aplicativo e tente novamente.');
+				Alert.alert(
+					error?.message || error,
+					'Reinicie o aplicativo e tente novamente.'
+				);
 				setLoading(false);
 			}
 		}
@@ -308,6 +301,8 @@ export function PlaceEditContainer({
 					state={state}
 					city={city}
 					setCity={setCity}
+					cityError={cityError}
+					setCityError={setCityError}
 					setState={setState}
 					citiesList={citiesList}
 				/>

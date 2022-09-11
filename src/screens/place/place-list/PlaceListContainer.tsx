@@ -35,7 +35,7 @@ export function PlaceListContainer({
 			.then(result => {
 				setPlaces(result);
 			})
-			.catch(() => {
+			.catch(error => {
 				setPlaces([]);
 			});
 		setLoading(false);

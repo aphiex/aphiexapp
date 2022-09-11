@@ -7,6 +7,7 @@ import {
 	getAllPlaces,
 	getPlaceById,
 	updatePlace,
+	PlaceCreate,
 } from '../utils';
 
 async function handleGetPlaces(key: string): Promise<Place[]> {
@@ -18,40 +19,49 @@ async function handleGetPlaces(key: string): Promise<Place[]> {
 
 					results.forEach(result => {
 						decryptedData.push({
-							id: result?.id,
-							name: result?.name
-								? CryptoES.AES.decrypt(result?.name, key).toString(
+							id: result?.place_id,
+							name: result?.place_name
+								? CryptoES.AES.decrypt(result?.place_name, key).toString(
 										CryptoES.enc.Utf8
 								  )
 								: '',
-							fixedPhone: result?.fixed_phone
-								? CryptoES.AES.decrypt(result?.fixed_phone, key).toString(
+							fixedPhone: result?.place_fixed_phone
+								? CryptoES.AES.decrypt(result?.place_fixed_phone, key).toString(
 										CryptoES.enc.Utf8
 								  )
 								: '',
-							mobilePhone: result?.mobile_phone
-								? CryptoES.AES.decrypt(result?.mobile_phone, key).toString(
+							mobilePhone: result?.place_mobile_phone
+								? CryptoES.AES.decrypt(
+										result?.place_mobile_phone,
+										key
+								  ).toString(CryptoES.enc.Utf8)
+								: '',
+							email: result?.place_email
+								? CryptoES.AES.decrypt(result?.place_email, key).toString(
 										CryptoES.enc.Utf8
 								  )
 								: '',
-							email: result?.email
-								? CryptoES.AES.decrypt(result?.email, key).toString(
+							address: result?.place_address
+								? CryptoES.AES.decrypt(result?.place_address, key).toString(
 										CryptoES.enc.Utf8
 								  )
 								: '',
-							address: result?.address
-								? CryptoES.AES.decrypt(result?.address, key).toString(
-										CryptoES.enc.Utf8
-								  )
-								: '',
-							cityId: result?.city_id,
+							city: {
+								id: result?.city_id,
+								name: result.city_name,
+								state: result.city_state,
+							},
 						});
 					});
 
 					resolve(decryptedData);
-				} else reject(new Error('Falha ao obter locais'));
+				} else {
+					reject(new Error('Falha ao obter locais'));
+				}
 			})
-			.catch(() => reject(new Error('Falha ao obter locais')));
+			.catch(error => {
+				reject(new Error('Falha ao obter locais'));
+			});
 	});
 }
 
@@ -61,33 +71,37 @@ async function handleGetPlaceById(key: string, id: number): Promise<Place> {
 			.then(result => {
 				if (result) {
 					const decryptedData: Place = {
-						id: result?.id,
-						name: result?.name
-							? CryptoES.AES.decrypt(result?.name, key).toString(
+						id: result?.place_id,
+						name: result?.place_name
+							? CryptoES.AES.decrypt(result?.place_name, key).toString(
 									CryptoES.enc.Utf8
 							  )
 							: '',
-						address: result?.address
-							? CryptoES.AES.decrypt(result?.address, key).toString(
+						address: result?.place_address
+							? CryptoES.AES.decrypt(result?.place_address, key).toString(
 									CryptoES.enc.Utf8
 							  )
 							: '',
-						email: result?.email
-							? CryptoES.AES.decrypt(result?.email, key).toString(
+						email: result?.place_email
+							? CryptoES.AES.decrypt(result?.place_email, key).toString(
 									CryptoES.enc.Utf8
 							  )
 							: '',
-						fixedPhone: result?.fixed_phone
-							? CryptoES.AES.decrypt(result?.fixed_phone, key).toString(
+						fixedPhone: result?.place_fixed_phone
+							? CryptoES.AES.decrypt(result?.place_fixed_phone, key).toString(
 									CryptoES.enc.Utf8
 							  )
 							: '',
-						mobilePhone: result?.mobile_phone
-							? CryptoES.AES.decrypt(result?.mobile_phone, key).toString(
+						mobilePhone: result?.place_mobile_phone
+							? CryptoES.AES.decrypt(result?.place_mobile_phone, key).toString(
 									CryptoES.enc.Utf8
 							  )
 							: '',
-						cityId: result?.city_id,
+						city: {
+							id: result?.city_id,
+							name: result.city_name,
+							state: result.city_state,
+						},
 					};
 
 					resolve(decryptedData);
@@ -97,11 +111,14 @@ async function handleGetPlaceById(key: string, id: number): Promise<Place> {
 	});
 }
 
-async function handleCreatePlace(place: Place, key: string): Promise<boolean> {
+async function handleCreatePlace(
+	place: PlaceCreate,
+	key: string
+): Promise<boolean> {
 	return new Promise(async (resolve, reject) => {
 		createPlaceTable()
 			.then(() => {
-				const encryptedPlace: Place = {
+				const encryptedPlace: PlaceCreate = {
 					cityId: place.cityId,
 					name: place?.name
 						? CryptoES.AES.encrypt(place?.name, key).toString()
@@ -121,7 +138,9 @@ async function handleCreatePlace(place: Place, key: string): Promise<boolean> {
 				};
 
 				createPlace(encryptedPlace)
-					.then(() => resolve(true))
+					.then(() => {
+						resolve(true);
+					})
 					.catch(() => reject(new Error('Falha ao criar local')));
 			})
 			.catch(() => reject(new Error('Falha ao criar local')));
@@ -132,7 +151,7 @@ async function handleUpdatePlace(place: Place, key: string): Promise<Place> {
 	return new Promise(async (resolve, reject) => {
 		const encryptedPlace: Place = {
 			id: place?.id,
-			cityId: place.cityId,
+			city: place.city,
 			name: place?.name
 				? CryptoES.AES.encrypt(place?.name, key).toString()
 				: '',

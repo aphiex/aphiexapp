@@ -6,9 +6,11 @@ import {
 	FolderPlus,
 	HospitalBuilding,
 	Logo,
+	LogoutVariant,
 	Settings,
 } from '../../assets/icons';
 import { IconButton } from '../../components';
+import theme from '../../styles/theme';
 import { styles } from './styles';
 
 type TMenu = {
@@ -17,6 +19,7 @@ type TMenu = {
 	handleGoToExam: () => void;
 	handleGoToDoctor: () => void;
 	handleGoToSettings: () => void;
+	handleLeaveProfile: () => void;
 };
 
 export function MenuView({
@@ -25,6 +28,7 @@ export function MenuView({
 	handleGoToPlace,
 	handleGoToProfile,
 	handleGoToSettings,
+	handleLeaveProfile,
 }: TMenu) {
 	return (
 		<View style={styles.container}>
@@ -60,10 +64,17 @@ export function MenuView({
 							onPress={handleGoToExam}
 						/>
 					</View>
+					<View style={styles.columnSpace}>
+						<IconButton
+							title="Médicos"
+							icon={<CardAccountDetails size={70} />}
+							onPress={handleGoToDoctor}
+						/>
+					</View>
 					<IconButton
-						title="Médicos"
-						icon={<CardAccountDetails size={70} />}
-						onPress={handleGoToDoctor}
+						title="Sair"
+						icon={<LogoutVariant size={70} color={theme.colors.softRed} />}
+						onPress={handleLeaveProfile}
 					/>
 				</View>
 			</View>

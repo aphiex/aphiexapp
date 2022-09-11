@@ -17,9 +17,6 @@ export function DoctorDetailContainer({
 	const { auth } = useAuth();
 	const { doctorId } = route.params;
 	const [doctor, setDoctor] = useState<Doctor>();
-	const [city, setCity] = useState<string>('');
-	const [state, setState] = useState<string>('');
-
 	const [modalVisible, setModalVisible] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(false);
 
@@ -39,19 +36,23 @@ export function DoctorDetailContainer({
 					.handleGetDoctorById(auth?.key, id)
 					.then(result => {
 						setDoctor(result);
-						if (result.cityId) {
-							handleGetCityById(result.cityId);
-						} else setLoading(false);
+						setLoading(false);
 					})
 					.catch(error => {
-						Alert.alert(error, 'Reinicie o aplicativo e tente novamente.');
+						Alert.alert(
+							error?.message || error,
+							'Reinicie o aplicativo e tente novamente.'
+						);
 						setLoading(false);
 					});
 			} else {
 				throw new Error('Não foi possível carregar as informações');
 			}
 		} catch (error: any) {
-			Alert.alert(error.message, 'Reinicie o aplicativo e tente novamente.');
+			Alert.alert(
+				error?.message || error,
+				'Reinicie o aplicativo e tente novamente.'
+			);
 			setLoading(false);
 		}
 	};
@@ -67,34 +68,19 @@ export function DoctorDetailContainer({
 						navigation.replace('DoctorList');
 					})
 					.catch(error => {
-						Alert.alert(error, 'Reinicie o aplicativo e tente novamente.');
+						Alert.alert(
+							error?.message || error,
+							'Reinicie o aplicativo e tente novamente.'
+						);
 						setLoading(false);
 					});
 			} catch (error: any) {
-				Alert.alert(error.message, 'Reinicie o aplicativo e tente novamente.');
+				Alert.alert(
+					error?.message || error,
+					'Reinicie o aplicativo e tente novamente.'
+				);
 				setLoading(false);
 			}
-		}
-	};
-
-	const handleGetCityById = (id: number) => {
-		try {
-			cityService
-				.handleGetCityById(id)
-				.then(result => {
-					if (result) {
-						setCity(result?.name || '');
-						setState(result?.state || '');
-					}
-					setLoading(false);
-				})
-				.catch(error => {
-					Alert.alert(error, 'Tente novamente.');
-					setLoading(false);
-				});
-		} catch (error: any) {
-			Alert.alert(error.message, 'Tente novamente.');
-			setLoading(false);
 		}
 	};
 
@@ -107,8 +93,6 @@ export function DoctorDetailContainer({
 			<ScreenContainer hasFooter>
 				<DoctorDetailView
 					doctor={doctor}
-					city={city}
-					state={state}
 					handleDelete={handleDelete}
 					modalVisible={modalVisible}
 					setModalVisible={setModalVisible}

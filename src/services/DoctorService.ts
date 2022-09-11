@@ -4,6 +4,7 @@ import {
 	createDoctorTable,
 	deleteDoctor,
 	Doctor,
+	DoctorCreate,
 	getAllDoctors,
 	getDoctorById,
 	updateDoctor,
@@ -18,43 +19,49 @@ async function handleGetDoctors(key: string): Promise<Doctor[]> {
 
 					results.forEach(result => {
 						decryptedData.push({
-							id: result?.id,
-							name: result?.name
-								? CryptoES.AES.decrypt(result?.name, key).toString(
+							id: result?.doctor_id,
+							name: result?.doctor_name
+								? CryptoES.AES.decrypt(result?.doctor_name, key).toString(
 										CryptoES.enc.Utf8
 								  )
 								: '',
-							fixedPhone: result?.fixed_phone
-								? CryptoES.AES.decrypt(result?.fixed_phone, key).toString(
+							fixedPhone: result?.doctor_fixed_phone
+								? CryptoES.AES.decrypt(
+										result?.doctor_fixed_phone,
+										key
+								  ).toString(CryptoES.enc.Utf8)
+								: '',
+							mobilePhone: result?.doctor_mobile_phone
+								? CryptoES.AES.decrypt(
+										result?.doctor_mobile_phone,
+										key
+								  ).toString(CryptoES.enc.Utf8)
+								: '',
+							email: result?.doctor_email
+								? CryptoES.AES.decrypt(result?.doctor_email, key).toString(
 										CryptoES.enc.Utf8
 								  )
 								: '',
-							mobilePhone: result?.mobile_phone
-								? CryptoES.AES.decrypt(result?.mobile_phone, key).toString(
+							address: result?.doctor_address
+								? CryptoES.AES.decrypt(result?.doctor_address, key).toString(
 										CryptoES.enc.Utf8
 								  )
 								: '',
-							email: result?.email
-								? CryptoES.AES.decrypt(result?.email, key).toString(
+							crm: result?.doctor_crm
+								? CryptoES.AES.decrypt(result?.doctor_crm, key).toString(
 										CryptoES.enc.Utf8
 								  )
 								: '',
-							address: result?.address
-								? CryptoES.AES.decrypt(result?.address, key).toString(
+							specialty: result?.doctor_specialty
+								? CryptoES.AES.decrypt(result?.doctor_specialty, key).toString(
 										CryptoES.enc.Utf8
 								  )
 								: '',
-							crm: result?.crm
-								? CryptoES.AES.decrypt(result?.crm, key).toString(
-										CryptoES.enc.Utf8
-								  )
-								: '',
-							specialty: result?.specialty
-								? CryptoES.AES.decrypt(result?.specialty, key).toString(
-										CryptoES.enc.Utf8
-								  )
-								: '',
-							cityId: result?.city_id,
+							city: {
+								id: result?.city_id,
+								name: result?.city_name,
+								state: result.city_state,
+							},
 						});
 					});
 
@@ -71,43 +78,47 @@ async function handleGetDoctorById(key: string, id: number): Promise<Doctor> {
 			.then(result => {
 				if (result) {
 					const decryptedData: Doctor = {
-						id: result?.id,
-						name: result?.name
-							? CryptoES.AES.decrypt(result?.name, key).toString(
+						id: result?.doctor_id,
+						name: result?.doctor_name
+							? CryptoES.AES.decrypt(result?.doctor_name, key).toString(
 									CryptoES.enc.Utf8
 							  )
 							: '',
-						address: result?.address
-							? CryptoES.AES.decrypt(result?.address, key).toString(
+						address: result?.doctor_address
+							? CryptoES.AES.decrypt(result?.doctor_address, key).toString(
 									CryptoES.enc.Utf8
 							  )
 							: '',
-						crm: result?.crm
-							? CryptoES.AES.decrypt(result?.crm, key).toString(
+						crm: result?.doctor_crm
+							? CryptoES.AES.decrypt(result?.doctor_crm, key).toString(
 									CryptoES.enc.Utf8
 							  )
 							: '',
-						email: result?.email
-							? CryptoES.AES.decrypt(result?.email, key).toString(
+						email: result?.doctor_email
+							? CryptoES.AES.decrypt(result?.doctor_email, key).toString(
 									CryptoES.enc.Utf8
 							  )
 							: '',
-						fixedPhone: result?.fixed_phone
-							? CryptoES.AES.decrypt(result?.fixed_phone, key).toString(
+						fixedPhone: result?.doctor_fixed_phone
+							? CryptoES.AES.decrypt(result?.doctor_fixed_phone, key).toString(
 									CryptoES.enc.Utf8
 							  )
 							: '',
-						mobilePhone: result?.mobile_phone
-							? CryptoES.AES.decrypt(result?.mobile_phone, key).toString(
+						mobilePhone: result?.doctor_mobile_phone
+							? CryptoES.AES.decrypt(result?.doctor_mobile_phone, key).toString(
 									CryptoES.enc.Utf8
 							  )
 							: '',
-						specialty: result?.specialty
-							? CryptoES.AES.decrypt(result?.specialty, key).toString(
+						specialty: result?.doctor_specialty
+							? CryptoES.AES.decrypt(result?.doctor_specialty, key).toString(
 									CryptoES.enc.Utf8
 							  )
 							: '',
-						cityId: result?.city_id,
+						city: {
+							id: result?.city_id,
+							name: result?.city_name,
+							state: result.city_state,
+						},
 					};
 
 					resolve(decryptedData);
@@ -118,13 +129,13 @@ async function handleGetDoctorById(key: string, id: number): Promise<Doctor> {
 }
 
 async function handleCreateDoctor(
-	doctor: Doctor,
+	doctor: DoctorCreate,
 	key: string
 ): Promise<boolean> {
 	return new Promise(async (resolve, reject) => {
 		createDoctorTable()
 			.then(() => {
-				const encryptedDoctor: Doctor = {
+				const encryptedDoctor: DoctorCreate = {
 					cityId: doctor.cityId,
 					name: doctor?.name
 						? CryptoES.AES.encrypt(doctor?.name, key).toString()
@@ -164,7 +175,7 @@ async function handleUpdateDoctor(
 	return new Promise(async (resolve, reject) => {
 		const encryptedDoctor: Doctor = {
 			id: doctor?.id,
-			cityId: doctor.cityId,
+			city: doctor.city,
 			name: doctor?.name
 				? CryptoES.AES.encrypt(doctor?.name, key).toString()
 				: '',

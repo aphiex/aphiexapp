@@ -35,6 +35,7 @@ export function DoctorCreateContainer({
 	const [state, setState] = useState<string | null>(null);
 
 	const [city, setCity] = useState<string | null>(null);
+	const [cityError, setCityError] = useState<string>('');
 
 	const [citiesList, setCitiesList] = useState<SelectItem[]>([]);
 
@@ -99,6 +100,11 @@ export function DoctorCreateContainer({
 
 		if (email && !validateEmail(email)) {
 			setEmailError('Email inválido');
+			return false;
+		}
+
+		if (state && !city) {
+			setCityError('Selecione uma cidade');
 			return false;
 		}
 
@@ -177,11 +183,11 @@ export function DoctorCreateContainer({
 					setLoadingCities(false);
 				})
 				.catch(error => {
-					Alert.alert(error, 'Tente novamente.');
+					Alert.alert(error?.message || error, 'Tente novamente.');
 					setLoadingCities(false);
 				});
 		} catch (error: any) {
-			Alert.alert(error.message, 'Tente novamente.');
+			Alert.alert(error?.message || error, 'Tente novamente.');
 			setLoadingCities(false);
 		}
 	};
@@ -213,11 +219,17 @@ export function DoctorCreateContainer({
 						navigation.replace('DoctorList');
 					})
 					.catch(error => {
-						Alert.alert(error, 'Reinicie o aplicativo e tente novamente.');
+						Alert.alert(
+							error?.message || error,
+							'Reinicie o aplicativo e tente novamente.'
+						);
 						setLoading(false);
 					});
 			} catch (error: any) {
-				Alert.alert(error.message, 'Reinicie o aplicativo e tente novamente.');
+				Alert.alert(
+					error?.message || error,
+					'Reinicie o aplicativo e tente novamente.'
+				);
 				setLoading(false);
 			}
 		}
@@ -262,6 +274,8 @@ export function DoctorCreateContainer({
 					setCity={setCity}
 					setState={setState}
 					citiesList={citiesList}
+					cityError={cityError}
+					setCityError={setCityError}
 				/>
 			</ScreenContainer>
 			<FooterContainer

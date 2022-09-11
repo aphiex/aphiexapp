@@ -16,7 +16,6 @@ export function DoctorEditContainer({
 }: NativeStackScreenProps<RootStackParamList, 'DoctorEdit'>) {
 	const { doctorId } = route.params;
 	const [doctor, setDoctor] = useState<Doctor>();
-	const [initialState, setInitialState] = useState<string | null>(null);
 
 	const [name, setName] = useState<string>('');
 	const [nameError, setNameError] = useState<string>('');
@@ -41,6 +40,7 @@ export function DoctorEditContainer({
 	const [state, setState] = useState<string | null>(null);
 
 	const [city, setCity] = useState<string | null>(null);
+	const [cityError, setCityError] = useState<string>('');
 
 	const [citiesList, setCitiesList] = useState<SelectItem[]>([]);
 
@@ -108,6 +108,11 @@ export function DoctorEditContainer({
 			return false;
 		}
 
+		if (state && !city) {
+			setCityError('Selecione uma cidade');
+			return false;
+		}
+
 		return true;
 	};
 
@@ -123,8 +128,8 @@ export function DoctorEditContainer({
 					(doctor?.address ? doctor?.address?.split(', n° ')[0] : '') ||
 				addressNumber !==
 					(doctor?.address ? doctor?.address?.split(', n° ')[1] : '') ||
-				state !== initialState ||
-				city !== (doctor?.cityId ? doctor?.cityId?.toString() : null)
+				state !== (doctor?.city?.state ? doctor?.city?.state : null) ||
+				city !== (doctor?.city?.id ? doctor?.city?.id?.toString() : null)
 		);
 	};
 
@@ -141,8 +146,8 @@ export function DoctorEditContainer({
 		setCrm(doctor?.crm || '');
 		setAddress(doctor?.address?.split(', n° ')[0] || '');
 		setAddressNumber(doctor?.address?.split(', n° ')[1] || '');
-		setState(initialState || '');
-		setCity(doctor?.cityId?.toString() || null);
+		setState(doctor?.city?.state || null);
+		setCity(doctor?.city?.id?.toString() || null);
 	};
 
 	const handleCancel = () => {
@@ -185,34 +190,12 @@ export function DoctorEditContainer({
 					setLoadingCities(false);
 				})
 				.catch(error => {
-					Alert.alert(error, 'Tente novamente.');
+					Alert.alert(error?.message || error, 'Tente novamente.');
 					setLoadingCities(false);
 				});
 		} catch (error: any) {
-			Alert.alert(error.message, 'Tente novamente.');
+			Alert.alert(error?.message || error, 'Tente novamente.');
 			setLoadingCities(false);
-		}
-	};
-
-	const handleGetCityById = (id: number) => {
-		try {
-			cityService
-				.handleGetCityById(id)
-				.then(result => {
-					if (result?.state) {
-						setInitialState(result.state);
-						setState(result.state);
-						handleGetCities(result.state);
-					}
-					setLoading(false);
-				})
-				.catch(error => {
-					Alert.alert(error, 'Tente novamente.');
-					setLoading(false);
-				});
-		} catch (error: any) {
-			Alert.alert(error.message, 'Tente novamente.');
-			setLoading(false);
 		}
 	};
 
@@ -232,23 +215,25 @@ export function DoctorEditContainer({
 						setCrm(result?.crm || '');
 						setAddress(result?.address?.split(', n° ')[0] || '');
 						setAddressNumber(result?.address?.split(', n° ')[1] || '');
-						setCity(result?.cityId?.toString() || null);
-
-						if (result?.cityId) handleGetCityById(result?.cityId);
-						else {
-							setInitialState(null);
-							setLoading(false);
-						}
+						setCity(result?.city?.id?.toString() || null);
+						setState(result?.city?.state || null);
+						setLoading(false);
 					})
 					.catch(error => {
-						Alert.alert(error, 'Reinicie o aplicativo e tente novamente.');
+						Alert.alert(
+							error?.message || error,
+							'Reinicie o aplicativo e tente novamente.'
+						);
 						setLoading(false);
 					});
 			} else {
 				throw new Error('Não foi possível carregar as informações');
 			}
 		} catch (error: any) {
-			Alert.alert(error.message, 'Reinicie o aplicativo e tente novamente.');
+			Alert.alert(
+				error?.message || error,
+				'Reinicie o aplicativo e tente novamente.'
+			);
 			setLoading(false);
 		}
 	};
@@ -268,7 +253,9 @@ export function DoctorEditContainer({
 									: address
 									? address?.trim()
 									: '',
-							cityId: city ? parseInt(city) : undefined,
+							city: {
+								id: city ? parseInt(city) : undefined,
+							},
 							crm: crm?.trim() || '',
 							email: email?.toLowerCase().trim() || '',
 							fixedPhone: fixedPhone || '',
@@ -282,11 +269,17 @@ export function DoctorEditContainer({
 						navigation.replace('DoctorDetail', { doctorId });
 					})
 					.catch(error => {
-						Alert.alert(error, 'Reinicie o aplicativo e tente novamente.');
+						Alert.alert(
+							error?.message || error,
+							'Reinicie o aplicativo e tente novamente.'
+						);
 						setLoading(false);
 					});
 			} catch (error: any) {
-				Alert.alert(error.message, 'Reinicie o aplicativo e tente novamente.');
+				Alert.alert(
+					error?.message || error,
+					'Reinicie o aplicativo e tente novamente.'
+				);
 				setLoading(false);
 			}
 		}
@@ -335,6 +328,8 @@ export function DoctorEditContainer({
 					setCity={setCity}
 					setState={setState}
 					citiesList={citiesList}
+					cityError={cityError}
+					setCityError={setCityError}
 				/>
 			</ScreenContainer>
 			<FooterContainer

@@ -18,24 +18,26 @@ async function handleGetProfiles(key: string): Promise<Profile[]> {
 
 					result.forEach(profile => {
 						decryptedData.push({
-							id: profile?.id,
-							name: profile?.name
-								? CryptoES.AES.decrypt(profile?.name, key).toString(
+							id: profile?.profile_id,
+							name: profile?.profile_name
+								? CryptoES.AES.decrypt(profile?.profile_name, key).toString(
 										CryptoES.enc.Utf8
 								  )
 								: '',
-							birthdate: profile?.birthdate
-								? CryptoES.AES.decrypt(profile?.birthdate, key).toString(
-										CryptoES.enc.Utf8
-								  )
+							birthdate: profile?.profile_birthdate
+								? CryptoES.AES.decrypt(
+										profile?.profile_birthdate,
+										key
+								  ).toString(CryptoES.enc.Utf8)
 								: '',
-							description: profile?.description
-								? CryptoES.AES.decrypt(profile?.description, key).toString(
-										CryptoES.enc.Utf8
-								  )
+							description: profile?.profile_description
+								? CryptoES.AES.decrypt(
+										profile?.profile_description,
+										key
+								  ).toString(CryptoES.enc.Utf8)
 								: '',
-							gender: profile?.gender
-								? CryptoES.AES.decrypt(profile?.gender, key).toString(
+							gender: profile?.profile_gender
+								? CryptoES.AES.decrypt(profile?.profile_gender, key).toString(
 										CryptoES.enc.Utf8
 								  )
 								: '',
@@ -55,24 +57,24 @@ async function handleGetProfileById(key: string, id: number): Promise<Profile> {
 			.then(result => {
 				if (result) {
 					const decryptedData: Profile = {
-						id: result?.id,
-						name: result?.name
-							? CryptoES.AES.decrypt(result?.name, key).toString(
+						id: result?.profile_id,
+						name: result?.profile_name
+							? CryptoES.AES.decrypt(result?.profile_name, key).toString(
 									CryptoES.enc.Utf8
 							  )
 							: '',
-						birthdate: result?.birthdate
-							? CryptoES.AES.decrypt(result?.birthdate, key).toString(
+						birthdate: result?.profile_birthdate
+							? CryptoES.AES.decrypt(result?.profile_birthdate, key).toString(
 									CryptoES.enc.Utf8
 							  )
 							: '',
-						description: result?.description
-							? CryptoES.AES.decrypt(result?.description, key).toString(
+						description: result?.profile_description
+							? CryptoES.AES.decrypt(result?.profile_description, key).toString(
 									CryptoES.enc.Utf8
 							  )
 							: '',
-						gender: result?.gender
-							? CryptoES.AES.decrypt(result?.gender, key).toString(
+						gender: result?.profile_gender
+							? CryptoES.AES.decrypt(result?.profile_gender, key).toString(
 									CryptoES.enc.Utf8
 							  )
 							: '',

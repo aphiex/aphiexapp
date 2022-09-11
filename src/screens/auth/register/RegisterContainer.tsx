@@ -39,7 +39,10 @@ export function RegisterContainer({
 				const passwordFromService = await authService.savePassword(password);
 				if (passwordFromService) navigation.replace('Login');
 			} catch (error: any) {
-				Alert.alert(error.message, 'Reinicie o aplicativo e tente novamente.');
+				Alert.alert(
+					error?.message || error,
+					'Reinicie o aplicativo e tente novamente.'
+				);
 			}
 		} else setErrorConfirm('As senhas informadas não são iguais');
 	};

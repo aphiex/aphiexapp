@@ -1,4 +1,4 @@
-import { database } from './Database';
+import { database } from '../Database';
 
 export const createSettingsTable = async () => {
 	try {

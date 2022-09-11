@@ -1,7 +1,7 @@
-import { database } from './Database';
-import { Profile } from './Types';
+import { database } from '../Database';
+import { Profile, ProfileFromDB } from '../types';
 
-export async function getAllProfiles(): Promise<Profile[] | null> {
+export async function getAllProfiles(): Promise<ProfileFromDB[] | null> {
 	return new Promise(async (resolve, reject) => {
 		(await database).transaction(tx => {
 			tx.executeSql(
@@ -19,11 +19,13 @@ export async function getAllProfiles(): Promise<Profile[] | null> {
 	});
 }
 
-export async function getProfileById(id: number): Promise<Profile | null> {
+export async function getProfileById(
+	id: number
+): Promise<ProfileFromDB | null> {
 	return new Promise(async (resolve, reject) => {
 		(await database).transaction(tx => {
 			tx.executeSql(
-				'SELECT * FROM profile WHERE id = (?)',
+				'SELECT * FROM profile WHERE profile_id = (?)',
 				[id],
 				(txObj, { rows: { _array } }) => {
 					resolve(_array[0]);
@@ -43,7 +45,7 @@ export const createProfileTable = async () => {
 			tx.executeSql(
 				'CREATE TABLE IF NOT EXISTS ' +
 					'profile ' +
-					'(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, gender TEXT, birthdate TEXT);'
+					'(profile_id INTEGER PRIMARY KEY AUTOINCREMENT, profile_name TEXT, profile_description TEXT, profile_gender TEXT, profile_birthdate TEXT);'
 			);
 		});
 	} catch (error) {
@@ -55,7 +57,7 @@ export async function createProfile(profile: Profile) {
 	try {
 		(await database).transaction(tx => {
 			tx.executeSql(
-				`INSERT INTO profile (name, description, gender, birthdate) VALUES (?,?,?,?)`,
+				`INSERT INTO profile (profile_name, profile_description, profile_gender, profile_birthdate) VALUES (?,?,?,?)`,
 				[
 					profile?.name || '',
 					profile?.description || '',
@@ -73,7 +75,7 @@ export async function updateProfile(profile: Profile) {
 	try {
 		(await database).transaction(tx => {
 			tx.executeSql(
-				`UPDATE profile SET name = (?), description = (?), gender = (?), birthdate = (?) WHERE id = (?)`,
+				`UPDATE profile SET profile_name = (?), profile_description = (?), profile_gender = (?), profile_birthdate = (?) WHERE profile_id = (?)`,
 				[
 					profile?.name || '',
 					profile?.description || '',
@@ -92,7 +94,7 @@ export async function deleteProfile(id: number): Promise<boolean | null> {
 	return new Promise(async (resolve, reject) => {
 		(await database).transaction(tx => {
 			tx.executeSql(
-				'DELETE FROM profile WHERE id = (?)',
+				'DELETE FROM profile WHERE profile_id = (?)',
 				[id],
 				() => {
 					resolve(true);

@@ -1,7 +1,9 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
+import { Alert } from 'react-native';
 import { HeartPulse } from '../../assets/icons';
 import { FooterContainer, ScreenContainer } from '../../components';
+import { useProfile } from '../../context';
 import { RootStackParamList } from '../../routers/PrivateStack';
 import theme from '../../styles/theme';
 import { MenuView } from './MenuView';
@@ -9,6 +11,8 @@ import { MenuView } from './MenuView';
 export function MenuContainer({
 	navigation,
 }: NativeStackScreenProps<RootStackParamList, 'Menu'>) {
+	const { leaveProfile } = useProfile();
+
 	const handleGoToProfile = () => {
 		navigation.navigate('ProfileDetail');
 	};
@@ -29,6 +33,22 @@ export function MenuContainer({
 		navigation.navigate('Settings');
 	};
 
+	const handleLeaveProfile = () => {
+		Alert.alert('Sair do perfil', 'Deseja sair do perfil?', [
+			{
+				text: 'Cancelar',
+				onPress: () => {},
+				style: 'cancel',
+			},
+			{
+				text: 'Confirmar',
+				onPress: () => {
+					leaveProfile();
+				},
+			},
+		]);
+	};
+
 	return (
 		<>
 			<ScreenContainer hasFooter>
@@ -38,6 +58,7 @@ export function MenuContainer({
 					handleGoToExam={handleGoToExam}
 					handleGoToDoctor={handleGoToDoctor}
 					handleGoToSettings={handleGoToSettings}
+					handleLeaveProfile={handleLeaveProfile}
 				/>
 			</ScreenContainer>
 			<FooterContainer

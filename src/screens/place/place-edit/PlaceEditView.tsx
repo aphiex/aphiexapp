@@ -25,6 +25,7 @@ type TPlaceEdit = {
 	addressNumber: string;
 	state: string | null;
 	city: string | null;
+	cityError: string;
 	loading: boolean;
 	loadingCities: boolean;
 	openStateDropdown: boolean;
@@ -33,6 +34,7 @@ type TPlaceEdit = {
 	setOpenCityDropdown: React.Dispatch<React.SetStateAction<boolean>>;
 	setState: React.Dispatch<React.SetStateAction<string | null>>;
 	setCity: React.Dispatch<React.SetStateAction<string | null>>;
+	setCityError: React.Dispatch<React.SetStateAction<string>>;
 	citiesList: SelectItem[];
 	handleChangeName: (value: string) => void;
 	handleChangeFixedPhone: (value: string) => void;
@@ -70,6 +72,8 @@ export function PlaceEditView({
 	state,
 	setState,
 	citiesList,
+	cityError,
+	setCityError,
 }: TPlaceEdit) {
 	return (
 		<View style={styles.container}>
@@ -160,6 +164,7 @@ export function PlaceEditView({
 								setValue={setState}
 								label="Estado"
 								placeholder={'Selecionar estado'}
+								onChangeValue={() => setCity(null)}
 							/>
 						</View>
 					</View>
@@ -171,6 +176,8 @@ export function PlaceEditView({
 						setOpen={setOpenCityDropdown}
 						setValue={setCity}
 						label="Cidade"
+						error={cityError}
+						setError={setCityError}
 						placeholder={
 							!Boolean(state)
 								? 'Primeiro selecione um estado'

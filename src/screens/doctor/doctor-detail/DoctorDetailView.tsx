@@ -13,8 +13,6 @@ import { styles } from './styles';
 
 type TDoctorDetail = {
 	doctor?: Doctor;
-	city?: string;
-	state?: string;
 	handleDelete: () => void;
 	setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 	modalVisible: boolean;
@@ -23,8 +21,6 @@ type TDoctorDetail = {
 
 export function DoctorDetailView({
 	doctor,
-	city,
-	state,
 	handleDelete,
 	modalVisible,
 	setModalVisible,
@@ -67,22 +63,30 @@ export function DoctorDetailView({
 					>
 						<View>
 							<Text style={styles.title}>Telefone</Text>
-							<MaskedText
-								mask={doctor?.fixedPhone ? '(99) 9999-9999' : 'A'}
-								style={styles.content}
-							>
-								{doctor?.fixedPhone || '-'}
-							</MaskedText>
+							{doctor?.fixedPhone ? (
+								<MaskedText
+									mask={doctor?.fixedPhone ? '(99) 9999-9999' : 'A'}
+									style={styles.content}
+								>
+									{doctor?.fixedPhone}
+								</MaskedText>
+							) : (
+								<Text style={styles.content}>-</Text>
+							)}
 						</View>
 
 						<View>
 							<Text style={styles.title}>Celular</Text>
-							<MaskedText
-								mask={doctor?.mobilePhone ? '(99) 99999-9999' : 'A'}
-								style={styles.content}
-							>
-								{doctor?.mobilePhone || '-'}
-							</MaskedText>
+							{doctor?.mobilePhone ? (
+								<MaskedText
+									mask={doctor?.mobilePhone ? '(99) 99999-9999' : 'A'}
+									style={styles.content}
+								>
+									{doctor?.mobilePhone}
+								</MaskedText>
+							) : (
+								<Text style={styles.content}>-</Text>
+							)}
 						</View>
 					</View>
 
@@ -108,12 +112,12 @@ export function DoctorDetailView({
 
 					<View style={styles.contentContainer}>
 						<Text style={styles.title}>Cidade</Text>
-						<Text style={styles.content}>{city || '-'}</Text>
+						<Text style={styles.content}>{doctor?.city?.name || '-'}</Text>
 					</View>
 
 					<View style={styles.contentContainer}>
 						<Text style={styles.title}>Estado</Text>
-						<Text style={styles.content}>{state || '-'}</Text>
+						<Text style={styles.content}>{doctor?.city?.state || '-'}</Text>
 					</View>
 				</View>
 			</View>

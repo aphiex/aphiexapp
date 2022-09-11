@@ -27,6 +27,7 @@ type TDoctorEdit = {
 	addressNumber: string;
 	state: string | null;
 	city: string | null;
+	cityError: string;
 	loading: boolean;
 	loadingCities: boolean;
 	openStateDropdown: boolean;
@@ -35,6 +36,7 @@ type TDoctorEdit = {
 	setOpenCityDropdown: React.Dispatch<React.SetStateAction<boolean>>;
 	setState: React.Dispatch<React.SetStateAction<string | null>>;
 	setCity: React.Dispatch<React.SetStateAction<string | null>>;
+	setCityError: React.Dispatch<React.SetStateAction<string>>;
 	citiesList: SelectItem[];
 	handleChangeName: (value: string) => void;
 	handleChangeFixedPhone: (value: string) => void;
@@ -78,6 +80,8 @@ export function DoctorEditView({
 	state,
 	setState,
 	citiesList,
+	cityError,
+	setCityError,
 }: TDoctorEdit) {
 	return (
 		<View style={styles.container}>
@@ -181,6 +185,7 @@ export function DoctorEditView({
 								setValue={setState}
 								label="Estado"
 								placeholder={'Selecionar estado'}
+								onChangeValue={() => setCity(null)}
 							/>
 						</View>
 					</View>
@@ -191,6 +196,8 @@ export function DoctorEditView({
 						items={citiesList}
 						setOpen={setOpenCityDropdown}
 						setValue={setCity}
+						error={cityError}
+						setError={setCityError}
 						label="Cidade"
 						placeholder={
 							!Boolean(state)

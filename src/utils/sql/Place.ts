@@ -1,17 +1,17 @@
-import { database } from './Database';
-import { Place, PlaceFromBD } from './Types';
+import { database } from '../Database';
+import { Place, PlaceFromDB, PlaceCreate } from '../types';
 
-export async function getAllPlaces(): Promise<PlaceFromBD[] | null> {
+export async function getAllPlaces(): Promise<PlaceFromDB[] | null> {
 	return new Promise(async (resolve, reject) => {
 		(await database).transaction(tx => {
 			tx.executeSql(
-				'SELECT * FROM place',
+				'SELECT * FROM place LEFT JOIN city ON place.city_id = city.city_id',
 				[],
 				(txObj, { rows: { _array } }) => {
 					resolve(_array);
 				},
 				(txObj, error) => {
-					reject(null);
+					reject(error);
 					return false;
 				}
 			);
@@ -19,11 +19,11 @@ export async function getAllPlaces(): Promise<PlaceFromBD[] | null> {
 	});
 }
 
-export async function getPlaceById(id: number): Promise<PlaceFromBD | null> {
+export async function getPlaceById(id: number): Promise<PlaceFromDB | null> {
 	return new Promise(async (resolve, reject) => {
 		(await database).transaction(tx => {
 			tx.executeSql(
-				'SELECT * FROM place WHERE id = (?)',
+				'SELECT * FROM place LEFT JOIN city ON place.city_id = city.city_id WHERE place_id = (?)',
 				[id],
 				(txObj, { rows: { _array } }) => {
 					resolve(_array[0]);
@@ -43,7 +43,7 @@ export const createPlaceTable = async () => {
 			tx.executeSql(
 				'CREATE TABLE IF NOT EXISTS ' +
 					'place ' +
-					'(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, fixed_phone TEXT, mobile_phone TEXT, email TEXT, address TEXT, city_id INTEGER);'
+					'(place_id INTEGER PRIMARY KEY AUTOINCREMENT, place_name TEXT, place_fixed_phone TEXT, place_mobile_phone TEXT, place_email TEXT, place_address TEXT, city_id INTEGER, FOREIGN KEY(city_id) REFERENCES city(city_id));'
 			);
 		});
 	} catch (error) {
@@ -51,11 +51,11 @@ export const createPlaceTable = async () => {
 	}
 };
 
-export async function createPlace(place: Place) {
+export async function createPlace(place: PlaceCreate) {
 	try {
 		(await database).transaction(tx => {
 			tx.executeSql(
-				`INSERT INTO place (name, fixed_phone, mobile_phone, email, address, city_id) VALUES (?,?,?,?,?,?)`,
+				`INSERT INTO place (place_name, place_fixed_phone, place_mobile_phone, place_email, place_address, city_id) VALUES (?,?,?,?,?,?)`,
 				[
 					place?.name || '',
 					place?.fixedPhone || '',
@@ -75,14 +75,14 @@ export async function updatePlace(place: Place) {
 	try {
 		(await database).transaction(tx => {
 			tx.executeSql(
-				`UPDATE place SET name = (?), fixed_phone = (?), mobile_phone = (?), email = (?), address = (?), city_id = (?) WHERE id = (?)`,
+				`UPDATE place SET place_name = (?), place_fixed_phone = (?), place_mobile_phone = (?), place_email = (?), place_address = (?), city_id = (?) WHERE place_id = (?)`,
 				[
 					place?.name || '',
 					place?.fixedPhone || '',
 					place?.mobilePhone || '',
 					place?.email || '',
 					place?.address || '',
-					place?.cityId || '',
+					place?.city?.id || '',
 					place?.id || '',
 				]
 			);
@@ -96,7 +96,7 @@ export async function deletePlace(id: number): Promise<boolean | null> {
 	return new Promise(async (resolve, reject) => {
 		(await database).transaction(tx => {
 			tx.executeSql(
-				'DELETE FROM place WHERE id = (?)',
+				'DELETE FROM place WHERE place_id = (?)',
 				[id],
 				() => {
 					resolve(true);

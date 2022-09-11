@@ -13,8 +13,6 @@ import { styles } from './styles';
 
 type TPlaceDetail = {
 	place?: Place;
-	city?: string;
-	state?: string;
 	handleDelete: () => void;
 	setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 	modalVisible: boolean;
@@ -23,8 +21,6 @@ type TPlaceDetail = {
 
 export function PlaceDetailView({
 	place,
-	city,
-	state,
 	handleDelete,
 	modalVisible,
 	setModalVisible,
@@ -67,22 +63,30 @@ export function PlaceDetailView({
 					>
 						<View>
 							<Text style={styles.title}>Telefone</Text>
-							<MaskedText
-								mask={place?.fixedPhone ? '(99) 9999-9999' : 'A'}
-								style={styles.content}
-							>
-								{place?.fixedPhone || '-'}
-							</MaskedText>
+							{place?.fixedPhone ? (
+								<MaskedText
+									mask={place?.fixedPhone ? '(99) 9999-9999' : ''}
+									style={styles.content}
+								>
+									{place?.fixedPhone}
+								</MaskedText>
+							) : (
+								<Text style={styles.content}>-</Text>
+							)}
 						</View>
 
 						<View>
 							<Text style={styles.title}>Celular</Text>
-							<MaskedText
-								mask={place?.mobilePhone ? '(99) 99999-9999' : 'A'}
-								style={styles.content}
-							>
-								{place?.mobilePhone || '-'}
-							</MaskedText>
+							{place?.mobilePhone ? (
+								<MaskedText
+									mask={place?.mobilePhone ? '(99) 99999-9999' : ''}
+									style={styles.content}
+								>
+									{place?.mobilePhone}
+								</MaskedText>
+							) : (
+								<Text style={styles.content}>-</Text>
+							)}
 						</View>
 					</View>
 
@@ -98,12 +102,12 @@ export function PlaceDetailView({
 
 					<View style={styles.contentContainer}>
 						<Text style={styles.title}>Cidade</Text>
-						<Text style={styles.content}>{city || '-'}</Text>
+						<Text style={styles.content}>{place?.city?.name || '-'}</Text>
 					</View>
 
 					<View style={styles.contentContainer}>
 						<Text style={styles.title}>Estado</Text>
-						<Text style={styles.content}>{state || '-'}</Text>
+						<Text style={styles.content}>{place?.city?.state || '-'}</Text>
 					</View>
 				</View>
 			</View>
