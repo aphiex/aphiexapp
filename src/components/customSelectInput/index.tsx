@@ -64,6 +64,9 @@ export function CustomSelectInput({
 					color: theme.colors.softBlack,
 				}}
 				disabled={disabled}
+				searchable={true}
+				searchPlaceholder="Pesquisar"
+				listMode={items?.length > 30 ? 'MODAL' : 'SCROLLVIEW'}
 			/>
 
 			<Text style={styles.error}>{error}</Text>
