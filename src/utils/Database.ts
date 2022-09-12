@@ -3,8 +3,7 @@ import * as SQLite from 'expo-sqlite';
 import * as FileSystem from 'expo-file-system';
 
 export async function openDatabase(): Promise<SQLite.WebSQLDatabase> {
-	const database = SQLite.openDatabase('aphiexDB.db');
-	database.closeAsync();
+	if (await database) (await database).closeAsync();
 
 	if (
 		!(await FileSystem.getInfoAsync(FileSystem.documentDirectory + 'SQLite'))

@@ -64,7 +64,7 @@ export function CustomSelectInput({
 					color: theme.colors.softBlack,
 				}}
 				disabled={disabled}
-				searchable={true}
+				searchable={items?.length > 10}
 				searchPlaceholder="Pesquisar"
 				listMode={items?.length > 30 ? 'MODAL' : 'SCROLLVIEW'}
 			/>
