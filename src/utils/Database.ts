@@ -3,8 +3,6 @@ import * as SQLite from 'expo-sqlite';
 import * as FileSystem from 'expo-file-system';
 
 export async function openDatabase(): Promise<SQLite.WebSQLDatabase> {
-	if (await database) (await database).closeAsync();
-
 	if (
 		!(await FileSystem.getInfoAsync(FileSystem.documentDirectory + 'SQLite'))
 			.exists
@@ -12,11 +10,13 @@ export async function openDatabase(): Promise<SQLite.WebSQLDatabase> {
 		await FileSystem.makeDirectoryAsync(
 			FileSystem.documentDirectory + 'SQLite'
 		);
+
+		await FileSystem.downloadAsync(
+			Asset.fromModule(require('../assets/database/aphiexDB.db')).uri,
+			FileSystem.documentDirectory + 'SQLite/aphiexDB.db'
+		);
 	}
-	await FileSystem.downloadAsync(
-		Asset.fromModule(require('../assets/database/aphiexDB.db')).uri,
-		FileSystem.documentDirectory + 'SQLite/aphiexDB.db'
-	);
+
 	return SQLite.openDatabase('aphiexDB.db');
 }
 export const database = openDatabase();
