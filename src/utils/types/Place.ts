@@ -26,5 +26,4 @@ export interface PlaceFromDB extends CityFromDB {
 	place_mobile_phone?: string;
 	place_email?: string;
 	place_address?: string;
-	city_id?: number;
 }

@@ -1,1 +1,0 @@
-export { ExamContainer } from './ExamContainer';

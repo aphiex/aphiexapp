@@ -45,7 +45,11 @@ export const createProfileTable = async () => {
 			tx.executeSql(
 				'CREATE TABLE IF NOT EXISTS ' +
 					'profile ' +
-					'(profile_id INTEGER PRIMARY KEY AUTOINCREMENT, profile_name TEXT, profile_description TEXT, profile_gender TEXT, profile_birthdate TEXT);'
+					'(profile_id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
+					'profile_name TEXT, ' +
+					'profile_description TEXT, ' +
+					'profile_gender TEXT, ' +
+					'profile_birthdate TEXT);'
 			);
 		});
 	} catch (error) {
@@ -57,7 +61,12 @@ export async function createProfile(profile: Profile) {
 	try {
 		(await database).transaction(tx => {
 			tx.executeSql(
-				`INSERT INTO profile (profile_name, profile_description, profile_gender, profile_birthdate) VALUES (?,?,?,?)`,
+				'INSERT INTO profile (' +
+					'profile_name, ' +
+					'profile_description, ' +
+					'profile_gender, ' +
+					'profile_birthdate' +
+					') VALUES (?,?,?,?)',
 				[
 					profile?.name || '',
 					profile?.description || '',
@@ -75,7 +84,12 @@ export async function updateProfile(profile: Profile) {
 	try {
 		(await database).transaction(tx => {
 			tx.executeSql(
-				`UPDATE profile SET profile_name = (?), profile_description = (?), profile_gender = (?), profile_birthdate = (?) WHERE profile_id = (?)`,
+				'UPDATE profile SET ' +
+					'profile_name = (?), ' +
+					'profile_description = (?), ' +
+					'profile_gender = (?), ' +
+					'profile_birthdate = (?) ' +
+					'WHERE profile_id = (?)',
 				[
 					profile?.name || '',
 					profile?.description || '',

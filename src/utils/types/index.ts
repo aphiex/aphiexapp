@@ -3,3 +3,6 @@ export * from './Doctor';
 export * from './Profile';
 export * from './Place';
 export * from './GeneralTypes';
+export * from './Test';
+export * from './TestType';
+export * from './ReferenceValue';

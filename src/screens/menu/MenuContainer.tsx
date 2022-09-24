@@ -22,7 +22,7 @@ export function MenuContainer({
 	};
 
 	const handleGoToExam = () => {
-		navigation.navigate('Exam');
+		navigation.navigate('TestList');
 	};
 
 	const handleGoToDoctor = () => {

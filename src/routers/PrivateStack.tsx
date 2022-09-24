@@ -2,7 +2,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import {
 	MenuContainer,
-	ExamContainer,
 	SettingsContainer,
 	ProfileEditContainer,
 	ProfileDetailContainer,
@@ -14,6 +13,10 @@ import {
 	PlaceCreateContainer,
 	PlaceDetailContainer,
 	PlaceEditContainer,
+	TestListContainer,
+	TestCreateContainer,
+	TestDetailContainer,
+	TestEditContainer,
 } from '../screens';
 
 export type RootStackParamList = {
@@ -32,7 +35,11 @@ export type RootStackParamList = {
 	PlaceDetail: { placeId: number };
 	PlaceEdit: { placeId: number };
 
-	Exam: undefined;
+	TestList: undefined;
+	TestCreate: undefined;
+	TestDetail: { testId: number };
+	TestEdit: { testId: number };
+
 	Settings: undefined;
 };
 
@@ -60,7 +67,10 @@ export default function PrivateStack() {
 			<Stack.Screen name="PlaceDetail" component={PlaceDetailContainer} />
 			<Stack.Screen name="PlaceEdit" component={PlaceEditContainer} />
 
-			<Stack.Screen name="Exam" component={ExamContainer} />
+			<Stack.Screen name="TestList" component={TestListContainer} />
+			<Stack.Screen name="TestCreate" component={TestCreateContainer} />
+			<Stack.Screen name="TestDetail" component={TestDetailContainer} />
+			<Stack.Screen name="TestEdit" component={TestEditContainer} />
 			<Stack.Screen name="Settings" component={SettingsContainer} />
 		</Stack.Navigator>
 	);

@@ -1,5 +1,5 @@
 import { database } from '../Database';
-import { City, CityFromDB } from '../types';
+import { CityFromDB } from '../types';
 
 export async function getCitiesByState(
 	state: string
@@ -7,7 +7,9 @@ export async function getCitiesByState(
 	return new Promise(async (resolve, reject) => {
 		(await database).transaction(tx => {
 			tx.executeSql(
-				'SELECT * FROM city WHERE city_state = (?) ORDER BY city_name ASC',
+				'SELECT * FROM city ' +
+					'WHERE city_state = (?) ' +
+					'ORDER BY city_name ASC',
 				[state],
 				(txObj, { rows: { _array } }) => {
 					resolve(_array);
