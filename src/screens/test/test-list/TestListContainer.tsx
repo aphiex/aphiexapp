@@ -2,57 +2,58 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
 import { Plus } from '../../../assets/icons';
 import { FooterContainer, ScreenContainer } from '../../../components';
-import { useAuth } from '../../../context';
+import { useAuth, useProfile } from '../../../context';
 import { RootStackParamList } from '../../../routers/PrivateStack';
-import { placeService } from '../../../services';
+import { placeService, testService } from '../../../services';
 import theme from '../../../styles/theme';
-import { Place } from '../../../utils/Types';
+import { Test } from '../../../utils/Types';
 import { TestListView } from './TestListView';
 
 export function TestListContainer({
 	navigation,
 }: NativeStackScreenProps<RootStackParamList, any>) {
-	const [places, setPlaces] = useState<Place[]>();
+	const [tests, setTests] = useState<Test[]>();
 	const [loading, setLoading] = useState<boolean>(true);
 	const { auth } = useAuth();
+	const { currentProfile } = useProfile();
 
-	const selectPlace = (id?: number) => {
-		if (id) navigation.navigate('PlaceDetail', { placeId: id });
+	const selectTest = (id?: number) => {
+		if (id) navigation.navigate('TestDetail', { testId: id });
 	};
 
-	const goToCreatePlace = () => {
-		navigation.navigate('PlaceCreate');
+	const goToCreateTest = () => {
+		navigation.navigate('TestCreate');
 	};
 
 	const handleGoBack = () => {
 		navigation.navigate('Menu');
 	};
 
-	const getPlaces = async () => {
+	const getTests = async () => {
 		setLoading(true);
-		placeService
-			.handleGetPlaces(auth?.key || '')
+		testService
+			.handleGetTests(auth.key, currentProfile?.id)
 			.then(result => {
-				setPlaces(result);
+				setTests(result);
 			})
 			.catch(error => {
-				setPlaces([]);
+				setTests([]);
 			});
 		setLoading(false);
 	};
 
 	useEffect(() => {
-		getPlaces();
+		getTests();
 	}, []);
 
 	return (
 		<>
 			<ScreenContainer hasFooter>
 				<TestListView
-					places={places}
+					tests={tests}
 					loading={loading}
-					selectPlace={selectPlace}
-					goToCreatePlace={goToCreatePlace}
+					selectTest={selectTest}
+					goToCreateTest={goToCreateTest}
 				/>
 			</ScreenContainer>
 			{!loading && (
@@ -61,9 +62,9 @@ export function TestListContainer({
 					btnLeftVariant="secondary"
 					btnLeftOnPress={() => handleGoBack()}
 					btnLeftDisabled={loading}
-					btnRightTitle="Criar Local"
+					btnRightTitle="Adicionar"
 					btnRightVariant="primary"
-					btnRightOnPress={() => goToCreatePlace()}
+					btnRightOnPress={() => goToCreateTest()}
 					btnRightIcon={<Plus size={18} color={theme.colors.white} />}
 				/>
 			)}

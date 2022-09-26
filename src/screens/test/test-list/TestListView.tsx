@@ -1,54 +1,58 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { HospitalBuilding } from '../../../assets/icons';
+import { FolderPlus, HospitalBuilding, TestTube } from '../../../assets/icons';
 import { CustomButton, LoadingState, PageTitle } from '../../../components';
-import { Place } from '../../../utils/Types';
+import theme from '../../../styles/theme';
+import { dateMask, Test } from '../../../utils';
 import { styles } from './styles';
 
 type TTestListView = {
-	places: Place[] | undefined;
+	tests: Test[] | undefined;
 	loading: boolean;
-	selectPlace: (id?: number) => void;
-	goToCreatePlace: () => void;
+	selectTest: (id?: number) => void;
+	goToCreateTest: () => void;
 };
 
 export function TestListView({
 	loading,
-	places,
-	selectPlace,
-	goToCreatePlace,
+	tests,
+	selectTest,
+	goToCreateTest,
 }: TTestListView) {
 	return (
 		<View style={styles.container}>
-			<PageTitle title="Locais" icon={<HospitalBuilding />} />
+			<PageTitle title="Exames" icon={<FolderPlus />} />
 
 			{loading && <LoadingState />}
 
-			{!loading && (!places || places?.length === 0) && (
+			{!loading && (!tests || tests?.length === 0) && (
 				<View style={styles.button}>
 					<CustomButton
-						title="Cadastrar Local"
-						onPress={() => goToCreatePlace()}
+						title="Cadastrar Exame"
+						onPress={() => goToCreateTest()}
 					/>
 				</View>
 			)}
 
-			{!loading && places && places.length > 0 && (
+			{!loading && tests && tests.length > 0 && (
 				<View style={styles.listContainer}>
-					{places.map(place => (
+					{tests.map(test => (
 						<Pressable
-							key={place?.id}
+							key={test?.id}
 							style={styles.listItem}
-							onPress={() => selectPlace(place?.id)}
+							onPress={() => selectTest(test?.id)}
 						>
 							<View style={styles.icon}>
-								<Text style={styles.textIcon}>
-									{place?.name?.charAt(0).toUpperCase() || '?'}
-								</Text>
+								<TestTube color={theme.colors.white} size={25} />
 							</View>
 							<View style={styles.textContainer}>
 								<Text numberOfLines={1} style={styles.text}>
-									{place?.name || ''}
+									{test?.testType?.name || ''}
+								</Text>
+								<Text numberOfLines={1} style={styles.description}>
+									{`${test?.date ? dateMask(new Date(test?.date)) : ''}${
+										test?.image ? '  • Possui imagem' : ''
+									}`}
 								</Text>
 							</View>
 						</Pressable>

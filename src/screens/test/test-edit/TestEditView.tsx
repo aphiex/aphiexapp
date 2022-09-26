@@ -1,10 +1,12 @@
 import React from 'react';
 import { View } from 'react-native';
-import { HospitalBuilding } from '../../../assets/icons';
+import { FolderPlus, HospitalBuilding } from '../../../assets/icons';
 import {
+	CustomDateInput,
 	CustomInput,
 	CustomMaskInput,
 	CustomSelectInput,
+	InputAdornment,
 	LoadingModal,
 	LoadingState,
 	PageTitle,
@@ -13,177 +15,96 @@ import { SelectItem, STATES } from '../../../utils';
 import { styles } from './styles';
 
 type TTestEdit = {
-	name: string;
-	nameError: string;
-	fixedPhone: string;
-	fixedPhoneError: string;
-	mobilePhone: string;
-	mobilePhoneError: string;
-	email: string;
-	emailError: string;
-	address: string;
-	addressNumber: string;
-	state: string | null;
-	city: string | null;
-	cityError: string;
+	description: string;
+	value: string;
+	valueError: string;
 	loading: boolean;
-	loadingCities: boolean;
-	openStateDropdown: boolean;
-	setOpenStateDropdown: React.Dispatch<React.SetStateAction<boolean>>;
-	openCityDropdown: boolean;
-	setOpenCityDropdown: React.Dispatch<React.SetStateAction<boolean>>;
-	setState: React.Dispatch<React.SetStateAction<string | null>>;
-	setCity: React.Dispatch<React.SetStateAction<string | null>>;
-	setCityError: React.Dispatch<React.SetStateAction<string>>;
-	citiesList: SelectItem[];
-	handleChangeName: (value: string) => void;
-	handleChangeFixedPhone: (value: string) => void;
-	handleChangeMobilePhone: (value: string) => void;
-	handleChangeEmail: (value: string) => void;
-	handleChangeAddress: (value: string) => void;
-	handleChangeAddressNumber: (value: string) => void;
+	openTestTypeDropdown: boolean;
+	setOpenTestTypeDropdown: React.Dispatch<React.SetStateAction<boolean>>;
+	testType: string | null;
+	setTestType: React.Dispatch<React.SetStateAction<string | null>>;
+	testTypesList: SelectItem[];
+	testTypeError: string;
+	setTestTypeError: React.Dispatch<React.SetStateAction<string>>;
+	date: Date;
+	setDate: React.Dispatch<React.SetStateAction<Date>>;
+	measurementUnit: string;
+	handleChangeValue: (v: string) => void;
+	handleChangeDescription: (value: string) => void;
+	handleChangeMeasurementUnit: (testTypeId: string) => void;
 };
 
 export function TestEditView({
-	handleChangeName,
-	name,
-	nameError,
+	description,
+	value,
+	valueError,
 	loading,
-	loadingCities,
-	openCityDropdown,
-	openStateDropdown,
-	setOpenCityDropdown,
-	setOpenStateDropdown,
-	address,
-	addressNumber,
-	city,
-	email,
-	emailError,
-	fixedPhone,
-	fixedPhoneError,
-	handleChangeAddress,
-	handleChangeAddressNumber,
-	setCity,
-	handleChangeEmail,
-	handleChangeFixedPhone,
-	handleChangeMobilePhone,
-	mobilePhone,
-	mobilePhoneError,
-	state,
-	setState,
-	citiesList,
-	cityError,
-	setCityError,
+	openTestTypeDropdown,
+	setOpenTestTypeDropdown,
+	testType,
+	setTestType,
+	testTypesList,
+	testTypeError,
+	setTestTypeError,
+	handleChangeValue,
+	handleChangeDescription,
+	date,
+	setDate,
+	handleChangeMeasurementUnit,
+	measurementUnit,
 }: TTestEdit) {
 	return (
 		<View style={styles.container}>
-			<PageTitle title="Editar Local" icon={<HospitalBuilding />} />
+			<PageTitle title="Editar Exame" icon={<FolderPlus />} />
 
 			{loading && <LoadingState />}
 
-			{loadingCities && <LoadingModal />}
-
 			{!loading && (
 				<View style={styles.form}>
-					<CustomInput
-						label="Nome*"
-						value={name}
-						error={nameError}
-						onChangeText={(value: string) => handleChangeName(value)}
-						placeholder="Digite o nome"
-					/>
-
-					<View
-						style={{
-							display: 'flex',
-							flexDirection: 'row',
-							justifyContent: 'space-between',
-						}}
-					>
-						<View style={{ width: '48%' }}>
-							<CustomMaskInput
-								label="Telefone"
-								mask="(99) 9999-9999"
-								value={fixedPhone}
-								error={fixedPhoneError}
-								defaultValue={fixedPhone}
-								onChangeText={(text, rawText) =>
-									handleChangeFixedPhone(rawText)
-								}
-							/>
-						</View>
-						<View style={{ width: '48%' }}>
-							<CustomMaskInput
-								label="Celular"
-								mask="(99) 99999-9999"
-								value={mobilePhone}
-								defaultValue={mobilePhone}
-								error={mobilePhoneError}
-								onChangeText={(text, rawText) =>
-									handleChangeMobilePhone(rawText)
-								}
-							/>
-						</View>
-					</View>
-
-					<CustomInput
-						label="Email"
-						value={email}
-						error={emailError}
-						onChangeText={(value: string) => handleChangeEmail(value)}
-					/>
-
-					<CustomInput
-						label="Endereço"
-						value={address}
-						onChangeText={(value: string) => handleChangeAddress(value)}
-					/>
-
-					<View
-						style={{
-							display: 'flex',
-							flexDirection: 'row',
-							justifyContent: 'space-between',
-						}}
-					>
-						<View style={{ width: '48%' }}>
-							<CustomInput
-								label="Número"
-								value={addressNumber}
-								onChangeText={(value: string) =>
-									handleChangeAddressNumber(value)
-								}
-							/>
-						</View>
-						<View style={{ width: '48%' }}>
-							<CustomSelectInput
-								open={openStateDropdown}
-								value={state}
-								items={STATES}
-								setOpen={setOpenStateDropdown}
-								setValue={setState}
-								label="Estado"
-								placeholder={'Selecionar estado'}
-								onChangeValue={() => setCity(null)}
-							/>
-						</View>
-					</View>
-
 					<CustomSelectInput
-						open={openCityDropdown}
-						value={city}
-						items={citiesList}
-						setOpen={setOpenCityDropdown}
-						setValue={setCity}
-						label="Cidade"
-						error={cityError}
-						setError={setCityError}
-						placeholder={
-							!Boolean(state)
-								? 'Primeiro selecione um estado'
-								: 'Selecionar cidade'
-						}
-						disabled={!Boolean(state)}
+						open={openTestTypeDropdown}
+						value={testType}
+						items={testTypesList}
+						setOpen={setOpenTestTypeDropdown}
+						setValue={setTestType}
+						error={testTypeError}
+						setError={setTestTypeError}
+						label="Tipo de exame*"
+						placeholder={'Selecione um tipo de exame'}
+						onChangeValue={e => {
+							handleChangeMeasurementUnit(e);
+						}}
+					/>
+
+					<View
+						style={{
+							display: 'flex',
+							flexDirection: 'row',
+							justifyContent: 'space-between',
+						}}
+					>
+						<View style={{ width: '48%' }}>
+							<InputAdornment
+								label="Valor*"
+								value={value}
+								error={valueError}
+								keyboardType="decimal-pad"
+								editable={Boolean(testType)}
+								onChangeText={(v: string) => handleChangeValue(v)}
+								placeholder={
+									Boolean(testType) ? 'Digite o valor' : 'Selecione um exame'
+								}
+								adornment={measurementUnit || ''}
+							/>
+						</View>
+						<View style={{ width: '48%' }}>
+							<CustomDateInput value={date} setValue={setDate} label="Data" />
+						</View>
+					</View>
+					<CustomInput
+						label="Descrição"
+						value={description}
+						onChangeText={(value: string) => handleChangeDescription(value)}
 					/>
 				</View>
 			)}

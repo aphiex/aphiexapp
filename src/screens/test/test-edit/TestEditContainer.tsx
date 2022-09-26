@@ -3,101 +3,87 @@ import React, { useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 import { Restart } from '../../../assets/icons';
 import { FooterContainer, ScreenContainer } from '../../../components';
-import { useAuth } from '../../../context';
+import { useAuth, useProfile } from '../../../context';
 import { RootStackParamList } from '../../../routers/PrivateStack';
-import { cityService, placeService } from '../../../services';
+import { cityService, testService, testTypeService } from '../../../services';
 import theme from '../../../styles/theme';
-import { Place, SelectItem, validateEmail } from '../../../utils';
+import {
+	Test,
+	SelectItem,
+	validateEmail,
+	TestEdit,
+	fixDateTimezone,
+	TestType,
+} from '../../../utils';
 import { TestEditView } from './TestEditView';
 
 export function TestEditContainer({
 	navigation,
 	route,
-}: NativeStackScreenProps<RootStackParamList, 'PlaceEdit'>) {
-	const { placeId } = route.params;
-	const [place, setPlace] = useState<Place>();
+}: NativeStackScreenProps<RootStackParamList, 'TestEdit'>) {
+	const { testId } = route.params;
+	const [test, setTest] = useState<Test>();
 
-	const [name, setName] = useState<string>('');
-	const [nameError, setNameError] = useState<string>('');
+	const [description, setDescription] = useState<string>('');
 
-	const [fixedPhone, setFixedPhone] = useState<string>('');
-	const [fixedPhoneError, setFixedPhoneError] = useState<string>('');
+	const [value, setValue] = useState<string>('');
+	const [valueError, setValueError] = useState<string>('');
 
-	const [mobilePhone, setMobilePhone] = useState<string>('');
-	const [mobilePhoneError, setMobilePhoneError] = useState<string>('');
+	const today = fixDateTimezone(new Date());
+	const [date, setDate] = useState<Date>(today);
 
-	const [email, setEmail] = useState<string>('');
-	const [emailError, setEmailError] = useState<string>('');
+	const [testType, setTestType] = useState<string | null>(null);
+	const [testTypeError, setTestTypeError] = useState<string>('');
+	const [measurementUnit, setMeasurementUnit] = useState<string>('');
 
-	const [address, setAddress] = useState<string>('');
-
-	const [addressNumber, setAddressNumber] = useState<string>('');
-
-	const [state, setState] = useState<string | null>(null);
-
-	const [city, setCity] = useState<string | null>(null);
-	const [cityError, setCityError] = useState<string>('');
-
-	const [citiesList, setCitiesList] = useState<SelectItem[]>([]);
+	const [testTypesList, setTestTypesList] = useState<SelectItem[]>([]);
+	const [testTypes, setTestTypes] = useState<TestType[]>([]);
 
 	const [loading, setLoading] = useState<boolean>(false);
-	const [loadingCities, setLoadingCities] = useState<boolean>(false);
+	const [loadingTestTypes, setLoadingTestTypes] = useState<boolean>(false);
 
-	const [openStateDropdown, setOpenStateDropdown] = useState<boolean>(false);
-	const [openCityDropdown, setOpenCityDropdown] = useState<boolean>(false);
+	const [openTestTypeDropdown, setOpenTestTypeDropdown] =
+		useState<boolean>(false);
 
+	const { currentProfile } = useProfile();
 	const { auth } = useAuth();
 
-	const handleChangeName = (value: string) => {
-		setName(value);
-		if (nameError) setNameError('');
+	const handleChangeValue = (v: string) => {
+		let formatedValue = v.replace(/\s/g, '').replace(/\-/g, '');
+		if (formatedValue[0] === '.' || formatedValue[0] === ',')
+			formatedValue = '0' + formatedValue;
+		setValue(formatedValue);
+		if (valueError) setValueError('');
 	};
 
-	const handleChangeFixedPhone = (value: string) => {
-		setFixedPhone(value);
-		if (fixedPhoneError) setFixedPhoneError('');
+	const handleFixValue = (v: string) => {
+		if (v[v.length - 1] === '.' || v[v.length - 1] === ',') {
+			const newValue = v.substring(0, v.length - 1);
+			return newValue;
+		}
+		return v;
 	};
 
-	const handleChangeMobilePhone = (value: string) => {
-		setMobilePhone(value);
-		if (mobilePhoneError) setMobilePhoneError('');
+	const handleChangeMeasurementUnit = (testTypeId: string) => {
+		const currentTestType = testTypes?.find(
+			test => parseInt(testTypeId) === test.id
+		);
+		setValue('');
+		setMeasurementUnit(currentTestType?.measurementUnit || '');
 	};
 
-	const handleChangeEmail = (value: string) => {
-		setEmail(value);
-		if (emailError) setEmailError('');
-	};
-
-	const handleChangeAddress = (value: string) => {
-		setAddress(value);
-	};
-
-	const handleChangeAddressNumber = (value: string) => {
-		const onlyNumbers = value.replace(/[^0-9.]/g, '');
-		setAddressNumber(onlyNumbers);
+	const handleChangeDescription = (v: string) => {
+		setDescription(v);
 	};
 
 	const handleValidation = () => {
-		if (!name) {
-			setNameError('Informe um nome');
-			return false;
-		}
-		if (fixedPhone && fixedPhone.length < 10) {
-			setFixedPhoneError('Telefone inválido');
-			return false;
-		}
-		if (mobilePhone && mobilePhone.length < 11) {
-			setMobilePhoneError('Celular inválido');
+		if (!testType) {
+			setTestTypeError('Selecione um tipo de exame');
 			return false;
 		}
 
-		if (email && !validateEmail(email)) {
-			setEmailError('Email inválido');
-			return false;
-		}
-
-		if (state && !city) {
-			setCityError('Selecione uma cidade');
+		if (!value) {
+			setValueError('Informe um valor');
 			return false;
 		}
 
@@ -106,31 +92,21 @@ export function TestEditContainer({
 
 	const isFormDust = () => {
 		return Boolean(
-			name !== (place?.name ? place?.name : '') ||
-				fixedPhone !== (place?.fixedPhone ? place?.fixedPhone : '') ||
-				mobilePhone !== (place?.mobilePhone ? place?.mobilePhone : '') ||
-				email !== (place?.email ? place?.email : '') ||
-				address !== (place?.address ? place?.address?.split(', n° ')[0] : '') ||
-				addressNumber !==
-					(place?.address ? place?.address?.split(', n° ')[1] : '') ||
-				state !== (place?.city?.state ? place?.city?.state : null) ||
-				city !== (place?.city?.id ? place?.city?.id?.toString() : null)
+			value !== (test?.value ? test?.value : '') ||
+				date?.toString() !== (test?.date ? test?.date : '') ||
+				testType !== (test?.testType?.id ? test?.testType?.id : '') ||
+				description !== (test?.description ? test?.description : '')
 		);
 	};
 
 	const resetForm = () => {
-		setName(place?.name || '');
-		setNameError('');
-		setFixedPhone(place?.fixedPhone || '');
-		setFixedPhoneError('');
-		setMobilePhone(place?.mobilePhone || '');
-		setMobilePhoneError('');
-		setEmail(place?.email || '');
-		setEmailError('');
-		setAddress(place?.address?.split(', n° ')[0] || '');
-		setAddressNumber(place?.address?.split(', n° ')[1] || '');
-		setState(place?.city?.state || null);
-		setCity(place?.city?.id?.toString() || null);
+		setDescription(test?.description || '');
+		setValue(test?.value?.toString() || '');
+		setValueError('');
+		setDate(test?.date ? fixDateTimezone(new Date(test.date)) : today);
+		setTestType(test?.testType?.id?.toString() || null);
+		setTestTypeError('');
+		setMeasurementUnit(test?.testType?.measurementUnit || '');
 	};
 
 	const handleCancel = () => {
@@ -148,56 +124,56 @@ export function TestEditContainer({
 						text: 'Sim',
 						onPress: () => {
 							resetForm();
-							navigation.navigate('PlaceDetail', { placeId });
+							navigation.navigate('TestDetail', { testId });
 						},
 					},
 				]
 			);
-		} else navigation.navigate('PlaceDetail', { placeId });
+		} else navigation.navigate('TestDetail', { testId });
 	};
 
-	const handleGetCities = (state: string) => {
-		setLoadingCities(true);
+	const handleGetTestTypes = () => {
+		setLoadingTestTypes(true);
 		try {
-			cityService
-				.handleGetCitiesByState(state)
+			testTypeService
+				.handleGetTestTypes()
 				.then(result => {
-					const citieListFormat: SelectItem[] = [];
-					result.forEach(city => {
-						citieListFormat.push({
-							label: city?.name || '',
-							value: city?.id ? city.id.toString() : '',
+					setTestTypes(result);
+					const testTypesListFormat: SelectItem[] = [];
+					result.forEach(test => {
+						testTypesListFormat.push({
+							label: test?.name || '',
+							value: test?.id ? test.id.toString() : '',
 						});
 					});
-					setCitiesList(citieListFormat);
-					setLoadingCities(false);
+					setTestTypesList(testTypesListFormat);
+					setLoadingTestTypes(false);
 				})
 				.catch(error => {
 					Alert.alert(error?.message || error, 'Tente novamente.');
-					setLoadingCities(false);
+					setLoadingTestTypes(false);
 				});
 		} catch (error: any) {
 			Alert.alert(error?.message || error, 'Tente novamente.');
-			setLoadingCities(false);
+			setLoadingTestTypes(false);
 		}
 	};
 
-	const handleGetPlace = (id: number) => {
+	const handleGetTest = (id: number) => {
 		setLoading(true);
 		try {
 			if (id && auth?.key) {
-				placeService
-					.handleGetPlaceById(auth?.key, id)
+				testService
+					.handleGetTestById(id, auth?.key, currentProfile?.id)
 					.then(result => {
-						setPlace(result);
-						setName(result?.name || '');
-						setFixedPhone(result?.fixedPhone || '');
-						setMobilePhone(result?.mobilePhone || '');
-						setEmail(result?.email || '');
-						setAddress(result?.address?.split(', n° ')[0] || '');
-						setAddressNumber(result?.address?.split(', n° ')[1] || '');
-						setCity(result?.city?.id?.toString() || null);
-						setState(result?.city?.state || null);
+						setTest(result);
+						setDescription(result?.description || '');
+						setValue(result?.value?.toString() || '');
+						setDate(
+							result?.date ? fixDateTimezone(new Date(result.date)) : today
+						);
+						setTestType(result?.testType?.id?.toString() || null);
+						setMeasurementUnit(result?.testType?.measurementUnit || '');
 						setLoading(false);
 					})
 					.catch(error => {
@@ -223,29 +199,23 @@ export function TestEditContainer({
 		if (handleValidation()) {
 			setLoading(true);
 			try {
-				placeService
-					.handleUpdatePlace(
+				testService
+					.handleUpdateTest(
 						{
-							id: placeId,
-							name: name?.trim() || '',
-							address:
-								address && addressNumber
-									? `${address?.trim()}, n° ${addressNumber?.trim()}`
-									: address
-									? address?.trim()
-									: '',
-							city: {
-								id: city ? parseInt(city) : undefined,
-							},
-							email: email?.toLowerCase().trim() || '',
-							fixedPhone: fixedPhone || '',
-							mobilePhone: mobilePhone || '',
+							id: testId,
+							description: description?.trim() || '',
+							date: date?.toString() || '',
+							image: '',
+							condition: '',
+							profileId: currentProfile?.id,
+							testTypeId: testType ? parseInt(testType) : undefined,
+							value: value ? handleFixValue(value) : undefined,
 						},
 						auth?.key || ''
 					)
-					.then(() => {
-						Alert.alert('Local atualizado com sucesso!');
-						navigation.replace('PlaceDetail', { placeId });
+					.then(result => {
+						Alert.alert('Exame atualizado com sucesso!');
+						navigation.replace('TestDetail', { testId });
 					})
 					.catch(error => {
 						Alert.alert(
@@ -265,46 +235,33 @@ export function TestEditContainer({
 	};
 
 	useEffect(() => {
-		if (placeId) handleGetPlace(placeId);
-	}, [placeId]);
-
-	useEffect(() => {
-		if (state) handleGetCities(state);
-	}, [state]);
+		if (testId) {
+			handleGetTestTypes();
+			handleGetTest(testId);
+		}
+	}, [testId]);
 
 	return (
 		<>
 			<ScreenContainer hasFooter>
 				<TestEditView
-					handleChangeName={handleChangeName}
-					name={name}
-					nameError={nameError}
-					loading={loading}
-					loadingCities={loadingCities}
-					openStateDropdown={openStateDropdown}
-					setOpenStateDropdown={setOpenStateDropdown}
-					openCityDropdown={openCityDropdown}
-					setOpenCityDropdown={setOpenCityDropdown}
-					fixedPhone={fixedPhone}
-					fixedPhoneError={fixedPhoneError}
-					handleChangeFixedPhone={handleChangeFixedPhone}
-					mobilePhone={mobilePhone}
-					mobilePhoneError={mobilePhoneError}
-					handleChangeMobilePhone={handleChangeMobilePhone}
-					email={email}
-					emailError={emailError}
-					handleChangeEmail={handleChangeEmail}
-					address={address}
-					handleChangeAddress={handleChangeAddress}
-					addressNumber={addressNumber}
-					handleChangeAddressNumber={handleChangeAddressNumber}
-					state={state}
-					city={city}
-					setCity={setCity}
-					cityError={cityError}
-					setCityError={setCityError}
-					setState={setState}
-					citiesList={citiesList}
+					handleChangeValue={handleChangeValue}
+					handleChangeDescription={handleChangeDescription}
+					description={description}
+					value={value}
+					valueError={valueError}
+					loading={loading || loadingTestTypes}
+					openTestTypeDropdown={openTestTypeDropdown}
+					setOpenTestTypeDropdown={setOpenTestTypeDropdown}
+					testType={testType}
+					setTestType={setTestType}
+					testTypesList={testTypesList}
+					testTypeError={testTypeError}
+					setTestTypeError={setTestTypeError}
+					date={date}
+					setDate={setDate}
+					measurementUnit={measurementUnit}
+					handleChangeMeasurementUnit={handleChangeMeasurementUnit}
 				/>
 			</ScreenContainer>
 			<FooterContainer

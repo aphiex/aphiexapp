@@ -3,96 +3,80 @@ import React, { useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 import { Restart } from '../../../assets/icons';
 import { FooterContainer, ScreenContainer } from '../../../components';
-import { useAuth } from '../../../context';
-import { cityService, placeService } from '../../../services';
+import { useAuth, useProfile } from '../../../context';
+import { testService, testTypeService } from '../../../services';
 import theme from '../../../styles/theme';
-import { SelectItem, validateEmail } from '../../../utils';
+import {
+	fixDateTimezone,
+	SelectItem,
+	TestType,
+	validateEmail,
+} from '../../../utils';
 import { TestCreateView } from './TestCreateView';
 
 export function TestCreateContainer({
 	navigation,
 }: NativeStackScreenProps<any, any>) {
-	const [name, setName] = useState<string>('');
-	const [nameError, setNameError] = useState<string>('');
+	const [description, setDescription] = useState<string>('');
 
-	const [fixedPhone, setFixedPhone] = useState<string>('');
-	const [fixedPhoneError, setFixedPhoneError] = useState<string>('');
+	const [value, setValue] = useState<string>('');
+	const [valueError, setValueError] = useState<string>('');
 
-	const [mobilePhone, setMobilePhone] = useState<string>('');
-	const [mobilePhoneError, setMobilePhoneError] = useState<string>('');
+	const today = fixDateTimezone(new Date());
+	const [date, setDate] = useState<Date>(today);
 
-	const [email, setEmail] = useState<string>('');
-	const [emailError, setEmailError] = useState<string>('');
+	const [testType, setTestType] = useState<string | null>(null);
+	const [testTypeError, setTestTypeError] = useState<string>('');
+	const [measurementUnit, setMeasurementUnit] = useState<string>('');
 
-	const [address, setAddress] = useState<string>('');
-
-	const [addressNumber, setAddressNumber] = useState<string>('');
-
-	const [state, setState] = useState<string | null>(null);
-
-	const [city, setCity] = useState<string | null>(null);
-	const [cityError, setCityError] = useState<string>('');
-
-	const [citiesList, setCitiesList] = useState<SelectItem[]>([]);
+	const [testTypesList, setTestTypesList] = useState<SelectItem[]>([]);
+	const [testTypes, setTestTypes] = useState<TestType[]>([]);
 
 	const [loading, setLoading] = useState<boolean>(false);
-	const [loadingCities, setLoadingCities] = useState<boolean>(false);
+	const [loadingTestTypes, setLoadingTestTypes] = useState<boolean>(false);
 
-	const [openStateDropdown, setOpenStateDropdown] = useState<boolean>(false);
-	const [openCityDropdown, setOpenCityDropdown] = useState<boolean>(false);
+	const [openTestTypeDropdown, setOpenTestTypeDropdown] =
+		useState<boolean>(false);
 
+	const { currentProfile } = useProfile();
 	const { auth } = useAuth();
 
-	const handleChangeName = (value: string) => {
-		setName(value);
-		if (nameError) setNameError('');
+	const handleChangeValue = (v: string) => {
+		let formatedValue = v.replace(/\s/g, '').replace(/\-/g, '');
+		if (formatedValue[0] === '.' || formatedValue[0] === ',')
+			formatedValue = '0' + formatedValue;
+		setValue(formatedValue);
+		if (valueError) setValueError('');
 	};
 
-	const handleChangeFixedPhone = (value: string) => {
-		setFixedPhone(value);
-		if (fixedPhoneError) setFixedPhoneError('');
+	const handleFixValue = (v: string) => {
+		if (v[v.length - 1] === '.' || v[v.length - 1] === ',') {
+			const newValue = v.substring(0, v.length - 1);
+			return newValue;
+		}
+		return v;
 	};
 
-	const handleChangeMobilePhone = (value: string) => {
-		setMobilePhone(value);
-		if (mobilePhoneError) setMobilePhoneError('');
+	const handleChangeMeasurementUnit = (testTypeId: string) => {
+		const currentTestType = testTypes?.find(
+			test => parseInt(testTypeId) === test.id
+		);
+		setValue('');
+		setMeasurementUnit(currentTestType?.measurementUnit || '');
 	};
 
-	const handleChangeEmail = (value: string) => {
-		setEmail(value);
-		if (emailError) setEmailError('');
-	};
-
-	const handleChangeAddress = (value: string) => {
-		setAddress(value);
-	};
-
-	const handleChangeAddressNumber = (value: string) => {
-		const onlyNumbers = value.replace(/[^0-9.]/g, '');
-		setAddressNumber(onlyNumbers);
+	const handleChangeDescription = (v: string) => {
+		setDescription(v);
 	};
 
 	const handleValidation = () => {
-		if (!name) {
-			setNameError('Informe um nome');
-			return false;
-		}
-		if (fixedPhone && fixedPhone.length < 10) {
-			setFixedPhoneError('Telefone inválido');
-			return false;
-		}
-		if (mobilePhone && mobilePhone.length < 11) {
-			setMobilePhoneError('Celular inválido');
+		if (!testType) {
+			setTestTypeError('Selecione um tipo de exame');
 			return false;
 		}
 
-		if (email && !validateEmail(email)) {
-			setEmailError('Email inválido');
-			return false;
-		}
-
-		if (state && !city) {
-			setCityError('Selecione uma cidade');
+		if (!value) {
+			setValueError('Informe um valor');
 			return false;
 		}
 
@@ -100,31 +84,17 @@ export function TestCreateContainer({
 	};
 
 	const isFormDust = () => {
-		return Boolean(
-			name ||
-				fixedPhone ||
-				mobilePhone ||
-				email ||
-				address ||
-				addressNumber ||
-				state ||
-				city
-		);
+		return Boolean(value || today !== date || testType || description);
 	};
 
 	const clearForm = () => {
-		setName('');
-		setNameError('');
-		setFixedPhone('');
-		setFixedPhoneError('');
-		setMobilePhone('');
-		setMobilePhoneError('');
-		setEmail('');
-		setEmailError('');
-		setAddress('');
-		setAddressNumber('');
-		setState('');
-		setCity('');
+		setDescription('');
+		setValue('');
+		setValueError('');
+		setDate(today);
+		setTestType(null);
+		setTestTypeError('');
+		setMeasurementUnit('');
 	};
 
 	const handleCancel = () => {
@@ -142,37 +112,38 @@ export function TestCreateContainer({
 						text: 'Sim',
 						onPress: () => {
 							clearForm();
-							navigation.navigate('PlaceList');
+							navigation.navigate('TestList');
 						},
 					},
 				]
 			);
-		} else navigation.navigate('PlaceList');
+		} else navigation.navigate('TestList');
 	};
 
-	const handleGetCities = (state: string) => {
-		setLoadingCities(true);
+	const handleGetTestTypes = () => {
+		setLoadingTestTypes(true);
 		try {
-			cityService
-				.handleGetCitiesByState(state)
+			testTypeService
+				.handleGetTestTypes()
 				.then(result => {
-					const citieListFormat: SelectItem[] = [];
-					result.forEach(city => {
-						citieListFormat.push({
-							label: city?.name || '',
-							value: city?.id ? city.id.toString() : '',
+					setTestTypes(result);
+					const testTypesListFormat: SelectItem[] = [];
+					result.forEach(test => {
+						testTypesListFormat.push({
+							label: test?.name || '',
+							value: test?.id ? test.id.toString() : '',
 						});
 					});
-					setCitiesList(citieListFormat);
-					setLoadingCities(false);
+					setTestTypesList(testTypesListFormat);
+					setLoadingTestTypes(false);
 				})
 				.catch(error => {
 					Alert.alert(error?.message || error, 'Tente novamente.');
-					setLoadingCities(false);
+					setLoadingTestTypes(false);
 				});
 		} catch (error: any) {
 			Alert.alert(error?.message || error, 'Tente novamente.');
-			setLoadingCities(false);
+			setLoadingTestTypes(false);
 		}
 	};
 
@@ -180,25 +151,20 @@ export function TestCreateContainer({
 		if (handleValidation()) {
 			setLoading(true);
 			try {
-				placeService
-					.handleCreatePlace(
+				testService
+					.handleCreateTest(
 						{
-							name: name?.trim() || '',
-							address:
-								address && addressNumber
-									? `${address?.trim()}, n° ${addressNumber?.trim()}`
-									: address
-									? address?.trim()
-									: '',
-							cityId: city ? parseInt(city) : undefined,
-							email: email?.toLowerCase().trim() || '',
-							fixedPhone: fixedPhone || '',
-							mobilePhone: mobilePhone || '',
+							description: description?.trim() || '',
+							date: date?.toString() || '',
+							image: '',
+							profileId: currentProfile?.id,
+							testTypeId: testType ? parseInt(testType) : undefined,
+							value: value ? handleFixValue(value) : undefined,
 						},
-						auth?.key || ''
+						auth.key
 					)
 					.then(() => {
-						navigation.replace('PlaceList');
+						navigation.replace('TestList');
 					})
 					.catch(error => {
 						Alert.alert(
@@ -218,42 +184,30 @@ export function TestCreateContainer({
 	};
 
 	useEffect(() => {
-		if (state) handleGetCities(state);
-	}, [state]);
+		handleGetTestTypes();
+	}, []);
 
 	return (
 		<>
 			<ScreenContainer hasFooter>
 				<TestCreateView
-					handleChangeName={handleChangeName}
-					name={name}
-					nameError={nameError}
-					loading={loading}
-					loadingCities={loadingCities}
-					openStateDropdown={openStateDropdown}
-					setOpenStateDropdown={setOpenStateDropdown}
-					openCityDropdown={openCityDropdown}
-					setOpenCityDropdown={setOpenCityDropdown}
-					fixedPhone={fixedPhone}
-					fixedPhoneError={fixedPhoneError}
-					handleChangeFixedPhone={handleChangeFixedPhone}
-					mobilePhone={mobilePhone}
-					mobilePhoneError={mobilePhoneError}
-					handleChangeMobilePhone={handleChangeMobilePhone}
-					email={email}
-					emailError={emailError}
-					handleChangeEmail={handleChangeEmail}
-					address={address}
-					handleChangeAddress={handleChangeAddress}
-					addressNumber={addressNumber}
-					handleChangeAddressNumber={handleChangeAddressNumber}
-					state={state}
-					city={city}
-					setCity={setCity}
-					setState={setState}
-					citiesList={citiesList}
-					cityError={cityError}
-					setCityError={setCityError}
+					handleChangeValue={handleChangeValue}
+					handleChangeDescription={handleChangeDescription}
+					description={description}
+					value={value}
+					valueError={valueError}
+					loading={loading || loadingTestTypes}
+					openTestTypeDropdown={openTestTypeDropdown}
+					setOpenTestTypeDropdown={setOpenTestTypeDropdown}
+					testType={testType}
+					setTestType={setTestType}
+					testTypesList={testTypesList}
+					testTypeError={testTypeError}
+					setTestTypeError={setTestTypeError}
+					date={date}
+					setDate={setDate}
+					measurementUnit={measurementUnit}
+					handleChangeMeasurementUnit={handleChangeMeasurementUnit}
 				/>
 			</ScreenContainer>
 			<FooterContainer

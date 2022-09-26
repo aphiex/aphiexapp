@@ -61,7 +61,7 @@ export function PlaceListContainer({
 					btnLeftVariant="secondary"
 					btnLeftOnPress={() => handleGoBack()}
 					btnLeftDisabled={loading}
-					btnRightTitle="Criar Local"
+					btnRightTitle="Adicionar"
 					btnRightVariant="primary"
 					btnRightOnPress={() => goToCreatePlace()}
 					btnRightIcon={<Plus size={18} color={theme.colors.white} />}

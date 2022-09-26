@@ -3,3 +3,5 @@ export * from './Doctor';
 export * from './Profile';
 export * from './Place';
 export * from './Auth';
+export * from './Test';
+export * from './TestType';

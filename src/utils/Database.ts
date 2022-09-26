@@ -19,4 +19,5 @@ export async function openDatabase(): Promise<SQLite.WebSQLDatabase> {
 
 	return SQLite.openDatabase('aphiexDB.db');
 }
+
 export const database = openDatabase();

@@ -1,6 +1,6 @@
 export type TestType = {
 	id?: number;
-	name?: number;
+	name?: string;
 	measurementUnit?: string;
 };
 

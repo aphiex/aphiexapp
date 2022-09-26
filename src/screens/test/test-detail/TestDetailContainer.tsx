@@ -3,39 +3,40 @@ import React, { useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 import { AccountEdit } from '../../../assets/icons';
 import { FooterContainer, ScreenContainer } from '../../../components';
-import { useAuth } from '../../../context';
+import { useAuth, useProfile } from '../../../context';
 import { RootStackParamList } from '../../../routers/PrivateStack';
-import { cityService, placeService } from '../../../services';
+import { cityService, testService } from '../../../services';
 import theme from '../../../styles/theme';
-import { Place } from '../../../utils';
+import { Test } from '../../../utils';
 import { TestDetailView } from './TestDetailView';
 
 export function TestDetailContainer({
 	navigation,
 	route,
-}: NativeStackScreenProps<RootStackParamList, 'PlaceDetail'>) {
+}: NativeStackScreenProps<RootStackParamList, 'TestDetail'>) {
 	const { auth } = useAuth();
-	const { placeId } = route.params;
-	const [place, setPlace] = useState<Place>();
+	const { currentProfile } = useProfile();
+	const { testId } = route.params;
+	const [test, setTest] = useState<Test>();
 	const [modalVisible, setModalVisible] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(false);
 
 	const handleGoBack = () => {
-		navigation.navigate('PlaceList');
+		navigation.navigate('TestList');
 	};
 
 	const handleEdit = () => {
-		navigation.navigate('PlaceEdit', { placeId: placeId });
+		navigation.navigate('TestEdit', { testId: testId });
 	};
 
-	const handleGetPlace = (id: number) => {
+	const handleGetTest = (id: number) => {
 		setLoading(true);
 		try {
 			if (id && auth?.key) {
-				placeService
-					.handleGetPlaceById(auth?.key, id)
+				testService
+					.handleGetTestById(id, auth?.key, currentProfile?.id)
 					.then(result => {
-						setPlace(result);
+						setTest(result);
 						setLoading(false);
 					})
 					.catch(error => {
@@ -58,14 +59,14 @@ export function TestDetailContainer({
 	};
 
 	const handleDelete = () => {
-		if (placeId) {
+		if (testId) {
 			setLoading(true);
 			try {
-				placeService
-					.handleDeletePlace(placeId)
+				testService
+					.handleDeleteTest(testId)
 					.then(() => {
-						Alert.alert('Local deletado com sucesso!');
-						navigation.replace('PlaceList');
+						Alert.alert('Exame deletado com sucesso!');
+						navigation.replace('TestList');
 					})
 					.catch(error => {
 						Alert.alert(
@@ -85,14 +86,14 @@ export function TestDetailContainer({
 	};
 
 	useEffect(() => {
-		if (placeId) handleGetPlace(placeId);
-	}, [placeId]);
+		if (testId) handleGetTest(testId);
+	}, [testId]);
 
 	return (
 		<>
 			<ScreenContainer hasFooter>
 				<TestDetailView
-					place={place}
+					test={test}
 					handleDelete={handleDelete}
 					modalVisible={modalVisible}
 					setModalVisible={setModalVisible}

@@ -61,7 +61,7 @@ export function DoctorListContainer({
 					btnLeftVariant="secondary"
 					btnLeftOnPress={() => handleGoBack()}
 					btnLeftDisabled={loading}
-					btnRightTitle="Criar Médico"
+					btnRightTitle="Adicionar"
 					btnRightVariant="primary"
 					btnRightOnPress={() => goToCreateDoctor()}
 					btnRightIcon={<Plus size={18} color={theme.colors.white} />}

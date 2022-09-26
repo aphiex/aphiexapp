@@ -1,14 +1,17 @@
 import { database } from '../Database';
-import { Test, TestCreate, TestFromDB } from '../types';
+import { Test, TestCreate, TestEdit, TestFromDB } from '../types';
 
-export async function getAllTests(): Promise<TestFromDB[] | null> {
+export async function getAllTests(
+	profileId: number
+): Promise<TestFromDB[] | null> {
 	return new Promise(async (resolve, reject) => {
 		(await database).transaction(tx => {
 			tx.executeSql(
 				'SELECT * FROM test ' +
 					'LEFT JOIN test_type ' +
-					'ON test.test_type_id = test_type.test_type_id',
-				[],
+					'ON test.test_type_id = test_type.test_type_id ' +
+					'WHERE profile_id = (?)',
+				[profileId],
 				(txObj, { rows: { _array } }) => {
 					resolve(_array);
 				},
@@ -21,15 +24,19 @@ export async function getAllTests(): Promise<TestFromDB[] | null> {
 	});
 }
 
-export async function getTestById(id: number): Promise<TestFromDB | null> {
+export async function getTestById(
+	id: number,
+	profileId: number
+): Promise<TestFromDB | null> {
 	return new Promise(async (resolve, reject) => {
 		(await database).transaction(tx => {
 			tx.executeSql(
 				'SELECT * FROM test ' +
 					'LEFT JOIN test_type ' +
 					'ON test.test_type_id = test_type.test_type_id ' +
-					'WHERE test_id = (?)',
-				[id],
+					'WHERE test_id = (?) ' +
+					'AND profile_id = (?)',
+				[id, profileId],
 				(txObj, { rows: { _array } }) => {
 					resolve(_array[0]);
 				},
@@ -53,6 +60,7 @@ export const createTestTable = async () => {
 					'test_date TEXT, ' +
 					'test_description TEXT, ' +
 					'test_image TEXT, ' +
+					'test_condition TEXT, ' +
 					'profile_id INTEGER, ' +
 					'test_type_id INTEGER, ' +
 					'FOREIGN KEY(profile_id) REFERENCES profile(profile_id), ' +
@@ -73,14 +81,16 @@ export async function createTest(test: TestCreate) {
 					'test_date, ' +
 					'test_description, ' +
 					'test_image, ' +
+					'test_condition, ' +
 					'profile_id, ' +
 					'test_type_id' +
-					') VALUES (?,?,?,?,?,?)',
+					') VALUES (?,?,?,?,?,?,?)',
 				[
 					test?.value || '',
 					test?.date || '',
 					test?.description || '',
 					test?.image || '',
+					test?.condition || '',
 					test?.profileId || '',
 					test?.testTypeId || '',
 				]
@@ -91,7 +101,7 @@ export async function createTest(test: TestCreate) {
 	}
 }
 
-export async function updateTest(test: Test) {
+export async function updateTest(test: TestEdit) {
 	try {
 		(await database).transaction(tx => {
 			tx.executeSql(
@@ -100,16 +110,18 @@ export async function updateTest(test: Test) {
 					'test_date = (?), ' +
 					'test_description = (?), ' +
 					'test_image = (?), ' +
+					'test_condition = (?), ' +
 					'profile_id = (?), ' +
-					'test_type_id = (?) ' +
+					'test_type_id = (?)' +
 					'WHERE test_id = (?)',
 				[
 					test?.value || '',
 					test?.date || '',
 					test?.description || '',
 					test?.image || '',
+					test?.condition || '',
 					test?.profileId || '',
-					test?.testType?.id || '',
+					test?.testTypeId || '',
 					test?.id || '',
 				]
 			);

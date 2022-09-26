@@ -22,3 +22,4 @@ export * from './TrashCan';
 export * from './LogoutVariant';
 export * from './NotePlusOutline';
 export * from './NoteEditOutline';
+export * from './TestTube';

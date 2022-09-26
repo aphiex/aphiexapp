@@ -18,7 +18,7 @@ type TCustomSelectInput = {
 	setValue: React.Dispatch<React.SetStateAction<string | null>>;
 	placeholder?: string;
 	disabled?: boolean;
-	onChangeValue?: () => void;
+	onChangeValue?: (e?: any) => void;
 };
 
 export function CustomSelectInput({
@@ -54,9 +54,9 @@ export function CustomSelectInput({
 				placeholderStyle={{
 					color: theme.colors.grey,
 				}}
-				onChangeValue={() => {
+				onChangeValue={e => {
 					if (setError) setError('');
-					if (onChangeValue) onChangeValue();
+					if (onChangeValue) onChangeValue(e);
 				}}
 				dropDownDirection="AUTO"
 				style={[styles.input, { borderColor: handleSetColor() }]}

@@ -1,18 +1,18 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { MaskedText } from 'react-native-mask-text';
-import { HospitalBuilding, TrashCan } from '../../../assets/icons';
+import { FolderPlus, HospitalBuilding, TrashCan } from '../../../assets/icons';
 import {
 	IconButton,
 	PageTitle,
 	PasswordRequestModalContainer,
 } from '../../../components';
 import theme from '../../../styles/theme';
-import { Place } from '../../../utils';
+import { dateMask, Test } from '../../../utils';
 import { styles } from './styles';
 
 type TTestDetail = {
-	place?: Place;
+	test?: Test;
 	handleDelete: () => void;
 	setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 	modalVisible: boolean;
@@ -20,7 +20,7 @@ type TTestDetail = {
 };
 
 export function TestDetailView({
-	place,
+	test,
 	handleDelete,
 	modalVisible,
 	setModalVisible,
@@ -29,8 +29,8 @@ export function TestDetailView({
 	return (
 		<>
 			<PasswordRequestModalContainer
-				title={place?.name || 'Deletar Local'}
-				text="Deseja apagar este local? Essa é uma ação irreversível. Para prosseguir informe sua senha."
+				title={test?.testType?.name || 'Deletar Exame'}
+				text="Deseja apagar este exame? Essa é uma ação irreversível. Para prosseguir informe sua senha."
 				modalVisible={modalVisible}
 				setModalVisible={setModalVisible}
 				onConfirm={handleDelete}
@@ -45,12 +45,12 @@ export function TestDetailView({
 				/>
 			</View>
 			<View style={styles.container}>
-				<PageTitle title="Visualizar Local" icon={<HospitalBuilding />} />
+				<PageTitle title="Visualizar Exame" icon={<FolderPlus />} />
 
 				<View style={styles.form}>
 					<View style={styles.contentContainer}>
 						<Text style={styles.title}>Nome</Text>
-						<Text style={styles.content}>{place?.name || '-'}</Text>
+						<Text style={styles.content}>{test?.testType.name || '-'}</Text>
 					</View>
 
 					<View
@@ -62,28 +62,28 @@ export function TestDetailView({
 						}}
 					>
 						<View>
-							<Text style={styles.title}>Telefone</Text>
-							{place?.fixedPhone ? (
-								<MaskedText
-									mask={place?.fixedPhone ? '(99) 9999-9999' : ''}
-									style={styles.content}
-								>
-									{place?.fixedPhone}
-								</MaskedText>
+							<Text style={styles.title}>Resultado</Text>
+							{test?.value ? (
+								<Text style={styles.content}>
+									{test?.value
+										? `${test?.value}${
+												test.testType.measurementUnit
+													? ` ${test.testType.measurementUnit}`
+													: ''
+										  }`
+										: '-'}
+								</Text>
 							) : (
 								<Text style={styles.content}>-</Text>
 							)}
 						</View>
 
 						<View>
-							<Text style={styles.title}>Celular</Text>
-							{place?.mobilePhone ? (
-								<MaskedText
-									mask={place?.mobilePhone ? '(99) 99999-9999' : ''}
-									style={styles.content}
-								>
-									{place?.mobilePhone}
-								</MaskedText>
+							<Text style={styles.title}>Data</Text>
+							{test?.date ? (
+								<Text style={styles.content}>
+									{dateMask(new Date(test?.date))}
+								</Text>
 							) : (
 								<Text style={styles.content}>-</Text>
 							)}
@@ -91,23 +91,23 @@ export function TestDetailView({
 					</View>
 
 					<View style={styles.contentContainer}>
-						<Text style={styles.title}>Email</Text>
-						<Text style={styles.content}>{place?.email || '-'}</Text>
+						<Text style={styles.title}>Descrição</Text>
+						<Text style={styles.content}>{test?.description || '-'}</Text>
 					</View>
 
 					<View style={styles.contentContainer}>
-						<Text style={styles.title}>Endereço</Text>
-						<Text style={styles.content}>{place?.address || '-'}</Text>
+						<Text style={styles.title}>Histórico de Resultados</Text>
+						<Text style={styles.content}>{'-'}</Text>
 					</View>
 
 					<View style={styles.contentContainer}>
-						<Text style={styles.title}>Cidade</Text>
-						<Text style={styles.content}>{place?.city?.name || '-'}</Text>
+						<Text style={styles.title}>Valores de Referência</Text>
+						<Text style={styles.content}>{'-'}</Text>
 					</View>
 
 					<View style={styles.contentContainer}>
-						<Text style={styles.title}>Estado</Text>
-						<Text style={styles.content}>{place?.city?.state || '-'}</Text>
+						<Text style={styles.title}>Anexos</Text>
+						<Text style={styles.content}>{'-'}</Text>
 					</View>
 				</View>
 			</View>
