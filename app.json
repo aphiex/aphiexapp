@@ -1,0 +1,32 @@
+{
+	"expo": {
+		"name": "Aphiex",
+		"slug": "Aphiex",
+		"version": "1.0.0",
+		"orientation": "portrait",
+		"icon": "./src/assets/images/icon.png",
+		"userInterfaceStyle": "light",
+		"splash": {
+			"image": "./src/assets/images/splash.png",
+			"resizeMode": "cover",
+			"backgroundColor": "#00BCD4"
+		},
+		"updates": {
+			"fallbackToCacheTimeout": 0
+		},
+		"assetBundlePatterns": ["**/*"],
+		"ios": {
+			"supportsTablet": true
+		},
+		"android": {
+			"package": "com.danielmpadua.aphiex",
+			"adaptiveIcon": {
+				"foregroundImage": "./src/assets/images/adaptive-icon.png",
+				"backgroundColor": "#00BCD4"
+			}
+		},
+		"web": {
+			"favicon": "./src/assets/images/favicon.png"
+		}
+	}
+}
