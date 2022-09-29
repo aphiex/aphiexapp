@@ -5,7 +5,7 @@ export const styles = StyleSheet.create({
 	container: {
 		alignItems: 'center',
 		justifyContent: 'center',
-		paddingHorizontal: 20,
+		// paddingHorizontal: 20,
 	},
 	form: {
 		marginTop: 50,
@@ -15,10 +15,53 @@ export const styles = StyleSheet.create({
 		fontFamily: theme.fonts.regular400,
 		fontSize: 24,
 		color: theme.colors.primary,
+		paddingHorizontal: 38,
 	},
 	content: {
 		fontFamily: theme.fonts.regular400,
 		fontSize: 19,
+		color: theme.colors.black,
+		paddingHorizontal: 38,
+	},
+	legendContainer: {
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-between',
+		paddingHorizontal: '4%',
+	},
+	legendContent: {
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+	},
+	blueCircle: {
+		width: 10,
+		height: 10,
+		backgroundColor: theme.colors.primary,
+		borderRadius: 100,
+		marginRight: 4,
+	},
+	redCircle: {
+		width: 10,
+		height: 10,
+		backgroundColor: theme.colors.red,
+		borderRadius: 100,
+		marginRight: 4,
+	},
+	measurement: {
+		fontFamily: theme.fonts.regular400,
+		fontSize: 14,
+		color: theme.colors.primary,
+	},
+	measurementValue: {
+		fontFamily: theme.fonts.regular400,
+		fontSize: 12,
+		color: theme.colors.black,
+	},
+	legend: {
+		fontFamily: theme.fonts.regular400,
+		fontSize: 14,
 		color: theme.colors.black,
 	},
 	desciption: {

@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { MaskedText } from 'react-native-mask-text';
-import { FolderPlus, HospitalBuilding, TrashCan } from '../../../assets/icons';
+import { FolderPlus, TrashCan } from '../../../assets/icons';
 import {
 	IconButton,
 	PageTitle,
@@ -9,6 +8,7 @@ import {
 } from '../../../components';
 import theme from '../../../styles/theme';
 import { dateMask, Test } from '../../../utils';
+import { HistoricalChartContainer } from './components';
 import { styles } from './styles';
 
 type TTestDetail = {
@@ -36,7 +36,15 @@ export function TestDetailView({
 				onConfirm={handleDelete}
 				loading={loading}
 			/>
-			<View style={{ position: 'absolute', right: 0, top: 0 }}>
+			<View
+				style={{
+					position: 'absolute',
+					right: 0,
+					top: 0,
+					paddingHorizontal: 18,
+					paddingTop: 20,
+				}}
+			>
 				<IconButton
 					title="Deletar"
 					color={theme.colors.softRed}
@@ -45,7 +53,9 @@ export function TestDetailView({
 				/>
 			</View>
 			<View style={styles.container}>
-				<PageTitle title="Visualizar Exame" icon={<FolderPlus />} />
+				<View style={{ paddingHorizontal: 18, paddingTop: 20 }}>
+					<PageTitle title="Visualizar Exame" icon={<FolderPlus />} />
+				</View>
 
 				<View style={styles.form}>
 					<View style={styles.contentContainer}>
@@ -97,7 +107,7 @@ export function TestDetailView({
 
 					<View style={styles.contentContainer}>
 						<Text style={styles.title}>Histórico de Resultados</Text>
-						<Text style={styles.content}>{'-'}</Text>
+						<HistoricalChartContainer />
 					</View>
 
 					<View style={styles.contentContainer}>

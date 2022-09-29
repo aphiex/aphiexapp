@@ -5,7 +5,7 @@ import { AccountEdit } from '../../../assets/icons';
 import { FooterContainer, ScreenContainer } from '../../../components';
 import { useAuth, useProfile } from '../../../context';
 import { RootStackParamList } from '../../../routers/PrivateStack';
-import { cityService, testService } from '../../../services';
+import { testService } from '../../../services';
 import theme from '../../../styles/theme';
 import { Test } from '../../../utils';
 import { TestDetailView } from './TestDetailView';
@@ -91,7 +91,7 @@ export function TestDetailContainer({
 
 	return (
 		<>
-			<ScreenContainer hasFooter>
+			<ScreenContainer hasFooter hasPadding={false}>
 				<TestDetailView
 					test={test}
 					handleDelete={handleDelete}
