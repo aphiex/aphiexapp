@@ -1,16 +1,20 @@
 import { database } from '../Database';
-import { Test, TestCreate, TestEdit, TestFromDB } from '../types';
+import { TestCreate, TestEdit, TestFromDB } from '../types';
 
 export async function getAllTests(
-	profileId: number
+	profileId: number,
+	ordination: 'DESC' | 'ASC'
 ): Promise<TestFromDB[] | null> {
 	return new Promise(async (resolve, reject) => {
+		// para fazer os filtros de ordenação basta setar o oderBy como test_date e o ordination DESC como default
+		// para os filtros de condições basta manter o 'WHERE profile_id = (?) ' e adicionar 'AND blablabla' de acordo com a necessidade
 		(await database).transaction(tx => {
 			tx.executeSql(
 				'SELECT * FROM test ' +
 					'LEFT JOIN test_type ' +
 					'ON test.test_type_id = test_type.test_type_id ' +
-					'WHERE profile_id = (?)',
+					'WHERE profile_id = (?) ' +
+					`ORDER BY test_date ${ordination}`,
 				[profileId],
 				(txObj, { rows: { _array } }) => {
 					resolve(_array);
@@ -39,6 +43,30 @@ export async function getTestById(
 				[id, profileId],
 				(txObj, { rows: { _array } }) => {
 					resolve(_array[0]);
+				},
+				(txObj, error) => {
+					reject(null);
+					return false;
+				}
+			);
+		});
+	});
+}
+
+export async function getHistorialTests(
+	testTypeId: number,
+	profileId: number
+): Promise<TestFromDB[] | null> {
+	return new Promise(async (resolve, reject) => {
+		(await database).transaction(tx => {
+			tx.executeSql(
+				'SELECT * FROM test ' +
+					'WHERE test_type_id = (?) ' +
+					'AND profile_id = (?) ' +
+					`ORDER BY test_date ASC`,
+				[testTypeId, profileId],
+				(txObj, { rows: { _array } }) => {
+					resolve(_array);
 				},
 				(txObj, error) => {
 					reject(null);

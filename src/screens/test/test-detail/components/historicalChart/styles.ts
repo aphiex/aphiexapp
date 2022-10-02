@@ -9,13 +9,25 @@ export const styles = StyleSheet.create({
 		paddingHorizontal: 38,
 		marginTop: 8,
 	},
-	legendContainer: {
-		marginTop: 10,
+	link: {
+		fontFamily: theme.fonts.regular400,
+		fontSize: 14,
+		color: theme.colors.primary,
+		paddingHorizontal: 38,
+		marginTop: 8,
+	},
+	infoContainer: {
+		marginTop: 24,
 		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'space-between',
-		paddingHorizontal: '4%',
+		paddingHorizontal: '9%',
+	},
+	legendContainer: {
+		display: 'flex',
+		flexDirection: 'column',
+		paddingHorizontal: '7%',
 	},
 	legendContent: {
 		display: 'flex',
@@ -33,6 +45,13 @@ export const styles = StyleSheet.create({
 		width: 10,
 		height: 10,
 		backgroundColor: theme.colors.red,
+		borderRadius: 100,
+		marginRight: 4,
+	},
+	greyCircle: {
+		width: 10,
+		height: 10,
+		backgroundColor: theme.colors.grey,
 		borderRadius: 100,
 		marginRight: 4,
 	},
@@ -68,6 +87,7 @@ export const styles = StyleSheet.create({
 		zIndex: 10,
 		backgroundColor: theme.colors.white,
 		height: 185,
+		width: 60,
 	},
 	measurementValue: {
 		fontFamily: theme.fonts.regular400,
@@ -77,6 +97,11 @@ export const styles = StyleSheet.create({
 	legend: {
 		fontFamily: theme.fonts.regular400,
 		fontSize: 14,
+		color: theme.colors.black,
+	},
+	legendSmall: {
+		fontFamily: theme.fonts.regular400,
+		fontSize: 12,
 		color: theme.colors.black,
 	},
 });

@@ -9,11 +9,16 @@ import {
 	updateTest,
 	TestCreate,
 	TestEdit,
+	getHistorialTests,
 } from '../utils';
 
-async function handleGetTests(key: string, profileId: number): Promise<Test[]> {
+async function handleGetTests(
+	key: string,
+	profileId: number,
+	ordination: 'DESC' | 'ASC'
+): Promise<Test[]> {
 	return new Promise(async (resolve, reject) => {
-		getAllTests(profileId)
+		getAllTests(profileId, ordination)
 			.then(results => {
 				if (results) {
 					const decryptedData: Test[] = [];
@@ -21,11 +26,64 @@ async function handleGetTests(key: string, profileId: number): Promise<Test[]> {
 					results.forEach(result => {
 						decryptedData.push({
 							id: result?.test_id,
-							date: result?.test_date
-								? CryptoES.AES.decrypt(result?.test_date, key).toString(
+							date: result?.test_date || '',
+							description: result?.test_description
+								? CryptoES.AES.decrypt(result?.test_description, key).toString(
 										CryptoES.enc.Utf8
 								  )
 								: '',
+							image: result?.test_image
+								? CryptoES.AES.decrypt(result?.test_image, key).toString(
+										CryptoES.enc.Utf8
+								  )
+								: '',
+							condition: result?.test_condition
+								? CryptoES.AES.decrypt(result?.test_condition, key).toString(
+										CryptoES.enc.Utf8
+								  )
+								: '',
+							value: result?.test_value
+								? parseInt(
+										CryptoES.AES.decrypt(result?.test_value, key).toString(
+											CryptoES.enc.Utf8
+										)
+								  )
+								: undefined,
+							profileId: result?.profile_id,
+							testType: {
+								id: result?.test_type_id,
+								measurementUnit: result?.test_type_measurement_unit,
+								name: result?.test_type_name,
+							},
+						});
+					});
+
+					resolve(decryptedData);
+				} else {
+					reject(new Error('Falha ao obter exames'));
+				}
+			})
+			.catch(error => {
+				reject(new Error('Falha ao obter exames'));
+			});
+	});
+}
+
+async function handleGetHistoricalTests(
+	testTypeId: number,
+	key: string,
+	profileId: number
+): Promise<Test[]> {
+	return new Promise(async (resolve, reject) => {
+		getHistorialTests(testTypeId, profileId)
+			.then(results => {
+				if (results) {
+					const decryptedData: Test[] = [];
+
+					results.forEach(result => {
+						decryptedData.push({
+							id: result?.test_id,
+							date: result?.test_date || '',
 							description: result?.test_description
 								? CryptoES.AES.decrypt(result?.test_description, key).toString(
 										CryptoES.enc.Utf8
@@ -79,11 +137,7 @@ async function handleGetTestById(
 				if (result) {
 					const decryptedData: Test = {
 						id: result?.test_id,
-						date: result?.test_date
-							? CryptoES.AES.decrypt(result?.test_date, key).toString(
-									CryptoES.enc.Utf8
-							  )
-							: '',
+						date: result?.test_date || '',
 						description: result?.test_description
 							? CryptoES.AES.decrypt(result?.test_description, key).toString(
 									CryptoES.enc.Utf8
@@ -135,9 +189,7 @@ async function handleCreateTest(
 					description: test?.description
 						? CryptoES.AES.encrypt(test?.description, key).toString()
 						: '',
-					date: test?.date
-						? CryptoES.AES.encrypt(test?.date, key).toString()
-						: '',
+					date: test?.date || '',
 					image: test?.image
 						? CryptoES.AES.encrypt(test?.image, key).toString()
 						: '',
@@ -171,7 +223,7 @@ async function handleUpdateTest(
 			description: test?.description
 				? CryptoES.AES.encrypt(test?.description, key).toString()
 				: '',
-			date: test?.date ? CryptoES.AES.encrypt(test?.date, key).toString() : '',
+			date: test?.date || '',
 			image: test?.image
 				? CryptoES.AES.encrypt(test?.image, key).toString()
 				: '',
@@ -202,4 +254,5 @@ export const testService = {
 	handleGetTestById,
 	handleDeleteTest,
 	handleUpdateTest,
+	handleGetHistoricalTests,
 };

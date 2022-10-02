@@ -50,6 +50,26 @@ export async function getReferenceValueById(
 	});
 }
 
+export async function getReferenceValueByTestType(
+	testTypeId: number
+): Promise<ReferenceValueFromDB[] | null> {
+	return new Promise(async (resolve, reject) => {
+		(await database).transaction(tx => {
+			tx.executeSql(
+				'SELECT * FROM reference_value ' + `WHERE test_type_id = ${testTypeId}`,
+				[],
+				(txObj, { rows: { _array } }) => {
+					resolve(_array);
+				},
+				(txObj, error) => {
+					reject(null);
+					return false;
+				}
+			);
+		});
+	});
+}
+
 export const createReferenceValueTable = async () => {
 	try {
 		(await database).transaction(tx => {
@@ -62,7 +82,7 @@ export const createReferenceValueTable = async () => {
 					'reference_value_max_value REAL, ' +
 					'reference_value_min_age INTEGER, ' +
 					'reference_value_max_age INTEGER, ' +
-					'reference_value_other VARCHAR (90), ' +
+					'reference_value_condition VARCHAR (90), ' +
 					'test_type_id INTEGER, ' +
 					'FOREIGN KEY(test_type_id) REFERENCES test_type(test_type_id));'
 			);
@@ -84,7 +104,7 @@ export async function createReferenceValue(
 					'reference_value_max_value, ' +
 					'reference_value_min_age, ' +
 					'reference_value_max_age, ' +
-					'reference_value_other, ' +
+					'reference_value_condition, ' +
 					'test_type_id' +
 					') VALUES (?,?,?,?,?,?)',
 				[
@@ -93,7 +113,7 @@ export async function createReferenceValue(
 					referenceValue?.maxValue || '',
 					referenceValue?.minAge || '',
 					referenceValue?.maxAge || '',
-					referenceValue?.other || '',
+					referenceValue?.condition || '',
 					referenceValue?.testTypeId || '',
 				]
 			);
@@ -113,7 +133,7 @@ export async function updateReferenceValue(referenceValue: ReferenceValue) {
 					'reference_value_max_value = (?), ' +
 					'reference_value_min_age = (?), ' +
 					'reference_value_max_age = (?), ' +
-					'reference_value_other = (?), ' +
+					'reference_value_condition = (?), ' +
 					'test_type_id = (?) ' +
 					'WHERE reference_value_id = (?)',
 				[
@@ -122,7 +142,7 @@ export async function updateReferenceValue(referenceValue: ReferenceValue) {
 					referenceValue?.maxValue || '',
 					referenceValue?.minAge || '',
 					referenceValue?.maxAge || '',
-					referenceValue?.other || '',
+					referenceValue?.condition || '',
 					referenceValue?.testType?.id || '',
 					referenceValue?.id || '',
 				]

@@ -5,7 +5,6 @@ export const styles = StyleSheet.create({
 	container: {
 		alignItems: 'center',
 		justifyContent: 'center',
-		// paddingHorizontal: 20,
 	},
 	form: {
 		marginTop: 50,

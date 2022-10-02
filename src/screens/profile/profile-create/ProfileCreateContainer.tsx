@@ -83,7 +83,7 @@ export function ProfileCreateContainer({
 							name: name || '',
 							description: description || '',
 							gender: gender || '',
-							birthdate: birthdate?.toString() || '',
+							birthdate: birthdate?.toISOString() || '',
 						},
 						auth?.key || ''
 					)

@@ -93,7 +93,7 @@ export function TestEditContainer({
 	const isFormDust = () => {
 		return Boolean(
 			value !== (test?.value ? test?.value : '') ||
-				date?.toString() !== (test?.date ? test?.date : '') ||
+				date?.toISOString() !== (test?.date ? test?.date : '') ||
 				testType !== (test?.testType?.id ? test?.testType?.id : '') ||
 				description !== (test?.description ? test?.description : '')
 		);
@@ -204,7 +204,7 @@ export function TestEditContainer({
 						{
 							id: testId,
 							description: description?.trim() || '',
-							date: date?.toString() || '',
+							date: date?.toISOString() || '',
 							image: '',
 							condition: '',
 							profileId: currentProfile?.id,

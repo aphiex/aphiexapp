@@ -155,7 +155,7 @@ export function TestCreateContainer({
 					.handleCreateTest(
 						{
 							description: description?.trim() || '',
-							date: date?.toString() || '',
+							date: date?.toISOString() || '',
 							image: '',
 							profileId: currentProfile?.id,
 							testTypeId: testType ? parseInt(testType) : undefined,

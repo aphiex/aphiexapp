@@ -11,8 +11,6 @@ export async function getAllTestTypes(): Promise<TestTypeFromDB[] | null> {
 					resolve(_array);
 				},
 				(txObj, error) => {
-					console.log(error);
-
 					reject(error);
 					return false;
 				}

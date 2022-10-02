@@ -7,7 +7,7 @@ export type ReferenceValue = {
 	maxValue?: number;
 	minAge?: number;
 	maxAge?: number;
-	other?: string;
+	condition?: string;
 	testType?: TestType | null;
 };
 
@@ -17,7 +17,7 @@ export type ReferenceValueCreate = {
 	maxValue?: number;
 	minAge?: number;
 	maxAge?: number;
-	other?: string;
+	condition?: string;
 	testTypeId?: number;
 };
 
@@ -28,5 +28,5 @@ export interface ReferenceValueFromDB extends TestTypeFromDB {
 	reference_value_max_value?: number;
 	reference_value_min_age?: number;
 	reference_value_max_age?: number;
-	reference_value_other?: string;
+	reference_value_condition?: string;
 }

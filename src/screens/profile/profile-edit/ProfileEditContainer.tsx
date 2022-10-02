@@ -54,10 +54,12 @@ export function ProfileEditContainer({
 			(currentProfile?.name && name !== currentProfile.name) ||
 				(currentProfile?.description &&
 					description !== currentProfile.description) ||
+				(!currentProfile?.description && description) ||
 				(currentProfile?.gender && gender !== currentProfile.gender) ||
+				(!currentProfile?.gender && gender) ||
 				(currentProfile?.birthdate &&
-					birthdate &&
-					birthdate?.toString() !== currentProfile.birthdate)
+					birthdate?.toISOString() !== currentProfile.birthdate) ||
+				(!currentProfile?.birthdate && birthdate)
 		);
 	};
 
@@ -108,7 +110,7 @@ export function ProfileEditContainer({
 							description: description || currentProfile?.description || '',
 							gender: gender || currentProfile?.gender || '',
 							birthdate:
-								birthdate?.toString() || currentProfile?.birthdate || '',
+								birthdate?.toISOString() || currentProfile?.birthdate || '',
 						},
 						auth?.key || ''
 					)

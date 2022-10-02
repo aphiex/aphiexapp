@@ -6,8 +6,9 @@ import { FooterContainer, ScreenContainer } from '../../../components';
 import { useAuth, useProfile } from '../../../context';
 import { RootStackParamList } from '../../../routers/PrivateStack';
 import { testService } from '../../../services';
+import { referenceValueService } from '../../../services/ReferenceValueService';
 import theme from '../../../styles/theme';
-import { Test } from '../../../utils';
+import { formatAgeInDays, ReferenceValue, Test } from '../../../utils';
 import { TestDetailView } from './TestDetailView';
 
 export function TestDetailContainer({
@@ -18,11 +19,17 @@ export function TestDetailContainer({
 	const { currentProfile } = useProfile();
 	const { testId } = route.params;
 	const [test, setTest] = useState<Test>();
+	const [referenceValues, setReferenceValues] = useState<ReferenceValue[]>([]);
 	const [modalVisible, setModalVisible] = useState<boolean>(false);
+	const [incompleteProfile, setIncompleteProfile] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(false);
 
 	const handleGoBack = () => {
 		navigation.navigate('TestList');
+	};
+
+	const handleGoToEditProfile = () => {
+		navigation.navigate('ProfileEdit');
 	};
 
 	const handleEdit = () => {
@@ -37,7 +44,25 @@ export function TestDetailContainer({
 					.handleGetTestById(id, auth?.key, currentProfile?.id)
 					.then(result => {
 						setTest(result);
-						setLoading(false);
+						if (
+							currentProfile?.birthdate &&
+							currentProfile?.gender &&
+							result?.testType?.id
+						) {
+							referenceValueService
+								.handleGetReferenceValueByTestType(result.testType.id)
+								.then(result => {
+									setReferenceValues(result);
+									setLoading(false);
+								})
+								.catch(() => {
+									setReferenceValues([]);
+									setLoading(false);
+								});
+						} else {
+							setIncompleteProfile(true);
+							setLoading(false);
+						}
 					})
 					.catch(error => {
 						Alert.alert(
@@ -98,6 +123,9 @@ export function TestDetailContainer({
 					modalVisible={modalVisible}
 					setModalVisible={setModalVisible}
 					loading={loading}
+					referenceValues={referenceValues}
+					incompleteProfile={incompleteProfile}
+					handleGoToEditProfile={handleGoToEditProfile}
 				/>
 			</ScreenContainer>
 			<FooterContainer

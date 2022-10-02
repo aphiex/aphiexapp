@@ -3,35 +3,42 @@ import { View, Text, ScrollView, ActivityIndicator } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import { Rect, Text as TextSVG, Svg } from 'react-native-svg';
 import theme from '../../../../../styles/theme';
-import { Test } from '../../../../../utils';
+import { ReferenceValue, shortDateMask, TestType } from '../../../../../utils';
 import { styles } from './styles';
-import { TChartDot, TDataPoint } from './HistoricalChartContainer';
+import {
+	TChartDot,
+	TDataPoint,
+	TTestWithReferenceValue,
+} from './HistoricalChartContainer';
 
 type THistoricalChartView = {
-	tests?: Test[];
-	handleSetChartSize: () => number;
-	isBiggerThanScreen: () => boolean;
+	tests?: TTestWithReferenceValue[];
+	testType?: TestType;
 	tooltipPos: TChartDot;
 	loading: boolean;
-	maxValue: number;
 	segments: number;
 	segmentsIndexs: number[];
+	incompleteProfile: boolean;
+	referenceValues?: ReferenceValue[];
+	handleSetChartSize: () => number;
 	handleDataPointClick: (data: TDataPoint) => void;
-	handleDotColor: (dataPoint: any) => string;
+	handleDotColor: (dataPoint: number, index: number) => string;
 	setTooltipPositionX: () => number;
 	setTooltipPositionY: () => number;
 	setTooltipTextPositionX: () => number;
 	setTooltipTextPositionY: () => number;
+	handleSetMeasurementSegments: (index: number) => number;
+	handleGoToEditProfile: () => void;
 };
 
 export function HistoricalChartView({
 	tests,
 	loading,
-	maxValue,
 	segments,
 	segmentsIndexs,
 	handleSetChartSize,
-	isBiggerThanScreen,
+	incompleteProfile,
+	referenceValues,
 	tooltipPos,
 	handleDataPointClick,
 	handleDotColor,
@@ -39,34 +46,49 @@ export function HistoricalChartView({
 	setTooltipPositionY,
 	setTooltipTextPositionX,
 	setTooltipTextPositionY,
+	handleGoToEditProfile,
+	testType,
+	handleSetMeasurementSegments,
 }: THistoricalChartView) {
 	return (
 		<>
 			{loading && (
-				<ActivityIndicator size="large" color={theme.colors.primary} />
+				<ActivityIndicator
+					size="large"
+					color={theme.colors.primary}
+					style={{ marginTop: 20 }}
+				/>
 			)}
-			{!loading && (!tests || tests?.length === 0) && (
-				<Text style={styles.content}>{'Não foi possível gerar o gráfico'}</Text>
+			{!loading && incompleteProfile && (
+				<View>
+					<Text style={styles.content}>
+						Para visualizar este conteúdo é necessário que os campos 'Sexo' e
+						'Data de Nascimento' do seu perfil estejam preenchidos
+					</Text>
+					<Text onPress={() => handleGoToEditProfile()} style={styles.link}>
+						Clique aqui para editar seu perfil!
+					</Text>
+				</View>
 			)}
-			{!loading && tests?.length === 1 && (
+			{!loading && (!tests || tests?.length === 0) && !incompleteProfile && (
+				<Text style={styles.content}>Não foi possível gerar o gráfico</Text>
+			)}
+			{!loading && !incompleteProfile && tests?.length === 1 && (
 				<Text style={styles.content}>
-					{
-						'Para gerar o gráfico é necessário que ao menos dois exames do mesmo tipo estejam cadastrados'
-					}
+					Para gerar o gráfico é necessário que ao menos dois exames do mesmo
+					tipo estejam cadastrados
 				</Text>
 			)}
-			{!loading && tests?.length > 1 && (
+			{!loading && !incompleteProfile && tests?.length > 1 && (
 				<View>
-					<View style={styles.legendContainer}>
-						<Text style={styles.legend}>{'mg/dL'}</Text>
-						<View style={styles.legendContent}>
-							<View style={styles.blueCircle} />
-							<Text style={styles.legend}>{'Normal'}</Text>
-						</View>
-						<View style={styles.legendContent}>
-							<View style={styles.redCircle} />
-							<Text style={styles.legend}>{'Fora do padrão'}</Text>
-						</View>
+					<View style={styles.infoContainer}>
+						<Text style={styles.legend}>{testType?.measurementUnit || ''}</Text>
+						{!referenceValues ||
+							(referenceValues?.length === 0 && (
+								<Text style={styles.legend}>
+									*Gráfico sem valor de referência
+								</Text>
+							))}
 					</View>
 
 					<View style={{ position: 'relative' }}>
@@ -79,7 +101,7 @@ export function HistoricalChartView({
 										{ marginTop: index === 0 ? 0 : 16.9 },
 									]}
 								>
-									{maxValue - (maxValue / segments) * index}
+									{handleSetMeasurementSegments(index)}
 								</Text>
 							))}
 						</View>
@@ -87,44 +109,38 @@ export function HistoricalChartView({
 						<View style={styles.leftBackground} />
 
 						<ScrollView horizontal={true}>
-							<View
-								style={[
-									styles.rightBackground,
-									{
-										width: isBiggerThanScreen() ? 70 : 22,
-									},
-								]}
-							/>
+							<View style={styles.rightBackground} />
 							<LineChart
 								data={{
-									labels: [
-										'31/03/22',
-										'31/03/22',
-										'31/03/22',
-										'31/03/22',
-										'31/03/22',
-										'31/03/22',
-										'31/03/22',
-										'31/03/22',
-										'31/03/22',
-										'31/03/22',
-										'31/03/22',
-										'31/03/22',
-									],
+									labels: tests.map(test => {
+										return shortDateMask(new Date(test.date));
+									}),
 									datasets: [
 										{
-											data: [20, 35, 55, 12, 25, 60, 50, 85, 40, 6, 50, 100],
+											data: tests?.map(test => {
+												return test.value;
+											}),
 											color: () => theme.colors.grey,
 											strokeWidth: 2,
 										},
 										{
-											data: [50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50],
+											data:
+												referenceValues && referenceValues?.length > 0
+													? tests?.map(test => {
+															return test?.referenceValue?.maxValue || 0;
+													  })
+													: [],
 											withDots: false,
 											color: () => theme.colors.red,
 											strokeWidth: 1,
 										},
 										{
-											data: [25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25],
+											data:
+												referenceValues && referenceValues?.length > 0
+													? tests?.map(test => {
+															return test?.referenceValue?.minValue || 0;
+													  })
+													: [],
 											withDots: false,
 											color: () => theme.colors.red,
 											strokeWidth: 1,
@@ -138,7 +154,9 @@ export function HistoricalChartView({
 								style={{ marginVertical: 8, borderRadius: 16 }}
 								withVerticalLines={false}
 								fromZero
-								getDotColor={dataPoint => handleDotColor(dataPoint)}
+								getDotColor={(dataPoint, index) =>
+									handleDotColor(dataPoint, index)
+								}
 								onDataPointClick={data => handleDataPointClick(data)}
 								chartConfig={{
 									decimalPlaces: 0,
@@ -162,7 +180,10 @@ export function HistoricalChartView({
 													y={setTooltipPositionY()}
 													width={tooltipPos.value.toFixed(2).length * 10}
 													height="30"
-													stroke={handleDotColor(tooltipPos.value)}
+													stroke={handleDotColor(
+														tooltipPos.value,
+														tooltipPos.index
+													)}
 													fill={theme.colors.white}
 												/>
 												<TextSVG
@@ -181,6 +202,29 @@ export function HistoricalChartView({
 								}}
 							/>
 						</ScrollView>
+
+						{referenceValues && referenceValues?.length > 0 && (
+							<View style={styles.legendContainer}>
+								<View style={styles.legendContent}>
+									<View style={styles.blueCircle} />
+									<Text style={styles.legend}>Normal</Text>
+								</View>
+								<View style={styles.legendContent}>
+									<View style={styles.redCircle} />
+									<Text style={styles.legend}>Fora do padrão</Text>
+								</View>
+								<View style={styles.legendContent}>
+									<View style={styles.greyCircle} />
+									<Text style={styles.legend}>Sem valor de referência</Text>
+								</View>
+								<View style={styles.legendContent}>
+									<Text style={styles.legendSmall}>
+										*As linhas vermelhas delimitam o intervalo desejado de
+										acordo com o seu perfil
+									</Text>
+								</View>
+							</View>
+						)}
 					</View>
 				</View>
 			)}

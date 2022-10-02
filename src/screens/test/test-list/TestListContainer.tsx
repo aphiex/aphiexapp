@@ -32,7 +32,7 @@ export function TestListContainer({
 	const getTests = async () => {
 		setLoading(true);
 		testService
-			.handleGetTests(auth.key, currentProfile?.id)
+			.handleGetTests(auth.key, currentProfile?.id, 'DESC')
 			.then(result => {
 				setTests(result);
 			})
