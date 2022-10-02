@@ -55,6 +55,12 @@ export const styles = StyleSheet.create({
 		borderRadius: 100,
 		marginRight: 4,
 	},
+	redLine: {
+		width: 10,
+		height: 1.5,
+		backgroundColor: theme.colors.red,
+		marginRight: 4,
+	},
 	measurement: {
 		fontFamily: theme.fonts.regular400,
 		fontSize: 14,
@@ -97,11 +103,6 @@ export const styles = StyleSheet.create({
 	legend: {
 		fontFamily: theme.fonts.regular400,
 		fontSize: 14,
-		color: theme.colors.black,
-	},
-	legendSmall: {
-		fontFamily: theme.fonts.regular400,
-		fontSize: 12,
 		color: theme.colors.black,
 	},
 });

@@ -10,6 +10,7 @@ export default {
 		softBlack: '#545454',
 		grey: '#999999',
 		softGray: '#DCDADC',
+		lightGray: '#F5F5F5',
 		white: '#FFFFFF',
 		red: '#FF0000',
 		softRed: '#FF6666',

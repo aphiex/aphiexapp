@@ -8,7 +8,10 @@ import {
 } from '../../../components';
 import theme from '../../../styles/theme';
 import { dateMask, ReferenceValue, Test } from '../../../utils';
-import { HistoricalChartContainer } from './components';
+import {
+	HistoricalChartContainer,
+	ReferenceTableContainer,
+} from './components';
 import { styles } from './styles';
 
 type TTestDetail = {
@@ -16,7 +19,6 @@ type TTestDetail = {
 	setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 	modalVisible: boolean;
 	loading: boolean;
-	incompleteProfile: boolean;
 	referenceValues?: ReferenceValue[];
 	handleDelete: () => void;
 	handleGoToEditProfile: () => void;
@@ -28,7 +30,6 @@ export function TestDetailView({
 	modalVisible,
 	setModalVisible,
 	loading,
-	incompleteProfile,
 	referenceValues,
 	handleGoToEditProfile,
 }: TTestDetail) {
@@ -68,7 +69,9 @@ export function TestDetailView({
 						<View style={styles.form}>
 							<View style={styles.contentContainer}>
 								<Text style={styles.title}>Nome</Text>
-								<Text style={styles.content}>{test?.testType.name || '-'}</Text>
+								<Text style={styles.content}>
+									{test?.testType?.name || '-'}
+								</Text>
 							</View>
 
 							<View
@@ -85,7 +88,7 @@ export function TestDetailView({
 										<Text style={styles.content}>
 											{test?.value
 												? `${test?.value}${
-														test.testType.measurementUnit
+														test?.testType?.measurementUnit
 															? ` ${test.testType.measurementUnit}`
 															: ''
 												  }`
@@ -118,7 +121,6 @@ export function TestDetailView({
 
 								<HistoricalChartContainer
 									testType={test?.testType}
-									incompleteProfile={incompleteProfile}
 									referenceValues={referenceValues}
 									handleGoToEditProfile={handleGoToEditProfile}
 								/>
@@ -126,7 +128,11 @@ export function TestDetailView({
 
 							<View style={styles.contentContainer}>
 								<Text style={styles.title}>Valores de Referência</Text>
-								<Text style={styles.content}>{'-'}</Text>
+
+								<ReferenceTableContainer
+									referenceValues={referenceValues}
+									measurementUnit={test?.testType?.measurementUnit}
+								/>
 							</View>
 
 							<View style={styles.contentContainer}>

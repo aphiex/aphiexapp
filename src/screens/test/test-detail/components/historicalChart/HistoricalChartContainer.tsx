@@ -31,7 +31,6 @@ export type TDataPoint = {
 
 export type THistoricalChartContainer = {
 	testType?: TestType;
-	incompleteProfile: boolean;
 	referenceValues?: ReferenceValue[];
 	handleGoToEditProfile: () => void;
 };
@@ -42,7 +41,6 @@ export interface TTestWithReferenceValue extends Test {
 
 export const HistoricalChartContainer = ({
 	testType,
-	incompleteProfile,
 	referenceValues,
 	handleGoToEditProfile,
 }: THistoricalChartContainer) => {
@@ -63,6 +61,13 @@ export const HistoricalChartContainer = ({
 		value: 0,
 		index: 0,
 	});
+
+	const isIncompleteProfile = () => {
+		if (currentProfile?.birthdate && currentProfile?.gender && testType?.id)
+			return false;
+
+		return true;
+	};
 
 	const handleSetChartSize = () => {
 		const chartSize = tests.length * elementSpace;
@@ -224,7 +229,7 @@ export const HistoricalChartContainer = ({
 			setTooltipPositionY={setTooltipPositionY}
 			setTooltipTextPositionX={setTooltipTextPositionX}
 			setTooltipTextPositionY={setTooltipTextPositionY}
-			incompleteProfile={incompleteProfile}
+			incompleteProfile={isIncompleteProfile()}
 			referenceValues={referenceValues}
 			handleGoToEditProfile={handleGoToEditProfile}
 			handleSetMeasurementSegments={handleSetMeasurementSegments}

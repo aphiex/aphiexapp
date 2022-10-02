@@ -218,9 +218,9 @@ export function HistoricalChartView({
 									<Text style={styles.legend}>Sem valor de referência</Text>
 								</View>
 								<View style={styles.legendContent}>
-									<Text style={styles.legendSmall}>
-										*As linhas vermelhas delimitam o intervalo desejado de
-										acordo com o seu perfil
+									<View style={styles.redLine} />
+									<Text style={styles.legend}>
+										Intervalo desejado de acordo com o seu perfil
 									</Text>
 								</View>
 							</View>

@@ -8,7 +8,7 @@ import { RootStackParamList } from '../../../routers/PrivateStack';
 import { testService } from '../../../services';
 import { referenceValueService } from '../../../services/ReferenceValueService';
 import theme from '../../../styles/theme';
-import { formatAgeInDays, ReferenceValue, Test } from '../../../utils';
+import { ReferenceValue, Test } from '../../../utils';
 import { TestDetailView } from './TestDetailView';
 
 export function TestDetailContainer({
@@ -21,7 +21,6 @@ export function TestDetailContainer({
 	const [test, setTest] = useState<Test>();
 	const [referenceValues, setReferenceValues] = useState<ReferenceValue[]>([]);
 	const [modalVisible, setModalVisible] = useState<boolean>(false);
-	const [incompleteProfile, setIncompleteProfile] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(false);
 
 	const handleGoBack = () => {
@@ -44,25 +43,17 @@ export function TestDetailContainer({
 					.handleGetTestById(id, auth?.key, currentProfile?.id)
 					.then(result => {
 						setTest(result);
-						if (
-							currentProfile?.birthdate &&
-							currentProfile?.gender &&
-							result?.testType?.id
-						) {
-							referenceValueService
-								.handleGetReferenceValueByTestType(result.testType.id)
-								.then(result => {
-									setReferenceValues(result);
-									setLoading(false);
-								})
-								.catch(() => {
-									setReferenceValues([]);
-									setLoading(false);
-								});
-						} else {
-							setIncompleteProfile(true);
-							setLoading(false);
-						}
+
+						referenceValueService
+							.handleGetReferenceValueByTestType(result.testType.id)
+							.then(result => {
+								setReferenceValues(result);
+								setLoading(false);
+							})
+							.catch(() => {
+								setReferenceValues([]);
+								setLoading(false);
+							});
 					})
 					.catch(error => {
 						Alert.alert(
@@ -124,7 +115,6 @@ export function TestDetailContainer({
 					setModalVisible={setModalVisible}
 					loading={loading}
 					referenceValues={referenceValues}
-					incompleteProfile={incompleteProfile}
 					handleGoToEditProfile={handleGoToEditProfile}
 				/>
 			</ScreenContainer>
