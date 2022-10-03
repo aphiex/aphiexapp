@@ -4,6 +4,12 @@ export function fixDateTimezone(date: Date) {
 	return newFixedDate;
 }
 
+export function undoFixDateTimezone(date: Date) {
+	const userTimezoneOffset = date.getTimezoneOffset() * 60000;
+	const newFixedDate = new Date(date.getTime() + userTimezoneOffset);
+	return newFixedDate;
+}
+
 export function formatDate(day: number, month: number, year: number) {
 	let formatedDate = '';
 	if (day < 10) formatedDate += '0';

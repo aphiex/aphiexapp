@@ -9,7 +9,12 @@ import {
 import { Calendar } from '../../assets/icons';
 import theme from '../../styles/theme';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { dateMask, getToday } from '../../utils';
+import {
+	dateMask,
+	fixDateTimezone,
+	getToday,
+	undoFixDateTimezone,
+} from '../../utils';
 import { styles } from './styles';
 
 type TCustomDateInput = {
@@ -29,7 +34,7 @@ export function CustomDateInput({
 	const [isPickerShow, setIsPickerShow] = useState<boolean>(false);
 
 	const onDateChange = (event: any, value: any) => {
-		if (event.type === 'set') setValue(value);
+		if (event.type === 'set') setValue(undoFixDateTimezone(value));
 		if (Platform.OS === 'android') {
 			setIsPickerShow(false);
 		}
@@ -44,7 +49,7 @@ export function CustomDateInput({
 		<View style={styles.container}>
 			{isPickerShow && (
 				<DateTimePicker
-					value={value || getToday()}
+					value={value ? fixDateTimezone(value) : getToday()}
 					mode={'date'}
 					display={Platform.OS === 'ios' ? 'spinner' : 'default'}
 					is24Hour={true}

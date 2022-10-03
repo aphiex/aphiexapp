@@ -7,13 +7,7 @@ import { useAuth, useProfile } from '../../../context';
 import { testService, testTypeService } from '../../../services';
 import { referenceValueService } from '../../../services/ReferenceValueService';
 import theme from '../../../styles/theme';
-import {
-	fixDateTimezone,
-	ReferenceValue,
-	SelectItem,
-	TestType,
-	validateEmail,
-} from '../../../utils';
+import { ReferenceValue, SelectItem, TestType } from '../../../utils';
 import { TestCreateView } from './TestCreateView';
 
 export function TestCreateContainer({
@@ -28,7 +22,7 @@ export function TestCreateContainer({
 	const [value, setValue] = useState<string>('');
 	const [valueError, setValueError] = useState<string>('');
 
-	const today = fixDateTimezone(new Date());
+	const today = new Date();
 	const [date, setDate] = useState<Date>(today);
 
 	const [testType, setTestType] = useState<string | null>(null);

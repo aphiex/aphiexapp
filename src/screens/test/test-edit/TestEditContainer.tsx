@@ -8,13 +8,7 @@ import { RootStackParamList } from '../../../routers/PrivateStack';
 import { testService, testTypeService } from '../../../services';
 import { referenceValueService } from '../../../services/ReferenceValueService';
 import theme from '../../../styles/theme';
-import {
-	Test,
-	SelectItem,
-	fixDateTimezone,
-	TestType,
-	ReferenceValue,
-} from '../../../utils';
+import { Test, SelectItem, TestType, ReferenceValue } from '../../../utils';
 import { TestEditView } from './TestEditView';
 
 export function TestEditContainer({
@@ -33,7 +27,7 @@ export function TestEditContainer({
 	const [value, setValue] = useState<string>('');
 	const [valueError, setValueError] = useState<string>('');
 
-	const today = fixDateTimezone(new Date());
+	const today = new Date();
 	const [date, setDate] = useState<Date>(today);
 
 	const [testType, setTestType] = useState<string | null>(null);

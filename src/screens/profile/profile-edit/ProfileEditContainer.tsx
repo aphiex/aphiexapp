@@ -7,7 +7,6 @@ import { useAuth, useProfile } from '../../../context';
 import { RootStackParamList } from '../../../routers/PrivateStack';
 import { profileService } from '../../../services';
 import theme from '../../../styles/theme';
-import { fixDateTimezone } from '../../../utils';
 import { ProfileEditView } from './ProfileEditView';
 
 export function ProfileEditContainer({
@@ -23,9 +22,7 @@ export function ProfileEditContainer({
 		currentProfile?.gender || null
 	);
 	const [birthdate, setBirthdate] = useState<Date | undefined>(
-		currentProfile?.birthdate
-			? fixDateTimezone(new Date(currentProfile.birthdate))
-			: undefined
+		currentProfile?.birthdate ? new Date(currentProfile.birthdate) : undefined
 	);
 	const { auth } = useAuth();
 	const [openDropdown, setOpenDropdown] = useState<boolean>(false);
@@ -69,9 +66,7 @@ export function ProfileEditContainer({
 		setDescription(currentProfile?.description || '');
 		setGender(currentProfile?.gender || null);
 		setBirthdate(
-			currentProfile?.birthdate
-				? fixDateTimezone(new Date(currentProfile.birthdate))
-				: undefined
+			currentProfile?.birthdate ? new Date(currentProfile.birthdate) : undefined
 		);
 	};
 
