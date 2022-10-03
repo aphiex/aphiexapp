@@ -93,7 +93,7 @@ export function HistoricalChartView({
 
 					<View style={{ position: 'relative' }}>
 						<View style={styles.measurementContainer}>
-							{segmentsIndexs.map(index => (
+							{segmentsIndexs?.map(index => (
 								<Text
 									key={index}
 									style={[
@@ -112,20 +112,26 @@ export function HistoricalChartView({
 							<View style={styles.rightBackground} />
 							<LineChart
 								data={{
-									labels: tests.map(test => {
-										return shortDateMask(new Date(test.date));
-									}),
+									labels:
+										tests?.length > 0
+											? tests?.map(test => {
+													return shortDateMask(new Date(test?.date));
+											  })
+											: [],
 									datasets: [
 										{
-											data: tests?.map(test => {
-												return test.value;
-											}),
+											data:
+												tests?.length > 0
+													? tests?.map(test => {
+															return test?.value || 0;
+													  })
+													: [],
 											color: () => theme.colors.grey,
 											strokeWidth: 2,
 										},
 										{
 											data:
-												referenceValues && referenceValues?.length > 0
+												tests?.length > 0 && referenceValues?.length > 0
 													? tests?.map(test => {
 															return test?.referenceValue?.maxValue || 0;
 													  })
@@ -136,7 +142,7 @@ export function HistoricalChartView({
 										},
 										{
 											data:
-												referenceValues && referenceValues?.length > 0
+												tests?.length > 0 && referenceValues?.length > 0
 													? tests?.map(test => {
 															return test?.referenceValue?.minValue || 0;
 													  })
@@ -172,17 +178,17 @@ export function HistoricalChartView({
 									},
 								}}
 								decorator={() => {
-									return tooltipPos.visible ? (
+									return tooltipPos?.visible ? (
 										<View>
 											<Svg>
 												<Rect
 													x={setTooltipPositionX()}
 													y={setTooltipPositionY()}
-													width={tooltipPos.value.toFixed(2).length * 10}
+													width={tooltipPos?.value?.toFixed(2).length * 10}
 													height="30"
 													stroke={handleDotColor(
-														tooltipPos.value,
-														tooltipPos.index
+														tooltipPos?.value,
+														tooltipPos?.index
 													)}
 													fill={theme.colors.white}
 												/>
@@ -194,7 +200,7 @@ export function HistoricalChartView({
 													fontWeight="bold"
 													textAnchor="middle"
 												>
-													{tooltipPos.value.toFixed(2)}
+													{tooltipPos?.value?.toFixed(2)}
 												</TextSVG>
 											</Svg>
 										</View>
@@ -203,7 +209,7 @@ export function HistoricalChartView({
 							/>
 						</ScrollView>
 
-						{referenceValues && referenceValues?.length > 0 && (
+						{referenceValues?.length > 0 && (
 							<View style={styles.legendContainer}>
 								<View style={styles.legendContent}>
 									<View style={styles.blueCircle} />
@@ -221,6 +227,11 @@ export function HistoricalChartView({
 									<View style={styles.redLine} />
 									<Text style={styles.legend}>
 										Intervalo desejado de acordo com o seu perfil
+									</Text>
+								</View>
+								<View style={[styles.legendContent, { marginTop: 10 }]}>
+									<Text style={styles.legend}>
+										*Clique nos pontos para ver os valores
 									</Text>
 								</View>
 							</View>

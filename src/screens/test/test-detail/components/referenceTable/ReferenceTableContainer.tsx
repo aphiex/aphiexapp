@@ -1,5 +1,4 @@
 import React from 'react';
-import { useProfile } from '../../../../../context';
 
 import {
 	ageClassification,
@@ -44,8 +43,7 @@ export const ReferenceTableContainer = ({
 
 		if (classification) return classification;
 
-		if (!reference?.minAge && !reference?.maxAge && !reference?.condition)
-			return 'Todas as idades';
+		if (!reference?.minAge && !reference?.maxAge) return 'Todas as idades';
 
 		if (!reference?.minAge && reference?.maxAge)
 			return `até ${setTimeValue(reference?.maxAge, timeLabel)} ${timeLabel}`;

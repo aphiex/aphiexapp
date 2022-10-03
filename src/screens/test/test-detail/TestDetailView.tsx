@@ -3,6 +3,7 @@ import { View, Text } from 'react-native';
 import { FolderPlus, TrashCan } from '../../../assets/icons';
 import {
 	IconButton,
+	LoadingModal,
 	PageTitle,
 	PasswordRequestModalContainer,
 } from '../../../components';
@@ -35,6 +36,7 @@ export function TestDetailView({
 }: TTestDetail) {
 	return (
 		<>
+			{loading && <LoadingModal />}
 			{!loading && (
 				<>
 					<PasswordRequestModalContainer
@@ -114,6 +116,11 @@ export function TestDetailView({
 							<View style={styles.contentContainer}>
 								<Text style={styles.title}>Descrição</Text>
 								<Text style={styles.content}>{test?.description || '-'}</Text>
+							</View>
+
+							<View style={styles.contentContainer}>
+								<Text style={styles.title}>Informação adicional</Text>
+								<Text style={styles.content}>{test?.condition || '-'}</Text>
 							</View>
 
 							<View style={styles.contentContainer}>

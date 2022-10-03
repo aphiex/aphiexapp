@@ -5,9 +5,11 @@ import { Restart } from '../../../assets/icons';
 import { FooterContainer, ScreenContainer } from '../../../components';
 import { useAuth, useProfile } from '../../../context';
 import { testService, testTypeService } from '../../../services';
+import { referenceValueService } from '../../../services/ReferenceValueService';
 import theme from '../../../styles/theme';
 import {
 	fixDateTimezone,
+	ReferenceValue,
 	SelectItem,
 	TestType,
 	validateEmail,
@@ -18,6 +20,10 @@ export function TestCreateContainer({
 	navigation,
 }: NativeStackScreenProps<any, any>) {
 	const [description, setDescription] = useState<string>('');
+
+	const [condition, setCondition] = useState<string>('');
+	const [referenceValues, setreferenceValues] = useState<ReferenceValue[]>([]);
+	const [referenceLoading, setreferenceLoading] = useState<boolean>(false);
 
 	const [value, setValue] = useState<string>('');
 	const [valueError, setValueError] = useState<string>('');
@@ -69,6 +75,11 @@ export function TestCreateContainer({
 		setDescription(v);
 	};
 
+	const handleChangeCondition = (v: string) => {
+		if (v === condition) setCondition('');
+		else setCondition(v);
+	};
+
 	const handleValidation = () => {
 		if (!testType) {
 			setTestTypeError('Selecione um tipo de exame');
@@ -84,7 +95,9 @@ export function TestCreateContainer({
 	};
 
 	const isFormDust = () => {
-		return Boolean(value || today !== date || testType || description);
+		return Boolean(
+			value || today !== date || testType || description || condition
+		);
 	};
 
 	const clearForm = () => {
@@ -95,6 +108,8 @@ export function TestCreateContainer({
 		setTestType(null);
 		setTestTypeError('');
 		setMeasurementUnit('');
+		setCondition('');
+		setreferenceValues([]);
 	};
 
 	const handleCancel = () => {
@@ -147,6 +162,27 @@ export function TestCreateContainer({
 		}
 	};
 
+	const handleGetReferenceValues = (testTypeId: string) => {
+		setreferenceLoading(true);
+		try {
+			referenceValueService
+				.handleGetReferenceConditionsByTestType(parseInt(testTypeId))
+				.then(result => {
+					setreferenceValues(result);
+					setreferenceLoading(false);
+				})
+				.catch(() => {
+					setreferenceLoading(false);
+					setCondition('');
+					setreferenceValues([]);
+				});
+		} catch {
+			setreferenceLoading(false);
+			setCondition('');
+			setreferenceValues([]);
+		}
+	};
+
 	const handleSubmit = () => {
 		if (handleValidation()) {
 			setLoading(true);
@@ -160,6 +196,7 @@ export function TestCreateContainer({
 							profileId: currentProfile?.id,
 							testTypeId: testType ? parseInt(testType) : undefined,
 							value: value ? handleFixValue(value) : undefined,
+							condition,
 						},
 						auth.key
 					)
@@ -187,6 +224,10 @@ export function TestCreateContainer({
 		handleGetTestTypes();
 	}, []);
 
+	useEffect(() => {
+		if (testType) handleGetReferenceValues(testType);
+	}, [testType]);
+
 	return (
 		<>
 			<ScreenContainer hasFooter>
@@ -208,6 +249,10 @@ export function TestCreateContainer({
 					setDate={setDate}
 					measurementUnit={measurementUnit}
 					handleChangeMeasurementUnit={handleChangeMeasurementUnit}
+					handleChangeCondition={handleChangeCondition}
+					condition={condition}
+					referenceValues={referenceValues}
+					referenceLoading={referenceLoading}
 				/>
 			</ScreenContainer>
 			<FooterContainer

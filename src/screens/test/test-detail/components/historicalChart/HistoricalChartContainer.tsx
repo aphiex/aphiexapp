@@ -78,7 +78,11 @@ export const HistoricalChartContainer = ({
 	const handleSetMeasurementSegments = (index: number) => {
 		const maxReferenceValue =
 			tests.length > 0 && referenceValues.length > 0
-				? Math.max(...tests.map(test => test?.referenceValue.maxValue))
+				? Math.max(
+						...tests.map(test => {
+							return test?.referenceValue?.maxValue || 0;
+						})
+				  )
 				: 0;
 
 		if (maxReferenceValue && maxReferenceValue >= maxValue) {
@@ -151,68 +155,81 @@ export const HistoricalChartContainer = ({
 	};
 
 	const getTests = async () => {
-		setLoading(true);
-		testService
-			.handleGetHistoricalTests(testType?.id, auth.key, currentProfile?.id)
-			.then(result => {
-				if (referenceValues?.length > 0) {
-					const newTests: TTestWithReferenceValue[] = [];
+		if (isIncompleteProfile()) {
+			setLoading(false);
+		} else {
+			setLoading(true);
+			testService
+				.handleGetHistoricalTests(testType?.id, auth?.key, currentProfile?.id)
+				.then(result => {
+					if (referenceValues?.length > 0) {
+						const newTests: TTestWithReferenceValue[] = [];
 
-					result?.forEach(testFromDB => {
-						const ageInDays = formatAgeInDays(
-							new Date(currentProfile?.birthdate),
-							new Date(testFromDB?.date)
-						);
-
-						let reference = undefined;
-						reference = referenceValues.find(ref => {
-							const allAges = Boolean(!ref?.minAge && !ref?.maxAge);
-
-							const ageBetween = Boolean(
-								ref?.minAge <= ageInDays && ref?.maxAge >= ageInDays
+						result?.forEach(testFromDB => {
+							const ageInDays = formatAgeInDays(
+								new Date(currentProfile?.birthdate),
+								new Date(testFromDB?.date)
 							);
 
-							const ageOver = Boolean(!ref?.minAge && ref?.maxAge >= ageInDays);
+							let reference = undefined;
 
-							const ageUnder = Boolean(
-								ref?.minAge <= ageInDays && !ref?.maxAge
-							);
+							reference = referenceValues?.find(ref => {
+								const gender = Boolean(
+									ref?.gender === currentProfile?.gender || ref?.gender === 'A'
+								);
 
-							const gender = Boolean(
-								ref?.gender === currentProfile?.gender || ref?.gender === 'A'
-							);
+								const condition = Boolean(
+									ref?.condition === testFromDB?.condition &&
+										ref?.condition &&
+										testFromDB?.condition
+								);
 
-							const condition = Boolean(
-								ref?.condition === testFromDB?.condition
-							);
+								if (gender && condition) return ref;
 
-							if (
-								gender &&
-								condition &&
-								(allAges || ageBetween || ageOver || ageUnder)
-							)
-								return ref;
+								const allAges = Boolean(!ref?.minAge && !ref?.maxAge);
+
+								const ageBetween = Boolean(
+									ref?.minAge <= ageInDays && ref?.maxAge >= ageInDays
+								);
+
+								const ageOver = Boolean(
+									!ref?.minAge && ref?.maxAge >= ageInDays
+								);
+
+								const ageUnder = Boolean(
+									ref?.minAge <= ageInDays && !ref?.maxAge
+								);
+
+								if (gender && (allAges || ageBetween || ageOver || ageUnder))
+									return ref;
+							});
+
+							newTests.push({ ...testFromDB, referenceValue: reference });
 						});
-
-						newTests.push({ ...testFromDB, referenceValue: reference });
-					});
-
-					setTests(newTests);
-				} else {
-					setTests(result);
-				}
-				setMaxValue(Math.max(...result.map(test => test.value)));
-				setLoading(false);
-			})
-			.catch(error => {
-				setTests([]);
-				setLoading(false);
-			});
+						setTests(newTests);
+					} else {
+						setTests(result);
+					}
+					if (result?.length > 0)
+						setMaxValue(
+							Math.max(
+								...result?.map(test => {
+									return test?.value || 0;
+								})
+							)
+						);
+					setLoading(false);
+				})
+				.catch(error => {
+					setTests([]);
+					setLoading(false);
+				});
+		}
 	};
 
 	useEffect(() => {
 		if (testType?.id) getTests();
-	}, [testType]);
+	}, [testType?.id]);
 
 	return (
 		<HistoricalChartView

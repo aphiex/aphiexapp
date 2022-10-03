@@ -5,15 +5,15 @@ import { Restart } from '../../../assets/icons';
 import { FooterContainer, ScreenContainer } from '../../../components';
 import { useAuth, useProfile } from '../../../context';
 import { RootStackParamList } from '../../../routers/PrivateStack';
-import { cityService, testService, testTypeService } from '../../../services';
+import { testService, testTypeService } from '../../../services';
+import { referenceValueService } from '../../../services/ReferenceValueService';
 import theme from '../../../styles/theme';
 import {
 	Test,
 	SelectItem,
-	validateEmail,
-	TestEdit,
 	fixDateTimezone,
 	TestType,
+	ReferenceValue,
 } from '../../../utils';
 import { TestEditView } from './TestEditView';
 
@@ -23,6 +23,10 @@ export function TestEditContainer({
 }: NativeStackScreenProps<RootStackParamList, 'TestEdit'>) {
 	const { testId } = route.params;
 	const [test, setTest] = useState<Test>();
+
+	const [condition, setCondition] = useState<string>('');
+	const [referenceValues, setreferenceValues] = useState<ReferenceValue[]>([]);
+	const [referenceLoading, setreferenceLoading] = useState<boolean>(false);
 
 	const [description, setDescription] = useState<string>('');
 
@@ -76,6 +80,11 @@ export function TestEditContainer({
 		setDescription(v);
 	};
 
+	const handleChangeCondition = (v: string) => {
+		if (v === condition) setCondition('');
+		else setCondition(v);
+	};
+
 	const handleValidation = () => {
 		if (!testType) {
 			setTestTypeError('Selecione um tipo de exame');
@@ -91,10 +100,17 @@ export function TestEditContainer({
 	};
 
 	const isFormDust = () => {
+		console.log('date: ', date?.toISOString());
+		console.log('test?.date: ', test?.date);
+		console.log('today: ', today.toISOString());
+
 		return Boolean(
-			value !== (test?.value ? test?.value : '') ||
-				date?.toISOString() !== (test?.date ? test?.date : '') ||
-				testType !== (test?.testType?.id ? test?.testType?.id : '') ||
+			value !== (test?.value ? test?.value.toString() : '') ||
+				date?.toISOString() !==
+					(test?.date ? test?.date : today.toISOString()) ||
+				testType !==
+					(test?.testType?.id ? test?.testType?.id.toString() : '') ||
+				condition !== (test?.condition ? test?.condition : '') ||
 				description !== (test?.description ? test?.description : '')
 		);
 	};
@@ -103,10 +119,11 @@ export function TestEditContainer({
 		setDescription(test?.description || '');
 		setValue(test?.value?.toString() || '');
 		setValueError('');
-		setDate(test?.date ? fixDateTimezone(new Date(test.date)) : today);
+		setDate(test?.date ? new Date(test.date) : today);
 		setTestType(test?.testType?.id?.toString() || null);
 		setTestTypeError('');
 		setMeasurementUnit(test?.testType?.measurementUnit || '');
+		setCondition(test?.condition || '');
 	};
 
 	const handleCancel = () => {
@@ -167,11 +184,10 @@ export function TestEditContainer({
 					.handleGetTestById(id, auth?.key, currentProfile?.id)
 					.then(result => {
 						setTest(result);
+						setCondition(result?.condition || '');
 						setDescription(result?.description || '');
 						setValue(result?.value?.toString() || '');
-						setDate(
-							result?.date ? fixDateTimezone(new Date(result.date)) : today
-						);
+						setDate(result?.date ? new Date(result.date) : today);
 						setTestType(result?.testType?.id?.toString() || null);
 						setMeasurementUnit(result?.testType?.measurementUnit || '');
 						setLoading(false);
@@ -195,6 +211,27 @@ export function TestEditContainer({
 		}
 	};
 
+	const handleGetReferenceValues = (testTypeId: string) => {
+		setreferenceLoading(true);
+		try {
+			referenceValueService
+				.handleGetReferenceConditionsByTestType(parseInt(testTypeId))
+				.then(result => {
+					setreferenceValues(result);
+					setreferenceLoading(false);
+				})
+				.catch(() => {
+					setreferenceLoading(false);
+					setCondition('');
+					setreferenceValues([]);
+				});
+		} catch {
+			setreferenceLoading(false);
+			setCondition('');
+			setreferenceValues([]);
+		}
+	};
+
 	const handleSubmit = () => {
 		if (handleValidation()) {
 			setLoading(true);
@@ -206,10 +243,10 @@ export function TestEditContainer({
 							description: description?.trim() || '',
 							date: date?.toISOString() || '',
 							image: '',
-							condition: '',
 							profileId: currentProfile?.id,
 							testTypeId: testType ? parseInt(testType) : undefined,
 							value: value ? handleFixValue(value) : undefined,
+							condition,
 						},
 						auth?.key || ''
 					)
@@ -241,6 +278,10 @@ export function TestEditContainer({
 		}
 	}, [testId]);
 
+	useEffect(() => {
+		if (testType) handleGetReferenceValues(testType);
+	}, [testType]);
+
 	return (
 		<>
 			<ScreenContainer hasFooter>
@@ -262,6 +303,10 @@ export function TestEditContainer({
 					setDate={setDate}
 					measurementUnit={measurementUnit}
 					handleChangeMeasurementUnit={handleChangeMeasurementUnit}
+					handleChangeCondition={handleChangeCondition}
+					condition={condition}
+					referenceValues={referenceValues}
+					referenceLoading={referenceLoading}
 				/>
 			</ScreenContainer>
 			<FooterContainer

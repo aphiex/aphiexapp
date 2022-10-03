@@ -61,7 +61,9 @@ export async function getHistorialTests(
 		(await database).transaction(tx => {
 			tx.executeSql(
 				'SELECT * FROM test ' +
-					'WHERE test_type_id = (?) ' +
+					'LEFT JOIN test_type ' +
+					'ON test.test_type_id = test_type.test_type_id ' +
+					'WHERE test.test_type_id = (?) ' +
 					'AND profile_id = (?) ' +
 					`ORDER BY test_date ASC`,
 				[testTypeId, profileId],

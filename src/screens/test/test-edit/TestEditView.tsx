@@ -1,17 +1,17 @@
+import Checkbox from 'expo-checkbox';
 import React from 'react';
-import { View } from 'react-native';
-import { FolderPlus, HospitalBuilding } from '../../../assets/icons';
+import { ActivityIndicator, View, Text } from 'react-native';
+import { FolderPlus } from '../../../assets/icons';
 import {
 	CustomDateInput,
 	CustomInput,
-	CustomMaskInput,
 	CustomSelectInput,
 	InputAdornment,
-	LoadingModal,
 	LoadingState,
 	PageTitle,
 } from '../../../components';
-import { SelectItem, STATES } from '../../../utils';
+import theme from '../../../styles/theme';
+import { ReferenceValue, SelectItem } from '../../../utils';
 import { styles } from './styles';
 
 type TTestEdit = {
@@ -19,6 +19,7 @@ type TTestEdit = {
 	value: string;
 	valueError: string;
 	loading: boolean;
+	referenceLoading: boolean;
 	openTestTypeDropdown: boolean;
 	setOpenTestTypeDropdown: React.Dispatch<React.SetStateAction<boolean>>;
 	testType: string | null;
@@ -29,9 +30,12 @@ type TTestEdit = {
 	date: Date;
 	setDate: React.Dispatch<React.SetStateAction<Date>>;
 	measurementUnit: string;
+	condition: string;
+	referenceValues: ReferenceValue[];
 	handleChangeValue: (v: string) => void;
 	handleChangeDescription: (value: string) => void;
 	handleChangeMeasurementUnit: (testTypeId: string) => void;
+	handleChangeCondition: (v: string) => void;
 };
 
 export function TestEditView({
@@ -52,6 +56,10 @@ export function TestEditView({
 	setDate,
 	handleChangeMeasurementUnit,
 	measurementUnit,
+	condition,
+	handleChangeCondition,
+	referenceLoading,
+	referenceValues,
 }: TTestEdit) {
 	return (
 		<View style={styles.container}>
@@ -106,6 +114,52 @@ export function TestEditView({
 						value={description}
 						onChangeText={(value: string) => handleChangeDescription(value)}
 					/>
+
+					{referenceLoading && (
+						<ActivityIndicator
+							size="large"
+							color={theme.colors.primary}
+							style={{ marginTop: 20 }}
+						/>
+					)}
+					{!referenceLoading && referenceValues?.length > 0 && (
+						<View style={styles.subContainer}>
+							<Text style={styles.subTitle}>Informações adicionais</Text>
+							{referenceValues.map(referenceValue => (
+								<View key={referenceValue.id} style={styles.section}>
+									<Checkbox
+										style={styles.checkbox}
+										value={referenceValue.condition === condition}
+										onValueChange={() =>
+											handleChangeCondition(referenceValue.condition)
+										}
+										color={
+											referenceValue.condition === condition
+												? theme.colors.primary
+												: theme.colors.grey
+										}
+									/>
+									<Text
+										numberOfLines={1}
+										onPress={() =>
+											handleChangeCondition(referenceValue.condition)
+										}
+										style={[
+											styles.checkBoxLabel,
+											{
+												color:
+													referenceValue.condition === condition
+														? theme.colors.black
+														: theme.colors.grey,
+											},
+										]}
+									>
+										{referenceValue.condition}
+									</Text>
+								</View>
+							))}
+						</View>
+					)}
 				</View>
 			)}
 		</View>

@@ -48,11 +48,7 @@ export function ReferenceTableView({
 										{reference?.condition}
 									</Text>
 								)}
-								{!Boolean(
-									!reference?.minAge &&
-										!reference?.maxAge &&
-										reference?.condition
-								) && (
+								{Boolean(!reference?.condition) && (
 									<Text numberOfLines={1} style={styles.tableContent}>
 										{`${handleShowAge(reference)} ${handleShowGender(
 											reference.gender

@@ -70,6 +70,28 @@ export async function getReferenceValueByTestType(
 	});
 }
 
+export async function getReferenceConditionsByTestType(
+	testTypeId: number
+): Promise<ReferenceValueFromDB[] | null> {
+	return new Promise(async (resolve, reject) => {
+		(await database).transaction(tx => {
+			tx.executeSql(
+				'SELECT * FROM reference_value ' +
+					`WHERE test_type_id = ${testTypeId} ` +
+					'AND reference_value_condition IS NOT NULL',
+				[],
+				(txObj, { rows: { _array } }) => {
+					resolve(_array);
+				},
+				(txObj, error) => {
+					reject(null);
+					return false;
+				}
+			);
+		});
+	});
+}
+
 export const createReferenceValueTable = async () => {
 	try {
 		(await database).transaction(tx => {

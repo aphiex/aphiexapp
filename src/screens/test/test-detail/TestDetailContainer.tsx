@@ -45,7 +45,7 @@ export function TestDetailContainer({
 						setTest(result);
 
 						referenceValueService
-							.handleGetReferenceValueByTestType(result.testType.id)
+							.handleGetReferenceValueByTestType(result?.testType?.id)
 							.then(result => {
 								setReferenceValues(result);
 								setLoading(false);

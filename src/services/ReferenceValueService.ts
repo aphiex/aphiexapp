@@ -8,6 +8,7 @@ import {
 	updateReferenceValue,
 	ReferenceValueCreate,
 	getReferenceValueByTestType,
+	getReferenceConditionsByTestType,
 } from '../utils';
 
 async function handleGetReferenceValues(): Promise<ReferenceValue[]> {
@@ -103,6 +104,36 @@ async function handleGetReferenceValueByTestType(
 	});
 }
 
+async function handleGetReferenceConditionsByTestType(
+	testTypeId: number
+): Promise<ReferenceValue[]> {
+	return new Promise(async (resolve, reject) => {
+		getReferenceConditionsByTestType(testTypeId)
+			.then(results => {
+				if (results && results.length > 0) {
+					const referenceValues: ReferenceValue[] = [];
+
+					results.forEach(result => {
+						referenceValues.push({
+							id: result?.reference_value_id,
+							gender: result?.reference_value_gender || '',
+							maxAge: result?.reference_value_max_age || undefined,
+							maxValue: result?.reference_value_max_value || undefined,
+							minAge: result?.reference_value_min_age || undefined,
+							minValue: result?.reference_value_min_value || undefined,
+							condition: result?.reference_value_condition || '',
+							testType: undefined,
+						});
+					});
+
+					resolve(referenceValues);
+				} else
+					reject(new Error('Não há condições cadastradas para este exame'));
+			})
+			.catch(() => reject(new Error('Falha ao obter condições')));
+	});
+}
+
 async function handleCreateReferenceValue(
 	referenceValue: ReferenceValueCreate
 ): Promise<boolean> {
@@ -146,4 +177,5 @@ export const referenceValueService = {
 	handleDeleteReferenceValue,
 	handleUpdateReferenceValue,
 	handleGetReferenceValueByTestType,
+	handleGetReferenceConditionsByTestType,
 };
