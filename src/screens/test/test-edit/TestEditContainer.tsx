@@ -100,10 +100,6 @@ export function TestEditContainer({
 	};
 
 	const isFormDust = () => {
-		console.log('date: ', date?.toISOString());
-		console.log('test?.date: ', test?.date);
-		console.log('today: ', today.toISOString());
-
 		return Boolean(
 			value !== (test?.value ? test?.value.toString() : '') ||
 				date?.toISOString() !==
