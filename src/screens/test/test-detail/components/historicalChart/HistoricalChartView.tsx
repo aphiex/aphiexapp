@@ -29,6 +29,10 @@ type THistoricalChartView = {
 	setTooltipTextPositionY: () => number;
 	handleSetMeasurementSegments: (index: number) => number;
 	handleGoToEditProfile: () => void;
+	handleTestValues: () => number[];
+	handleMinReferenceValues: () => number[];
+	handleMaxReferenceValues: () => number[];
+	handleLabels: () => string[];
 };
 
 export function HistoricalChartView({
@@ -49,6 +53,10 @@ export function HistoricalChartView({
 	handleGoToEditProfile,
 	testType,
 	handleSetMeasurementSegments,
+	handleTestValues,
+	handleMinReferenceValues,
+	handleMaxReferenceValues,
+	handleLabels,
 }: THistoricalChartView) {
 	return (
 		<>
@@ -112,41 +120,19 @@ export function HistoricalChartView({
 							<View style={styles.rightBackground} />
 							<LineChart
 								data={{
-									labels:
-										tests?.length > 0
-											? tests?.map(test => {
-													return shortDateMask(new Date(test?.date));
-											  })
-											: [],
+									labels: handleLabels(),
 									datasets: [
 										{
-											data:
-												tests?.length > 0
-													? tests?.map(test => {
-															return test?.value || 0;
-													  })
-													: [],
-											color: () => theme.colors.grey,
-											strokeWidth: 2,
+											data: handleTestValues(),
 										},
 										{
-											data:
-												tests?.length > 0 && referenceValues?.length > 0
-													? tests?.map(test => {
-															return test?.referenceValue?.maxValue || 0;
-													  })
-													: [],
+											data: handleMaxReferenceValues(),
 											withDots: false,
 											color: () => theme.colors.red,
 											strokeWidth: 1,
 										},
 										{
-											data:
-												tests?.length > 0 && referenceValues?.length > 0
-													? tests?.map(test => {
-															return test?.referenceValue?.minValue || 0;
-													  })
-													: [],
+											data: handleMinReferenceValues(),
 											withDots: false,
 											color: () => theme.colors.red,
 											strokeWidth: 1,

@@ -7,6 +7,7 @@ import theme from '../../../../../styles/theme';
 import {
 	formatAgeInDays,
 	ReferenceValue,
+	shortDateMask,
 	Test,
 	TestType,
 } from '../../../../../utils';
@@ -70,9 +71,53 @@ export const HistoricalChartContainer = ({
 	};
 
 	const handleSetChartSize = () => {
-		const chartSize = tests.length * elementSpace;
+		const chartSize = (tests.length + 1) * elementSpace;
 		if (chartSize > screenSize) return chartSize;
 		return screenSize;
+	};
+
+	const handleTestValues = () => {
+		if (tests?.length > 0) {
+			const testValues = tests?.map(test => {
+				return test?.value || 0;
+			});
+			return testValues;
+		}
+		return [];
+	};
+
+	const handleMinReferenceValues = () => {
+		if (tests?.length > 0 && referenceValues?.length > 0) {
+			const minValues = tests?.map(test => {
+				return test?.referenceValue?.minValue || 0;
+			});
+			minValues.push(tests[tests.length - 1]?.referenceValue?.minValue || 0);
+			return minValues;
+		}
+		return [];
+	};
+
+	const handleMaxReferenceValues = () => {
+		if (tests?.length > 0 && referenceValues?.length > 0) {
+			const maxValues = tests?.map(test => {
+				return test?.referenceValue?.maxValue || 0;
+			});
+			maxValues.push(tests[tests.length - 1]?.referenceValue?.maxValue || 0);
+			return maxValues;
+		}
+		return [];
+	};
+
+	const handleLabels = () => {
+		if (tests?.length > 0) {
+			const formatedLabels = tests?.map(test => {
+				return shortDateMask(new Date(test?.date));
+			});
+
+			formatedLabels.push('');
+			return formatedLabels;
+		}
+		return [];
 	};
 
 	const handleSetMeasurementSegments = (index: number) => {
@@ -174,34 +219,40 @@ export const HistoricalChartContainer = ({
 							let reference = undefined;
 
 							reference = referenceValues?.find(ref => {
+								// ABRIR O BANCO E FAZER TESTE DE MESA COM AS CONDIÇÕES ABAIXO
 								const gender = Boolean(
+									// TRUE
 									ref?.gender === currentProfile?.gender || ref?.gender === 'A'
 								);
 
 								const condition = Boolean(
+									// FALSE
 									ref?.condition === testFromDB?.condition &&
 										ref?.condition &&
 										testFromDB?.condition
 								);
 
-								if (gender && condition) return ref;
+								if (gender && condition) return ref; // FALSE
 
-								const allAges = Boolean(!ref?.minAge && !ref?.maxAge);
+								// the checks below are only valid if there is no condition
+								if (!ref?.condition) {
+									const allAges = Boolean(!ref?.minAge && !ref?.maxAge);
 
-								const ageBetween = Boolean(
-									ref?.minAge <= ageInDays && ref?.maxAge >= ageInDays
-								);
+									const ageBetween = Boolean(
+										ref?.minAge <= ageInDays && ref?.maxAge >= ageInDays
+									);
 
-								const ageOver = Boolean(
-									!ref?.minAge && ref?.maxAge >= ageInDays
-								);
+									const ageOver = Boolean(
+										ref?.minAge <= ageInDays && !ref?.maxAge
+									);
 
-								const ageUnder = Boolean(
-									ref?.minAge <= ageInDays && !ref?.maxAge
-								);
+									const ageUnder = Boolean(
+										!ref?.minAge && ref?.maxAge >= ageInDays
+									);
 
-								if (gender && (allAges || ageBetween || ageOver || ageUnder))
-									return ref;
+									if (gender && (allAges || ageBetween || ageOver || ageUnder))
+										return ref;
+								}
 							});
 
 							newTests.push({ ...testFromDB, referenceValue: reference });
@@ -250,6 +301,10 @@ export const HistoricalChartContainer = ({
 			referenceValues={referenceValues}
 			handleGoToEditProfile={handleGoToEditProfile}
 			handleSetMeasurementSegments={handleSetMeasurementSegments}
+			handleTestValues={handleTestValues}
+			handleMinReferenceValues={handleMinReferenceValues}
+			handleMaxReferenceValues={handleMaxReferenceValues}
+			handleLabels={handleLabels}
 		/>
 	);
 };
