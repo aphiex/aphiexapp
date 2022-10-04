@@ -9,10 +9,11 @@ import {
 	LoadingState,
 	PageTitle,
 } from '../../../components';
-import { SelectItem, STATES } from '../../../utils';
+import { Place, SelectItem, STATES } from '../../../utils';
 import { styles } from './styles';
 
 type TPlaceEdit = {
+	place: Place;
 	name: string;
 	nameError: string;
 	fixedPhone: string;
@@ -45,6 +46,7 @@ type TPlaceEdit = {
 };
 
 export function PlaceEditView({
+	place,
 	handleChangeName,
 	name,
 	nameError,
@@ -164,7 +166,14 @@ export function PlaceEditView({
 								setValue={setState}
 								label="Estado"
 								placeholder={'Selecionar estado'}
-								onChangeValue={() => setCity(null)}
+								onChangeValue={e => {
+									if (
+										e !== (place?.city?.state ? place?.city?.state : null) ||
+										city !==
+											(place?.city?.id ? place?.city?.id?.toString() : null)
+									)
+										setCity(null);
+								}}
 							/>
 						</View>
 					</View>

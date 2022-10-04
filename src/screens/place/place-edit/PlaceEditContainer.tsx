@@ -276,6 +276,7 @@ export function PlaceEditContainer({
 		<>
 			<ScreenContainer hasFooter>
 				<PlaceEditView
+					place={place}
 					handleChangeName={handleChangeName}
 					name={name}
 					nameError={nameError}

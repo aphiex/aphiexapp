@@ -9,10 +9,11 @@ import {
 	LoadingState,
 	PageTitle,
 } from '../../../components';
-import { SelectItem, STATES } from '../../../utils';
+import { Doctor, SelectItem, STATES } from '../../../utils';
 import { styles } from './styles';
 
 type TDoctorEdit = {
+	doctor: Doctor;
 	name: string;
 	nameError: string;
 	fixedPhone: string;
@@ -49,6 +50,7 @@ type TDoctorEdit = {
 };
 
 export function DoctorEditView({
+	doctor,
 	handleChangeName,
 	name,
 	nameError,
@@ -185,7 +187,14 @@ export function DoctorEditView({
 								setValue={setState}
 								label="Estado"
 								placeholder={'Selecionar estado'}
-								onChangeValue={() => setCity(null)}
+								onChangeValue={e => {
+									if (
+										e !== (doctor?.city?.state ? doctor?.city?.state : null) ||
+										city !==
+											(doctor?.city?.id ? doctor?.city?.id?.toString() : null)
+									)
+										setCity(null);
+								}}
 							/>
 						</View>
 					</View>

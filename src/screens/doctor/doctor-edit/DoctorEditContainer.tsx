@@ -299,6 +299,7 @@ export function DoctorEditContainer({
 				<DoctorEditView
 					handleChangeName={handleChangeName}
 					name={name}
+					doctor={doctor}
 					nameError={nameError}
 					loading={loading}
 					loadingCities={loadingCities}
