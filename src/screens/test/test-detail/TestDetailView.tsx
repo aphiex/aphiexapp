@@ -8,7 +8,7 @@ import {
 	PasswordRequestModalContainer,
 } from '../../../components';
 import theme from '../../../styles/theme';
-import { dateMask, ReferenceValue, Test } from '../../../utils';
+import { dateMask, formatQuantity, ReferenceValue, Test } from '../../../utils';
 import {
 	HistoricalChartContainer,
 	ReferenceTableContainer,
@@ -89,7 +89,7 @@ export function TestDetailView({
 									{test?.value ? (
 										<Text style={styles.content}>
 											{test?.value
-												? `${test?.value}${
+												? `${formatQuantity(test?.value)}${
 														test?.testType?.measurementUnit
 															? ` ${test.testType.measurementUnit}`
 															: ''

@@ -113,6 +113,7 @@ export function DoctorEditView({
 						<View style={{ width: '48%' }}>
 							<CustomMaskInput
 								label="Telefone"
+								keyboardType="number-pad"
 								mask="(99) 9999-9999"
 								value={fixedPhone}
 								error={fixedPhoneError}
@@ -125,6 +126,7 @@ export function DoctorEditView({
 						<View style={{ width: '48%' }}>
 							<CustomMaskInput
 								label="Celular"
+								keyboardType="number-pad"
 								mask="(99) 99999-9999"
 								value={mobilePhone}
 								defaultValue={mobilePhone}
@@ -138,6 +140,7 @@ export function DoctorEditView({
 
 					<CustomInput
 						label="Email"
+						keyboardType="email-address"
 						value={email}
 						error={emailError}
 						onChangeText={(value: string) => handleChangeEmail(value)}
@@ -172,6 +175,7 @@ export function DoctorEditView({
 						<View style={{ width: '48%' }}>
 							<CustomInput
 								label="Número"
+								keyboardType="number-pad"
 								value={addressNumber}
 								onChangeText={(value: string) =>
 									handleChangeAddressNumber(value)

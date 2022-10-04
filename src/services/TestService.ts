@@ -154,7 +154,7 @@ async function handleGetTestById(
 							  )
 							: '',
 						value: result?.test_value
-							? parseInt(
+							? Number(
 									CryptoES.AES.decrypt(result?.test_value, key).toString(
 										CryptoES.enc.Utf8
 									)

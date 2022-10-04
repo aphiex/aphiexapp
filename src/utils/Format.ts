@@ -61,10 +61,32 @@ export const formatQuantity = (value?: number) => {
 	if (!value && value !== 0) return `-`;
 	if (value === 0) return `0`;
 
-	return `${(+value).toLocaleString('pt-BR', {
-		minimumFractionDigits: 0,
-		maximumFractionDigits: 2,
-	})}`;
+	if (Number.isInteger(value)) {
+		return value.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+	}
+
+	const newValue = value
+		.toFixed(2)
+		.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+		.replace(/.([^.]*)$/, ',$1');
+
+	// when newValue ends with 'x,00' remove the 0s
+	if (
+		newValue[newValue.length - 1] === '0' &&
+		newValue[newValue.length - 2] === '0'
+	)
+		return newValue.substring(0, newValue.length - 3);
+
+	// when newValue ends with 'X,X0' remove the 0
+	if (newValue[newValue.length - 1] === '0')
+		return newValue.substring(0, newValue.length - 1);
+
+	return newValue;
+};
+
+export const dotToComma = (value?: string) => {
+	if (value) return value.replace('.', ',');
+	return value;
 };
 
 export const ageClassification = (

@@ -68,7 +68,7 @@ export function PlaceCreateContainer({
 	};
 
 	const handleChangeAddressNumber = (value: string) => {
-		const onlyNumbers = value.replace(/[^0-9.]/g, '');
+		const onlyNumbers = value.replace(/[^0-9]/g, '');
 		setAddressNumber(onlyNumbers);
 	};
 

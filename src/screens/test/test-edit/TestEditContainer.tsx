@@ -8,7 +8,13 @@ import { RootStackParamList } from '../../../routers/PrivateStack';
 import { testService, testTypeService } from '../../../services';
 import { referenceValueService } from '../../../services/ReferenceValueService';
 import theme from '../../../styles/theme';
-import { Test, SelectItem, TestType, ReferenceValue } from '../../../utils';
+import {
+	Test,
+	SelectItem,
+	TestType,
+	ReferenceValue,
+	dotToComma,
+} from '../../../utils';
 import { TestEditView } from './TestEditView';
 
 export function TestEditContainer({
@@ -47,19 +53,27 @@ export function TestEditContainer({
 	const { auth } = useAuth();
 
 	const handleChangeValue = (v: string) => {
-		let formatedValue = v.replace(/\s/g, '').replace(/\-/g, '');
-		if (formatedValue[0] === '.' || formatedValue[0] === ',')
-			formatedValue = '0' + formatedValue;
-		setValue(formatedValue);
+		let formatedValue = v
+			.replace(/\s/g, '')
+			.replace(/\-/g, '')
+			.replace(/\./g, '');
+		if (formatedValue[0] === ',') formatedValue = '0' + formatedValue;
+
+		const onlyOneComma = Boolean(formatedValue.split(',').length - 1 < 2);
+
+		if (onlyOneComma) setValue(formatedValue);
+
 		if (valueError) setValueError('');
 	};
 
 	const handleFixValue = (v: string) => {
+		let newValue = v;
+
 		if (v[v.length - 1] === '.' || v[v.length - 1] === ',') {
-			const newValue = v.substring(0, v.length - 1);
-			return newValue;
+			newValue = v.substring(0, v.length - 1);
 		}
-		return v;
+
+		return newValue.replace(',', '.');
 	};
 
 	const handleChangeMeasurementUnit = (testTypeId: string) => {
@@ -95,7 +109,7 @@ export function TestEditContainer({
 
 	const isFormDust = () => {
 		return Boolean(
-			value !== (test?.value ? test?.value.toString() : '') ||
+			value !== (test?.value ? dotToComma(test?.value.toString()) : '') ||
 				date?.toISOString() !==
 					(test?.date ? test?.date : today.toISOString()) ||
 				testType !==
@@ -107,7 +121,7 @@ export function TestEditContainer({
 
 	const resetForm = () => {
 		setDescription(test?.description || '');
-		setValue(test?.value?.toString() || '');
+		setValue(test?.value ? dotToComma(test?.value?.toString()) : '');
 		setValueError('');
 		setDate(test?.date ? new Date(test.date) : today);
 		setTestType(test?.testType?.id?.toString() || null);
@@ -176,7 +190,7 @@ export function TestEditContainer({
 						setTest(result);
 						setCondition(result?.condition || '');
 						setDescription(result?.description || '');
-						setValue(result?.value?.toString() || '');
+						setValue(result?.value ? dotToComma(result?.value.toString()) : '');
 						setDate(result?.date ? new Date(result.date) : today);
 						setTestType(result?.testType?.id?.toString() || null);
 						setMeasurementUnit(result?.testType?.measurementUnit || '');

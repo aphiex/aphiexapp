@@ -42,19 +42,27 @@ export function TestCreateContainer({
 	const { auth } = useAuth();
 
 	const handleChangeValue = (v: string) => {
-		let formatedValue = v.replace(/\s/g, '').replace(/\-/g, '');
-		if (formatedValue[0] === '.' || formatedValue[0] === ',')
-			formatedValue = '0' + formatedValue;
-		setValue(formatedValue);
+		let formatedValue = v
+			.replace(/\s/g, '')
+			.replace(/\-/g, '')
+			.replace(/\./g, '');
+		if (formatedValue[0] === ',') formatedValue = '0' + formatedValue;
+
+		const onlyOneComma = Boolean(formatedValue.split(',').length - 1 < 2);
+
+		if (onlyOneComma) setValue(formatedValue);
+
 		if (valueError) setValueError('');
 	};
 
 	const handleFixValue = (v: string) => {
+		let newValue = v;
+
 		if (v[v.length - 1] === '.' || v[v.length - 1] === ',') {
-			const newValue = v.substring(0, v.length - 1);
-			return newValue;
+			newValue = v.substring(0, v.length - 1);
 		}
-		return v;
+
+		return newValue.replace(',', '.');
 	};
 
 	const handleChangeMeasurementUnit = (testTypeId: string) => {
