@@ -2,14 +2,15 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import { HeartPulse } from '../../assets/icons';
 import { FooterContainer, ScreenContainer } from '../../components';
+import { RootStackParamList } from '../../routers/PrivateStack';
 import theme from '../../styles/theme';
 import { SettingsView } from './SettingsView';
 
 export function SettingsContainer({
 	navigation,
-}: NativeStackScreenProps<any, any>) {
+}: NativeStackScreenProps<RootStackParamList, 'Settings'>) {
 	const handleToCreateTestType = () => {
-		console.log('Cadastrar novo tipo de exame');
+		navigation.navigate('TestTypeCreate');
 	};
 
 	const handleToEditTestType = () => {

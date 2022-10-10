@@ -98,14 +98,14 @@ export const createReferenceValueTable = async () => {
 			tx.executeSql(
 				'CREATE TABLE IF NOT EXISTS ' +
 					'reference_value ' +
-					'(reference_value_id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
-					'reference_value_gender CHAR (1), ' +
+					'(reference_value_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, ' +
+					'reference_value_gender CHAR (1) NOT NULL, ' +
 					'reference_value_min_value REAL, ' +
 					'reference_value_max_value REAL, ' +
 					'reference_value_min_age INTEGER, ' +
 					'reference_value_max_age INTEGER, ' +
 					'reference_value_condition VARCHAR (90), ' +
-					'test_type_id INTEGER, ' +
+					'test_type_id INTEGER NOT NULL, ' +
 					'FOREIGN KEY(test_type_id) REFERENCES test_type(test_type_id));'
 			);
 		});

@@ -5,3 +5,4 @@ export * from './menu';
 export * from './place';
 export * from './profile';
 export * from './settings';
+export * from './test-type';

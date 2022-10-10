@@ -4,6 +4,7 @@ import { Alert } from 'react-native';
 import { Restart } from '../../../assets/icons';
 import { FooterContainer, ScreenContainer } from '../../../components';
 import { useAuth } from '../../../context';
+import { RootStackParamList } from '../../../routers/PrivateStack';
 import { cityService, placeService } from '../../../services';
 import theme from '../../../styles/theme';
 import { SelectItem, validateEmail } from '../../../utils';
@@ -11,7 +12,7 @@ import { PlaceCreateView } from './PlaceCreateView';
 
 export function PlaceCreateContainer({
 	navigation,
-}: NativeStackScreenProps<any, any>) {
+}: NativeStackScreenProps<RootStackParamList, 'PlaceCreate'>) {
 	const [name, setName] = useState<string>('');
 	const [nameError, setNameError] = useState<string>('');
 

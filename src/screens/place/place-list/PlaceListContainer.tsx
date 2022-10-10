@@ -11,7 +11,7 @@ import { PlaceListView } from './PlaceListView';
 
 export function PlaceListContainer({
 	navigation,
-}: NativeStackScreenProps<RootStackParamList, any>) {
+}: NativeStackScreenProps<RootStackParamList, 'PlaceList'>) {
 	const [places, setPlaces] = useState<Place[]>();
 	const [loading, setLoading] = useState<boolean>(true);
 	const { auth } = useAuth();

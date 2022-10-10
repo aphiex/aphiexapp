@@ -5,7 +5,7 @@ export async function getAllTestTypes(): Promise<TestTypeFromDB[] | null> {
 	return new Promise(async (resolve, reject) => {
 		(await database).transaction(tx => {
 			tx.executeSql(
-				'SELECT * FROM test_type ORDER BY test_type_name ASC',
+				'SELECT * FROM test_type ORDER BY test_type_name COLLATE UNICODE ASC',
 				[],
 				(txObj, { rows: { _array } }) => {
 					resolve(_array);
@@ -45,9 +45,9 @@ export const createTestTypeTable = async () => {
 			tx.executeSql(
 				'CREATE TABLE IF NOT EXISTS ' +
 					'test_type ' +
-					'(test_type_id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
-					'test_type_name VARCHAR (90), ' +
-					'test_type_measurement_unit VARCHAR (45));'
+					'(test_type_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, ' +
+					'test_type_name VARCHAR (90) NOT NULL, ' +
+					'test_type_measurement_unit VARCHAR (45) NOT NULL);'
 			);
 		});
 	} catch (error) {
@@ -61,7 +61,7 @@ export async function createTestType(testType: TestTypeCreate) {
 			tx.executeSql(
 				'INSERT INTO test_type (' +
 					'test_type_name, ' +
-					'test_type_measurement_unit, ' +
+					'test_type_measurement_unit' +
 					') VALUES (?,?)',
 				[testType?.name || '', testType?.measurementUnit || '']
 			);
@@ -70,7 +70,6 @@ export async function createTestType(testType: TestTypeCreate) {
 		return error;
 	}
 }
-
 export async function updateTestType(testType: TestType) {
 	try {
 		(await database).transaction(tx => {

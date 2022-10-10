@@ -5,7 +5,7 @@ export type TestType = {
 };
 
 export type TestTypeCreate = {
-	name?: number;
+	name?: string;
 	measurementUnit?: string;
 };
 

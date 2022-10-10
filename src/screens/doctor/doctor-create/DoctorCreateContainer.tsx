@@ -4,6 +4,7 @@ import { Alert } from 'react-native';
 import { Restart } from '../../../assets/icons';
 import { FooterContainer, ScreenContainer } from '../../../components';
 import { useAuth } from '../../../context';
+import { RootStackParamList } from '../../../routers/PrivateStack';
 import { cityService, doctorService } from '../../../services';
 import theme from '../../../styles/theme';
 import { SelectItem, validateEmail } from '../../../utils';
@@ -11,7 +12,7 @@ import { DoctorCreateView } from './DoctorCreateView';
 
 export function DoctorCreateContainer({
 	navigation,
-}: NativeStackScreenProps<any, any>) {
+}: NativeStackScreenProps<RootStackParamList, 'DoctorCreate'>) {
 	const [name, setName] = useState<string>('');
 	const [nameError, setNameError] = useState<string>('');
 

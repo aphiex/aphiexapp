@@ -4,6 +4,7 @@ import { Alert } from 'react-native';
 import { Restart } from '../../../assets/icons';
 import { FooterContainer, ScreenContainer } from '../../../components';
 import { useAuth, useProfile } from '../../../context';
+import { RootStackParamList } from '../../../routers/PrivateStack';
 import { testService, testTypeService } from '../../../services';
 import { referenceValueService } from '../../../services/ReferenceValueService';
 import theme from '../../../styles/theme';
@@ -12,7 +13,7 @@ import { TestCreateView } from './TestCreateView';
 
 export function TestCreateContainer({
 	navigation,
-}: NativeStackScreenProps<any, any>) {
+}: NativeStackScreenProps<RootStackParamList, 'TestCreate'>) {
 	const [description, setDescription] = useState<string>('');
 
 	const [condition, setCondition] = useState<string>('');

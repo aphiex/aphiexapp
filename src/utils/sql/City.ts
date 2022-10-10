@@ -9,7 +9,7 @@ export async function getCitiesByState(
 			tx.executeSql(
 				'SELECT * FROM city ' +
 					'WHERE city_state = (?) ' +
-					'ORDER BY city_name ASC',
+					'ORDER BY city_name COLLATE UNICODE ASC',
 				[state],
 				(txObj, { rows: { _array } }) => {
 					resolve(_array);

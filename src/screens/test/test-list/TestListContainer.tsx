@@ -11,7 +11,7 @@ import { TestListView } from './TestListView';
 
 export function TestListContainer({
 	navigation,
-}: NativeStackScreenProps<RootStackParamList, any>) {
+}: NativeStackScreenProps<RootStackParamList, 'TestList'>) {
 	const [tests, setTests] = useState<Test[]>();
 	const [loading, setLoading] = useState<boolean>(true);
 	const { auth } = useAuth();

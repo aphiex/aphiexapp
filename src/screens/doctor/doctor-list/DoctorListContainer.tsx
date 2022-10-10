@@ -11,7 +11,7 @@ import { DoctorListView } from './DoctorListView';
 
 export function DoctorListContainer({
 	navigation,
-}: NativeStackScreenProps<RootStackParamList, any>) {
+}: NativeStackScreenProps<RootStackParamList, 'DoctorList'>) {
 	const [doctors, setDoctors] = useState<Doctor[]>();
 	const [loading, setLoading] = useState<boolean>(true);
 	const { auth } = useAuth();

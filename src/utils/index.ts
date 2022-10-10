@@ -5,3 +5,4 @@ export * from './States';
 export * from './GeneralValidations';
 export * from './types';
 export * from './sql';
+export * from './Enum';

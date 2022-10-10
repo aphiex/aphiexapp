@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { StyleProp, Text, View, ViewStyle } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import theme from '../../styles/theme';
 import { styles } from './styles';
@@ -18,7 +18,11 @@ type TCustomSelectInput = {
 	setValue: React.Dispatch<React.SetStateAction<string | null>>;
 	placeholder?: string;
 	disabled?: boolean;
+	noError?: boolean;
+	noLabel?: boolean;
 	onChangeValue?: (e?: any) => void;
+	onSelect?: (value: string) => void;
+	dropDownContainerStyle?: StyleProp<ViewStyle>;
 };
 
 export function CustomSelectInput({
@@ -33,6 +37,10 @@ export function CustomSelectInput({
 	disabled,
 	setError,
 	onChangeValue,
+	noError,
+	noLabel,
+	onSelect,
+	dropDownContainerStyle,
 }: TCustomSelectInput) {
 	function handleSetColor() {
 		if (disabled) return theme.colors.softGray;
@@ -42,7 +50,9 @@ export function CustomSelectInput({
 
 	return (
 		<View style={styles.container}>
-			<Text style={[styles.label, { color: handleSetColor() }]}>{label}</Text>
+			{!noLabel && (
+				<Text style={[styles.label, { color: handleSetColor() }]}>{label}</Text>
+			)}
 
 			<DropDownPicker
 				open={open}
@@ -66,10 +76,14 @@ export function CustomSelectInput({
 				disabled={disabled}
 				searchable={items?.length > 10}
 				searchPlaceholder="Pesquisar"
+				dropDownContainerStyle={dropDownContainerStyle}
 				listMode={items?.length > 30 ? 'MODAL' : 'SCROLLVIEW'}
+				onSelectItem={({ value }) => {
+					if (onSelect) onSelect(value);
+				}}
 			/>
 
-			<Text style={styles.error}>{error}</Text>
+			{!noError && <Text style={styles.error}>{error}</Text>}
 		</View>
 	);
 }
