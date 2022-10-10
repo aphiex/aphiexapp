@@ -25,7 +25,6 @@ export const ReferenceValueContainer = ({
 	const [valueVariation, setValueVariation] = useState<string>('BETWEEN');
 
 	const handleChangeCondition = (value: string) => {
-		console.log('handleChangeCondition');
 		if (typeof value == 'string') {
 			setReferenceValues(prev =>
 				prev.map((prevReference, prevIndex) => {
@@ -45,7 +44,6 @@ export const ReferenceValueContainer = ({
 	};
 
 	const handleChangeGender = (value: string) => {
-		console.log('handleChangeGender');
 		setReferenceValues(prev =>
 			prev.map((prevReference, prevIndex) => {
 				if (prevIndex === index) {
@@ -61,10 +59,7 @@ export const ReferenceValueContainer = ({
 	};
 
 	const handleChangeValueVariation = (value: string) => {
-		console.log('handleChangeValueVariation');
 		setValueVariation(value);
-		if (value === 'AGE_OVER') console.log('bumbum');
-		if (value === 'AGE_UNDER') console.log('popo');
 
 		setReferenceValues(prev =>
 			prev.map((prevReference, prevIndex) => {
@@ -82,7 +77,6 @@ export const ReferenceValueContainer = ({
 	};
 
 	const handleChangeMinValue = (value?: number) => {
-		console.log('handleChangeMinValue');
 		setReferenceValues(prev =>
 			prev.map((prevReference, prevIndex) => {
 				if (prevIndex === index) {
@@ -98,7 +92,6 @@ export const ReferenceValueContainer = ({
 	};
 
 	const handleChangeMaxValue = (value?: number) => {
-		console.log('handleChangeMaxValue');
 		setReferenceValues(prev =>
 			prev.map((prevReference, prevIndex) => {
 				if (prevIndex === index) {
