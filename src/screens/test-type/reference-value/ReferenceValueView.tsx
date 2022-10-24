@@ -334,7 +334,7 @@ export function ReferenceValueView({
 								keyboardType="decimal-pad"
 								onChangeText={(v: string) => {
 									if (currentReferenceValue?.minValue !== undefined)
-										handleChangeMinValue(v);
+										handleChangeMinValue(v || '0');
 								}}
 								adornment={measurementUnit || ''}
 								noError
@@ -348,7 +348,7 @@ export function ReferenceValueView({
 								keyboardType="decimal-pad"
 								onChangeText={(v: string) => {
 									if (currentReferenceValue?.maxValue !== undefined)
-										handleChangeMaxValue(v);
+										handleChangeMaxValue(v || '0');
 								}}
 								adornment={measurementUnit || ''}
 								noError
@@ -387,7 +387,7 @@ export function ReferenceValueView({
 								keyboardType="decimal-pad"
 								onChangeText={(v: string) => {
 									if (currentReferenceValue?.maxValue !== undefined)
-										handleChangeMaxValue(v);
+										handleChangeMaxValue(v || '0');
 								}}
 								adornment={measurementUnit || ''}
 								noError

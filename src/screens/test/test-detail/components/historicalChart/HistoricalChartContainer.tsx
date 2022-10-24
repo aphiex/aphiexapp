@@ -89,9 +89,9 @@ export const HistoricalChartContainer = ({
 	const handleMinReferenceValues = () => {
 		if (tests?.length > 0 && referenceValues?.length > 0) {
 			const minValues = tests?.map(test => {
-				return test?.referenceValue?.minValue || 0;
+				return Number(test?.referenceValue?.minValue);
 			});
-			minValues.push(tests[tests.length - 1]?.referenceValue?.minValue || 0);
+			minValues.push(Number(tests[tests.length - 1]?.referenceValue?.minValue));
 			return minValues;
 		}
 		return [];
@@ -100,9 +100,9 @@ export const HistoricalChartContainer = ({
 	const handleMaxReferenceValues = () => {
 		if (tests?.length > 0 && referenceValues?.length > 0) {
 			const maxValues = tests?.map(test => {
-				return test?.referenceValue?.maxValue || 0;
+				return Number(test?.referenceValue?.maxValue);
 			});
-			maxValues.push(tests[tests.length - 1]?.referenceValue?.maxValue || 0);
+			maxValues.push(Number(tests[tests.length - 1]?.referenceValue?.maxValue));
 			return maxValues;
 		}
 		return [];
@@ -125,7 +125,7 @@ export const HistoricalChartContainer = ({
 			tests.length > 0 && referenceValues.length > 0
 				? Math.max(
 						...tests.map(test => {
-							return test?.referenceValue?.maxValue || 0;
+							return Number(test?.referenceValue?.maxValue);
 						})
 				  )
 				: 0;
@@ -169,8 +169,9 @@ export const HistoricalChartContainer = ({
 
 		if (!referenceValue) return theme.colors.grey;
 		if (
-			(referenceValue?.maxValue && dataPoint > referenceValue.maxValue) ||
-			(referenceValue?.minValue && dataPoint < referenceValue?.minValue)
+			(referenceValue?.maxValue &&
+				dataPoint > Number(referenceValue.maxValue)) ||
+			(referenceValue?.minValue && dataPoint < Number(referenceValue?.minValue))
 		) {
 			return theme.colors.red;
 		}

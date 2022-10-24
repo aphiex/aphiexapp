@@ -25,7 +25,7 @@ export const ReferenceTableContainer = ({
 	};
 
 	const handleShowValueRange = (minValue?: number, maxValue?: number) => {
-		if (!minValue && !maxValue) return '-';
+		if (minValue === undefined && maxValue === undefined) return '-';
 		if (!minValue && maxValue) return `abaixo de ${formatQuantity(maxValue)}`;
 		if (minValue && !maxValue) return `acima de ${formatQuantity(minValue)}`;
 		if (minValue === maxValue) return formatQuantity(minValue);
@@ -43,7 +43,8 @@ export const ReferenceTableContainer = ({
 
 		if (classification) return classification;
 
-		if (!reference?.minAge && !reference?.maxAge) return 'Todas as idades';
+		if (reference?.minAge === undefined && reference?.maxAge === undefined)
+			return 'Todas as idades';
 
 		if (!reference?.minAge && reference?.maxAge)
 			return `até ${setTimeValue(reference?.maxAge, timeLabel)} ${timeLabel}`;
@@ -54,7 +55,13 @@ export const ReferenceTableContainer = ({
 				timeLabel
 			)} ${timeLabel}`;
 
-		if (reference?.minAge && reference?.maxAge)
+		if (reference?.minAge === reference?.maxAge)
+			return `${setTimeValue(reference?.minAge, timeLabel)} ${timeLabel}`;
+
+		if (
+			(reference?.minAge || reference?.minAge === 0) &&
+			(reference?.maxAge || reference?.maxAge === 0)
+		)
 			return `${setTimeValue(reference?.minAge, timeLabel)} a ${setTimeValue(
 				reference?.maxAge,
 				timeLabel

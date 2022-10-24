@@ -76,7 +76,7 @@ export function TestTypeCreateContainer({
 	};
 
 	const handleFixValue = (v?: string) => {
-		if (v) {
+		if (v !== undefined) {
 			let newValue = v;
 
 			if (v[v.length - 1] === '.' || v[v.length - 1] === ',') {

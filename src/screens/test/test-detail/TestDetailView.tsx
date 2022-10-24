@@ -118,10 +118,12 @@ export function TestDetailView({
 								<Text style={styles.content}>{test?.description || '-'}</Text>
 							</View>
 
-							<View style={styles.contentContainer}>
-								<Text style={styles.title}>Informação adicional</Text>
-								<Text style={styles.content}>{test?.condition || '-'}</Text>
-							</View>
+							{Boolean(test?.condition) && (
+								<View style={styles.contentContainer}>
+									<Text style={styles.title}>Informação adicional</Text>
+									<Text style={styles.content}>{test?.condition}</Text>
+								</View>
+							)}
 
 							<View style={styles.contentContainer}>
 								<Text style={styles.title}>Histórico de Resultados</Text>

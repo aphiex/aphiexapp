@@ -130,13 +130,13 @@ export async function createReferenceValue(
 					'test_type_id' +
 					') VALUES (?,?,?,?,?,?,?)',
 				[
-					referenceValue?.gender || '',
-					referenceValue?.minValue || '',
-					referenceValue?.maxValue || '',
-					referenceValue?.minAge || '',
-					referenceValue?.maxAge || '',
-					referenceValue?.condition || '',
-					referenceValue?.testTypeId || '',
+					referenceValue?.gender,
+					referenceValue?.minValue ? Number(referenceValue?.minValue) : '',
+					referenceValue?.maxValue ? Number(referenceValue?.maxValue) : '',
+					referenceValue?.minAge,
+					referenceValue?.maxAge,
+					referenceValue?.condition,
+					referenceValue?.testTypeId,
 				]
 			);
 		});

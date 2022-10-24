@@ -19,6 +19,7 @@ import {
 	ReferenceValue,
 	ReferenceValueCreation,
 	SelectItem,
+	setTimeLabel,
 	TestType,
 } from '../../../utils';
 import { TestTypeEditView } from './TestTypeEditView';
@@ -486,7 +487,11 @@ export function TestTypeEditContainer({
 		if (classification === 'Criança') return 'CHILD';
 		if (classification === 'Adulto') return 'ADULT';
 		if (classification === 'Idoso') return 'ELDER';
-		if (!classification && !referenceValue?.minAge && !referenceValue?.maxAge)
+		if (
+			!classification &&
+			referenceValue?.minAge === undefined &&
+			referenceValue?.maxAge === undefined
+		)
 			return 'ALL';
 
 		return 'CUSTOM';
@@ -504,6 +509,16 @@ export function TestTypeEditContainer({
 		return 'BETWEEN';
 	};
 
+	const setInitalTime = (referenceValue: ReferenceValue) => {
+		const timeLabel = setTimeLabel(
+			referenceValue?.minAge,
+			referenceValue?.maxAge
+		);
+		if (timeLabel === 'ano' || timeLabel === 'anos') return 'YEAR';
+		if (timeLabel === 'mês' || timeLabel === 'meses') return 'MONTH';
+		return 'DAY';
+	};
+
 	const handleGetReferenceValues = (testTypeId: string) => {
 		setReferenceLoading(true);
 		try {
@@ -516,9 +531,9 @@ export function TestTypeEditContainer({
 							condition: reference?.condition || '',
 							gender: reference?.gender || 'A',
 							maxAge: reference?.maxAge,
-							maxValue: reference?.maxValue || '0',
+							maxValue: reference?.maxValue,
 							minAge: reference?.minAge,
-							minValue: reference?.minValue || '0',
+							minValue: reference?.minValue,
 							yOffset: 0,
 							conditionError: '',
 							genderError: '',
@@ -526,7 +541,7 @@ export function TestTypeEditContainer({
 							maxValueError: '',
 							minAgeError: '',
 							minValueError: '',
-							time: 'DAY',
+							time: setInitalTime(reference),
 							ageVariation: setInitalAgeVariation(reference),
 							timeVariation: setInitalTimeVariation(reference),
 							valueVariation: setInitalValueVariation(reference),

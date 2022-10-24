@@ -22,16 +22,16 @@ async function handleGetReferenceValues(): Promise<ReferenceValue[]> {
 					results.forEach(result => {
 						referenceValues.push({
 							id: result?.reference_value_id,
-							gender: result?.reference_value_gender || '',
-							maxAge: result?.reference_value_max_age || undefined,
-							maxValue: result?.reference_value_max_value || undefined,
-							minAge: result?.reference_value_min_age || undefined,
-							minValue: result?.reference_value_min_value || undefined,
-							condition: result?.reference_value_condition || '',
+							gender: result?.reference_value_gender,
+							maxAge: result?.reference_value_max_age,
+							maxValue: result?.reference_value_max_value?.toString(),
+							minAge: result?.reference_value_min_age,
+							minValue: result?.reference_value_min_value?.toString(),
+							condition: result?.reference_value_condition,
 							testType: {
-								id: result?.test_type_id || undefined,
-								measurementUnit: result?.test_type_measurement_unit || '',
-								name: result?.test_type_name || '',
+								id: result?.test_type_id,
+								measurementUnit: result?.test_type_measurement_unit,
+								name: result?.test_type_name,
 							},
 						});
 					});
@@ -56,16 +56,16 @@ async function handleGetReferenceValueById(
 				if (result) {
 					const referenceValue: ReferenceValue = {
 						id: result?.reference_value_id,
-						gender: result?.reference_value_gender || '',
-						maxAge: result?.reference_value_max_age || undefined,
-						maxValue: result?.reference_value_max_value || undefined,
-						minAge: result?.reference_value_min_age || undefined,
-						minValue: result?.reference_value_min_value || undefined,
-						condition: result?.reference_value_condition || '',
+						gender: result?.reference_value_gender,
+						maxAge: result?.reference_value_max_age,
+						maxValue: result?.reference_value_max_value?.toString(),
+						minAge: result?.reference_value_min_age,
+						minValue: result?.reference_value_min_value?.toString(),
+						condition: result?.reference_value_condition,
 						testType: {
-							id: result?.test_type_id || undefined,
-							measurementUnit: result?.test_type_measurement_unit || '',
-							name: result?.test_type_name || '',
+							id: result?.test_type_id,
+							measurementUnit: result?.test_type_measurement_unit,
+							name: result?.test_type_name,
 						},
 					};
 
@@ -82,19 +82,25 @@ async function handleGetReferenceValueByTestType(
 	return new Promise(async (resolve, reject) => {
 		getReferenceValueByTestType(testTypeId)
 			.then(results => {
+				console.log(results);
+
 				if (results) {
 					const referenceValues: ReferenceValue[] = [];
 
 					results.forEach(result => {
 						referenceValues.push({
 							id: result?.reference_value_id,
-							gender: result?.reference_value_gender || '',
-							maxAge: result?.reference_value_max_age || undefined,
-							maxValue: result?.reference_value_max_value || undefined,
-							minAge: result?.reference_value_min_age || undefined,
-							minValue: result?.reference_value_min_value || undefined,
-							condition: result?.reference_value_condition || '',
-							testType: undefined,
+							gender: result?.reference_value_gender,
+							maxAge: result?.reference_value_max_age,
+							maxValue: result?.reference_value_max_value?.toString(),
+							minAge: result?.reference_value_min_age,
+							minValue: result?.reference_value_min_value?.toString(),
+							condition: result?.reference_value_condition,
+							testType: {
+								id: result?.test_type_id,
+								measurementUnit: result?.test_type_measurement_unit,
+								name: result?.test_type_name,
+							},
 						});
 					});
 
@@ -117,13 +123,17 @@ async function handleGetReferenceConditionsByTestType(
 					results.forEach(result => {
 						referenceValues.push({
 							id: result?.reference_value_id,
-							gender: result?.reference_value_gender || '',
-							maxAge: result?.reference_value_max_age || undefined,
-							maxValue: result?.reference_value_max_value || undefined,
-							minAge: result?.reference_value_min_age || undefined,
-							minValue: result?.reference_value_min_value || undefined,
-							condition: result?.reference_value_condition || '',
-							testType: undefined,
+							gender: result?.reference_value_gender,
+							maxAge: result?.reference_value_max_age,
+							maxValue: result?.reference_value_max_value?.toString(),
+							minAge: result?.reference_value_min_age,
+							minValue: result?.reference_value_min_value?.toString(),
+							condition: result?.reference_value_condition,
+							testType: {
+								id: result?.test_type_id,
+								measurementUnit: result?.test_type_measurement_unit,
+								name: result?.test_type_name,
+							},
 						});
 					});
 
