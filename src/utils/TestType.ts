@@ -8,6 +8,10 @@ export interface ReferenceValueCreation extends ReferenceValueCreate {
 	minAgeError?: string;
 	maxAgeError?: string;
 	yOffset?: number;
+	ageVariation?: string;
+	timeVariation?: string;
+	valueVariation?: string;
+	time?: string;
 }
 
 export const isSameCondition = (
@@ -36,7 +40,7 @@ export const isInvalidValue = (reference: ReferenceValueCreation) => {
 	return Boolean(
 		reference?.minValue &&
 			reference?.maxValue &&
-			reference?.minValue > reference?.maxValue
+			parseInt(reference?.minValue) > parseInt(reference?.maxValue)
 	);
 };
 
@@ -49,7 +53,7 @@ export const isInvalidAge = (reference: ReferenceValueCreation) => {
 };
 
 export const isInvalidMinAge = (
-	referenceA: ReferenceValueCreation, // referenceA min age is between referenceB min age and referenceB max age
+	referenceA: ReferenceValueCreation,
 	referenceB: ReferenceValueCreation
 ) => {
 	return Boolean(
@@ -67,14 +71,16 @@ export const isInvalidMinAge = (
 				// referenceA minAge is above referenceB minAge when referenceB maxAge don't exist
 				(referenceA?.minAge &&
 					referenceB?.minAge &&
-					!referenceB?.maxAge &&
+					referenceB?.maxAge === undefined &&
 					referenceA?.minAge >= referenceB?.minAge) ||
 				// referenceA minAge is below referenceB maxAge when referenceB minAge don't exist
 				(referenceA?.minAge &&
-					!referenceB?.minAge &&
+					referenceB?.minAge === undefined &&
 					referenceB?.maxAge &&
 					referenceA?.minAge <= referenceB?.maxAge) ||
-				(referenceA?.minAge && !referenceB?.minAge && !referenceB?.maxAge))
+				(referenceA?.minAge &&
+					referenceB?.minAge === undefined &&
+					referenceB?.maxAge === undefined))
 	);
 };
 
@@ -97,13 +103,15 @@ export const isInvalidMaxAge = (
 				// referenceA maxAge is above referenceB minAge when referenceB maxAge don't exist
 				(referenceA?.maxAge &&
 					referenceB?.minAge &&
-					!referenceB?.maxAge &&
+					referenceB?.maxAge === undefined &&
 					referenceA?.maxAge >= referenceB?.minAge) ||
 				// referenceA maxAge is below referenceB maxAge when referenceB minAge don't exist
 				(referenceA?.maxAge &&
-					!referenceB?.minAge &&
+					referenceB?.minAge === undefined &&
 					referenceB?.maxAge &&
 					referenceA?.maxAge <= referenceB?.maxAge) ||
-				(referenceA?.maxAge && !referenceB?.minAge && !referenceB?.maxAge))
+				(referenceA?.maxAge &&
+					referenceB?.minAge === undefined &&
+					referenceB?.maxAge === undefined))
 	);
 };

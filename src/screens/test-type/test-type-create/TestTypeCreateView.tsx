@@ -52,7 +52,6 @@ export function TestTypeCreateView({
 		<>
 			<View style={styles.container}>
 				<PageTitle title="Novo Tipo de Exame" icon={<FolderPlus />} />
-
 				{!loading && (
 					<View style={styles.form}>
 						<CustomInput

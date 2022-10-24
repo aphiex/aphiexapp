@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Alert } from 'react-native';
-import { MEASUREMENT_UNITS, ReferenceValueCreation } from '../../../utils';
+import {
+	ageClassification,
+	MEASUREMENT_UNITS,
+	ReferenceValueCreation,
+} from '../../../utils';
 import { ReferenceValueView } from './ReferenceValueView';
 
 type TReferenceValueContainer = {
@@ -26,17 +30,10 @@ export const ReferenceValueContainer = ({
 	const [openAge, setOpenAge] = useState<boolean>(false);
 	const [openTimeVariation, setOpenTimeVariation] = useState<boolean>(false);
 	const [openTime, setOpenTime] = useState<boolean>(false);
-
-	const [ageVariation, setAgeVariation] = useState<string>('CUSTOM');
-	const [timeVariation, setTimeVariation] = useState<string>('BETWEEN');
-	const [valueVariation, setValueVariation] = useState<string>('BETWEEN');
-	const [time, setTime] = useState<string>('DAY');
+	const [initalAgeLoad, setInitalAgeLoad] = useState<boolean>(true);
+	const [finalAgeLoad, setFinalAgeLoad] = useState<boolean>(true);
 
 	const handleChangeCondition = (value: string) => {
-		setAgeVariation('CUSTOM');
-		setTime('DAY');
-		setTimeVariation('BETWEEN');
-
 		if (typeof value === 'string') {
 			setReferenceValues(prev =>
 				prev.map((prevReference, prevIndex) => {
@@ -48,6 +45,9 @@ export const ReferenceValueContainer = ({
 							genderError: '',
 							maxAge: value ? undefined : 0,
 							minAge: value ? undefined : 0,
+							ageVariation: 'CUSTOM',
+							time: 'DAY',
+							timeVariation: 'BETWEEN',
 						};
 						return newReference;
 					}
@@ -67,13 +67,13 @@ export const ReferenceValueContainer = ({
 						conditionError: '',
 						genderError: '',
 						minAge:
-							ageVariation === 'CUSTOM'
-								? prevReference.minAge
-								: handleSetMinAge(ageVariation, value),
+							prevReference?.ageVariation === 'CUSTOM'
+								? prevReference?.minAge
+								: handleSetMinAge(prevReference?.ageVariation, value),
 						maxAge:
-							ageVariation === 'CUSTOM'
-								? prevReference.maxAge
-								: handleSetMaxAge(ageVariation, value),
+							prevReference?.ageVariation === 'CUSTOM'
+								? prevReference?.maxAge
+								: handleSetMaxAge(prevReference?.ageVariation, value),
 					};
 					return newReference;
 				}
@@ -83,8 +83,6 @@ export const ReferenceValueContainer = ({
 	};
 
 	const handleChangeValueVariation = (value: string) => {
-		setValueVariation(value);
-
 		setReferenceValues(prev =>
 			prev.map((prevReference, prevIndex) => {
 				if (prevIndex === index) {
@@ -94,6 +92,7 @@ export const ReferenceValueContainer = ({
 						maxValue: value === 'OR_MORE' ? undefined : '0',
 						minValueError: '',
 						maxValueError: '',
+						valueVariation: value,
 					};
 					return newReference;
 				}
@@ -121,10 +120,6 @@ export const ReferenceValueContainer = ({
 	};
 
 	const handleChangeAgeVariation = (value: string) => {
-		setAgeVariation(value);
-		setTime('DAY');
-		setTimeVariation('BETWEEN');
-
 		setReferenceValues(prev =>
 			prev.map((prevReference, prevIndex) => {
 				if (prevIndex === index) {
@@ -134,6 +129,9 @@ export const ReferenceValueContainer = ({
 						maxAge: handleSetMaxAge(value, prevReference?.gender),
 						minAgeError: '',
 						maxAgeError: '',
+						ageVariation: value,
+						time: 'DAY',
+						timeVariation: 'BETWEEN',
 					};
 					return newReference;
 				}
@@ -143,8 +141,6 @@ export const ReferenceValueContainer = ({
 	};
 
 	const handleChangeTimeVariation = (value: string) => {
-		setTimeVariation(value);
-
 		setReferenceValues(prev =>
 			prev.map((prevReference, prevIndex) => {
 				if (prevIndex === index) {
@@ -154,6 +150,7 @@ export const ReferenceValueContainer = ({
 						maxAge: value === 'OR_MORE' ? undefined : 0,
 						minAgeError: '',
 						maxAgeError: '',
+						timeVariation: value,
 					};
 					return newReference;
 				}
@@ -249,15 +246,17 @@ export const ReferenceValueContainer = ({
 	};
 
 	const handleFormatAge = (value: number) => {
-		if (time === 'YEAR') return (value / 365)?.toString();
-		if (time === 'MONTH') return (value / 30)?.toString();
-		return value?.toString();
+		if (currentReferenceValue?.time === 'YEAR')
+			return (value / 365)?.toString();
+		if (currentReferenceValue?.time === 'MONTH')
+			return (value / 30)?.toString();
+		return value ? value?.toString() : '0';
 	};
 
 	const handleUnformatAge = (value: string) => {
-		if (time === 'YEAR') return Number(value) * 365;
-		if (time === 'MONTH') return Number(value) * 30;
-		return Number(value);
+		if (currentReferenceValue?.time === 'YEAR') return Number(value) * 365;
+		if (currentReferenceValue?.time === 'MONTH') return Number(value) * 30;
+		return value ? Number(value) : 0;
 	};
 
 	const handleChangeMinAge = (value?: number) => {
@@ -309,6 +308,33 @@ export const ReferenceValueContainer = ({
 		);
 	};
 
+	const handleChangeTime = (value: string) => {
+		setReferenceValues(prev =>
+			prev.map((prevReference, prevIndex) => {
+				if (prevIndex === index) {
+					const newReference: ReferenceValueCreation = {
+						...prevReference,
+						time: value,
+					};
+					return newReference;
+				}
+				return prevReference;
+			})
+		);
+		if (currentReferenceValue?.timeVariation === 'BETWEEN') {
+			handleChangeMinAge(0);
+			handleChangeMaxAge(0);
+		}
+		if (currentReferenceValue?.timeVariation === 'OR_MORE') {
+			handleChangeMinAge(0);
+			handleChangeMaxAge(undefined);
+		}
+		if (currentReferenceValue?.timeVariation === 'OR_LESS') {
+			handleChangeMinAge(undefined);
+			handleChangeMaxAge(0);
+		}
+	};
+
 	return (
 		<ReferenceValueView
 			currentReferenceValue={currentReferenceValue}
@@ -324,30 +350,27 @@ export const ReferenceValueContainer = ({
 			setOpenGender={setOpenGender}
 			openValueVariation={openValueVariation}
 			setOpenValueVariation={setOpenValueVariation}
-			valueVariation={valueVariation}
-			setValueVariation={setValueVariation}
 			handleChangeValueVariation={handleChangeValueVariation}
 			handleChangeMinValue={handleChangeMinValue}
 			handleChangeMaxValue={handleChangeMaxValue}
 			openAge={openAge}
 			setOpenAge={setOpenAge}
-			ageVariation={ageVariation}
-			setAgeVariation={setAgeVariation}
 			handleChangeAgeVariation={handleChangeAgeVariation}
 			openTimeVariation={openTimeVariation}
 			setOpenTimeVariation={setOpenTimeVariation}
-			timeVariation={timeVariation}
-			setTimeVariation={setTimeVariation}
 			handleChangeTimeVariation={handleChangeTimeVariation}
 			openTime={openTime}
 			setOpenTime={setOpenTime}
-			time={time}
-			setTime={setTime}
 			handleFormatAge={handleFormatAge}
 			handleUnformatAge={handleUnformatAge}
 			handleChangeMinAge={handleChangeMinAge}
 			handleChangeMaxAge={handleChangeMaxAge}
 			handleSetYOffset={handleSetYOffset}
+			handleChangeTime={handleChangeTime}
+			initalAgeLoad={initalAgeLoad}
+			setInitalAgeLoad={setInitalAgeLoad}
+			finalAgeLoad={finalAgeLoad}
+			setFinalAgeLoad={setFinalAgeLoad}
 		/>
 	);
 };

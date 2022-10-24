@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Alert } from 'react-native';
 import { Restart } from '../../../assets/icons';
 import { FooterContainer, ScreenContainer } from '../../../components';
@@ -8,6 +8,7 @@ import { testTypeService } from '../../../services';
 import { referenceValueService } from '../../../services/ReferenceValueService';
 import theme from '../../../styles/theme';
 import {
+	ageClassification,
 	isInvalidAge,
 	isInvalidMaxAge,
 	isInvalidMinAge,
@@ -15,15 +16,27 @@ import {
 	isSameCondition,
 	isSameGender,
 	MEASUREMENT_UNITS,
+	ReferenceValue,
 	ReferenceValueCreation,
+	SelectItem,
+	TestType,
 } from '../../../utils';
-import { TestTypeCreateView } from './TestTypeCreateView';
+import { TestTypeEditView } from './TestTypeEditView';
 
-export function TestTypeCreateContainer({
+export function TestTypeEditContainer({
 	navigation,
-}: NativeStackScreenProps<RootStackParamList, 'TestTypeCreate'>) {
+}: NativeStackScreenProps<RootStackParamList, 'TestTypeEdit'>) {
 	const scrollRef = useRef();
 	const referenceOffset = 390;
+
+	const [testType, setTestType] = useState<string | null>(null);
+	const [testTypeError, setTestTypeError] = useState<string>('');
+	const [testTypes, setTestTypes] = useState<TestType[]>([]);
+	const [loadingTestTypes, setLoadingTestTypes] = useState<boolean>(false);
+	const [testTypesList, setTestTypesList] = useState<SelectItem[]>([]);
+	const [openTestTypeDropdown, setOpenTestTypeDropdown] =
+		useState<boolean>(false);
+
 	const [name, setName] = useState<string>('');
 	const [nameError, setNameError] = useState<string>('');
 
@@ -39,6 +52,7 @@ export function TestTypeCreateContainer({
 	const [referenceValues, setReferenceValues] = useState<
 		ReferenceValueCreation[]
 	>([]);
+	const [referenceLoading, setReferenceLoading] = useState<boolean>(false);
 
 	const handleAddReference = () => {
 		setReferenceValues(prevState => [
@@ -154,9 +168,9 @@ export function TestTypeCreateContainer({
 							if (prevIndex === indexA) {
 								const newReference: ReferenceValueCreation = {
 									...prevReference,
-									minValueError:
+									minAgeError:
 										'A idade inicial não pode ser maior que a idade final',
-									maxValueError:
+									maxAgeError:
 										'A idade inicial não pode ser maior que a idade final',
 								};
 								return newReference;
@@ -276,7 +290,7 @@ export function TestTypeCreateContainer({
 									if (prevIndex === indexA) {
 										const newReference: ReferenceValueCreation = {
 											...prevReference,
-											minAgeError: `A idade final informada já pertence ao intervalo de idade do Valor de Refêrencia #${
+											maxAgeError: `A idade final informada já pertence ao intervalo de idade do Valor de Refêrencia #${
 												indexB + 1
 											} para o mesmo sexo`,
 										};
@@ -332,7 +346,7 @@ export function TestTypeCreateContainer({
 	const handleCancel = () => {
 		if (isFormDust()) {
 			Alert.alert(
-				'Criação em andamento',
+				'Edição em andamento',
 				'Todas as informações inseridas serão perdidas. Deseja voltar mesmo assim?',
 				[
 					{
@@ -357,49 +371,64 @@ export function TestTypeCreateContainer({
 			setLoading(true);
 			try {
 				testTypeService
-					.handleCreateTestType({
+					.handleUpdateTestType({
 						measurementUnit: measurementUnit?.trim() || '',
 						name: name?.trim() || '',
+						id: parseInt(testType),
 					})
-					.then(testTypeId => {
+					.then(() => {
 						if (referenceValues.length > 0) {
-							let errors: number[] = [];
-							referenceValues.forEach((reference, index) => {
-								referenceValueService
-									.handleCreateReferenceValue({
-										condition: reference.condition,
-										gender: reference.gender,
-										maxAge: reference.maxAge,
-										maxValue: handleFixValue(reference?.maxValue),
-										minAge: reference.minAge,
-										minValue: handleFixValue(reference?.minValue),
-										testTypeId: testTypeId,
-									})
-									.catch(() => {
-										errors.push(index + 1);
-									})
-									.finally(() => {
-										if (index === referenceValues?.length - 1) {
-											if (errors?.length > 0) {
-												Alert.alert(
-													name,
-													`Tipo de exame criado com sucesso, entretanto houve erro ao cadastrar os seguintes valores de referência:
+							referenceValueService
+								.handleDeleteReferenceValueByTestTypeId(parseInt(testType))
+								.then(() => {
+									let errors: number[] = [];
+									referenceValues.forEach((reference, index) => {
+										referenceValueService
+											.handleCreateReferenceValue({
+												condition: reference.condition,
+												gender: reference.gender,
+												maxAge: reference.maxAge,
+												maxValue: handleFixValue(reference?.maxValue),
+												minAge: reference.minAge,
+												minValue: handleFixValue(reference?.minValue),
+												testTypeId: parseInt(testType),
+											})
+											.catch(() => {
+												errors.push(index + 1);
+											})
+											.finally(() => {
+												if (index === referenceValues?.length - 1) {
+													if (errors?.length > 0) {
+														Alert.alert(
+															name,
+															`Tipo de exame atualizado com sucesso, entretanto houve erro ao cadastrar os seguintes valores de referência:
 														${errors.map((errorNumber, errorIndex) => {
 															return ` #${errorNumber}${
 																errorIndex === errors?.length - 1 ? '' : ','
 															}`;
 														})}
 													`
-												);
-											} else {
-												Alert.alert(name, 'Tipo de exame criado com sucesso');
-											}
-											navigation.replace('Settings');
-										}
+														);
+													} else {
+														Alert.alert(
+															name,
+															'Tipo de exame atualizado com sucesso'
+														);
+													}
+													navigation.replace('Settings');
+												}
+											});
 									});
-							});
+								})
+								.catch(error => {
+									Alert.alert(
+										'Erro ao atualizar Valores de Referência',
+										'Reinicie o aplicativo e tente novamente.'
+									);
+									setLoading(false);
+								});
 						} else {
-							Alert.alert(name, 'Tipo de exame criado com sucesso');
+							Alert.alert(name, 'Tipo de exame atualizado com sucesso');
 							navigation.replace('Settings');
 						}
 					})
@@ -420,14 +449,133 @@ export function TestTypeCreateContainer({
 		}
 	};
 
+	const handleGetTestTypes = () => {
+		setLoadingTestTypes(true);
+		try {
+			testTypeService
+				.handleGetTestTypes()
+				.then(result => {
+					setTestTypes(result);
+					const testTypesListFormat: SelectItem[] = [];
+					result.forEach(test => {
+						testTypesListFormat.push({
+							label: test?.name || '',
+							value: test?.id ? test.id.toString() : '',
+						});
+					});
+					setTestTypesList(testTypesListFormat);
+					setLoadingTestTypes(false);
+				})
+				.catch(error => {
+					Alert.alert(error?.message || error, 'Tente novamente.');
+					setLoadingTestTypes(false);
+				});
+		} catch (error: any) {
+			Alert.alert(error?.message || error, 'Tente novamente.');
+			setLoadingTestTypes(false);
+		}
+	};
+
+	const setInitalAgeVariation = (referenceValue: ReferenceValue) => {
+		const classification = ageClassification(
+			referenceValue?.minAge,
+			referenceValue?.maxAge,
+			referenceValue?.gender
+		);
+
+		if (classification === 'Criança') return 'CHILD';
+		if (classification === 'Adulto') return 'ADULT';
+		if (classification === 'Idoso') return 'ELDER';
+		if (!classification && !referenceValue?.minAge && !referenceValue?.maxAge)
+			return 'ALL';
+
+		return 'CUSTOM';
+	};
+
+	const setInitalTimeVariation = (referenceValue: ReferenceValue) => {
+		if (!referenceValue?.minAge && referenceValue?.maxAge) return 'OR_LESS';
+		if (referenceValue?.minAge && !referenceValue?.maxAge) return 'OR_MORE';
+		return 'BETWEEN';
+	};
+
+	const setInitalValueVariation = (referenceValue: ReferenceValue) => {
+		if (!referenceValue?.minValue && referenceValue?.maxValue) return 'OR_LESS';
+		if (referenceValue?.minValue && !referenceValue?.maxValue) return 'OR_MORE';
+		return 'BETWEEN';
+	};
+
+	const handleGetReferenceValues = (testTypeId: string) => {
+		setReferenceLoading(true);
+		try {
+			referenceValueService
+				.handleGetReferenceValueByTestType(parseInt(testTypeId))
+				.then(result => {
+					const newReferences: ReferenceValueCreation[] = [];
+					result.forEach(reference => {
+						newReferences.push({
+							condition: reference?.condition || '',
+							gender: reference?.gender || 'A',
+							maxAge: reference?.maxAge,
+							maxValue: reference?.maxValue || '0',
+							minAge: reference?.minAge,
+							minValue: reference?.minValue || '0',
+							yOffset: 0,
+							conditionError: '',
+							genderError: '',
+							maxAgeError: '',
+							maxValueError: '',
+							minAgeError: '',
+							minValueError: '',
+							time: 'DAY',
+							ageVariation: setInitalAgeVariation(reference),
+							timeVariation: setInitalTimeVariation(reference),
+							valueVariation: setInitalValueVariation(reference),
+						});
+					});
+					setReferenceValues(newReferences);
+					setReferenceLoading(false);
+				})
+				.catch(() => {
+					setReferenceLoading(false);
+					setReferenceValues([]);
+				});
+		} catch {
+			setReferenceLoading(false);
+			setReferenceValues([]);
+		}
+	};
+
+	useEffect(() => {
+		handleGetTestTypes();
+	}, []);
+
+	useEffect(() => {
+		if (testType) {
+			setName(testTypes?.find(test => test?.id === parseInt(testType))?.name);
+			setMeasurementUnit(
+				testTypes?.find(test => test?.id === parseInt(testType))
+					?.measurementUnit
+			);
+			setNameError('');
+			setMeasurementUnitError('');
+			handleGetReferenceValues(testType);
+		} else {
+			setName('');
+			setMeasurementUnit('');
+			setNameError('');
+			setMeasurementUnitError('');
+			setReferenceValues([]);
+		}
+	}, [testType]);
+
 	return (
 		<>
 			<ScreenContainer hasFooter hasPadding={false} scrollRef={scrollRef}>
-				<TestTypeCreateView
+				<TestTypeEditView
 					handleChangeName={handleChangeName}
 					name={name}
 					nameError={nameError}
-					loading={loading}
+					loading={loading || loadingTestTypes || referenceLoading}
 					measurementUnit={measurementUnit}
 					measurementUnitError={measurementUnitError}
 					setMeasurementUnit={setMeasurementUnit}
@@ -439,6 +587,13 @@ export function TestTypeCreateContainer({
 					handleAddReference={handleAddReference}
 					referenceValues={referenceValues}
 					setReferenceValues={setReferenceValues}
+					openTestTypeDropdown={openTestTypeDropdown}
+					setOpenTestTypeDropdown={setOpenTestTypeDropdown}
+					setTestType={setTestType}
+					setTestTypeError={setTestTypeError}
+					testType={testType}
+					testTypeError={testTypeError}
+					testTypesList={testTypesList}
 				/>
 			</ScreenContainer>
 			<FooterContainer
@@ -456,7 +611,7 @@ export function TestTypeCreateContainer({
 				}
 				btnMiddleVariant="secondary"
 				btnMiddleDisabled={loading}
-				btnRightTitle="Criar"
+				btnRightTitle="Editar"
 				btnRightVariant="primary"
 				btnRightOnPress={() => handleSubmit()}
 				btnRightDisabled={loading || !isFormDust()}

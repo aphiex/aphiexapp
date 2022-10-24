@@ -9,6 +9,7 @@ import {
 	ReferenceValueCreate,
 	getReferenceValueByTestType,
 	getReferenceConditionsByTestType,
+	deleteReferenceValueByTestTypeId,
 } from '../utils';
 
 async function handleGetReferenceValues(): Promise<ReferenceValue[]> {
@@ -170,6 +171,16 @@ async function handleDeleteReferenceValue(
 	});
 }
 
+async function handleDeleteReferenceValueByTestTypeId(
+	testTypeId: number
+): Promise<boolean> {
+	return new Promise(async (resolve, reject) => {
+		deleteReferenceValueByTestTypeId(testTypeId)
+			.then(() => resolve(true))
+			.catch(() => reject(new Error('Falha ao deletar valores de referência')));
+	});
+}
+
 export const referenceValueService = {
 	handleGetReferenceValues,
 	handleCreateReferenceValue,
@@ -178,4 +189,5 @@ export const referenceValueService = {
 	handleUpdateReferenceValue,
 	handleGetReferenceValueByTestType,
 	handleGetReferenceConditionsByTestType,
+	handleDeleteReferenceValueByTestTypeId,
 };

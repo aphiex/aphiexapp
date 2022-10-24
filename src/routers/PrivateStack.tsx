@@ -18,6 +18,7 @@ import {
 	TestDetailContainer,
 	TestEditContainer,
 	TestTypeCreateContainer,
+	TestTypeEditContainer,
 } from '../screens';
 
 export type RootStackParamList = {
@@ -42,6 +43,7 @@ export type RootStackParamList = {
 	TestEdit: { testId: number };
 
 	TestTypeCreate: undefined;
+	TestTypeEdit: undefined;
 
 	Settings: undefined;
 };
@@ -76,6 +78,7 @@ export default function PrivateStack() {
 			<Stack.Screen name="TestEdit" component={TestEditContainer} />
 
 			<Stack.Screen name="TestTypeCreate" component={TestTypeCreateContainer} />
+			<Stack.Screen name="TestTypeEdit" component={TestTypeEditContainer} />
 
 			<Stack.Screen name="Settings" component={SettingsContainer} />
 		</Stack.Navigator>

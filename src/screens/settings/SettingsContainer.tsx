@@ -14,7 +14,7 @@ export function SettingsContainer({
 	};
 
 	const handleToEditTestType = () => {
-		console.log('Editar tipo de exame');
+		navigation.navigate('TestTypeEdit');
 	};
 
 	return (

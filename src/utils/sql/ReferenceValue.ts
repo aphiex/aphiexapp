@@ -194,3 +194,23 @@ export async function deleteReferenceValue(
 		});
 	});
 }
+
+export async function deleteReferenceValueByTestTypeId(
+	testTypeId: number
+): Promise<boolean | null> {
+	return new Promise(async (resolve, reject) => {
+		(await database).transaction(tx => {
+			tx.executeSql(
+				'DELETE FROM reference_value WHERE test_type_id = (?)',
+				[testTypeId],
+				() => {
+					resolve(true);
+				},
+				(txObj, error) => {
+					reject(null);
+					return false;
+				}
+			);
+		});
+	});
+}

@@ -32,30 +32,27 @@ type TReferenceValueView = {
 	handleChangeGender: (value: string) => void;
 	openValueVariation: boolean;
 	setOpenValueVariation: React.Dispatch<React.SetStateAction<boolean>>;
-	valueVariation: string;
-	setValueVariation: React.Dispatch<React.SetStateAction<string>>;
 	handleChangeValueVariation: (value: string) => void;
 	handleChangeMinValue: (value?: string) => void;
 	handleChangeMaxValue: (value?: string) => void;
 	openAge: boolean;
 	setOpenAge: React.Dispatch<React.SetStateAction<boolean>>;
-	ageVariation: string;
-	setAgeVariation: React.Dispatch<React.SetStateAction<string>>;
 	handleChangeAgeVariation: (value: string) => void;
 	openTimeVariation: boolean;
 	setOpenTimeVariation: React.Dispatch<React.SetStateAction<boolean>>;
-	timeVariation: string;
-	setTimeVariation: React.Dispatch<React.SetStateAction<string>>;
 	handleChangeTimeVariation: (value: string) => void;
 	openTime: boolean;
 	setOpenTime: React.Dispatch<React.SetStateAction<boolean>>;
-	time: string;
-	setTime: React.Dispatch<React.SetStateAction<string>>;
 	handleFormatAge: (value: number) => string;
 	handleUnformatAge: (value: string) => number;
 	handleChangeMinAge: (value?: number) => void;
 	handleChangeMaxAge: (value?: number) => void;
 	handleSetYOffset: (value?: number) => void;
+	handleChangeTime: (value: string) => void;
+	initalAgeLoad: boolean;
+	setInitalAgeLoad: React.Dispatch<React.SetStateAction<boolean>>;
+	finalAgeLoad: boolean;
+	setFinalAgeLoad: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export function ReferenceValueView({
@@ -75,27 +72,24 @@ export function ReferenceValueView({
 	openValueVariation,
 	setOpenValueVariation,
 	handleChangeValueVariation,
-	valueVariation,
-	setValueVariation,
 	openAge,
 	setOpenAge,
-	ageVariation,
 	handleChangeAgeVariation,
-	setAgeVariation,
 	handleChangeTimeVariation,
 	openTimeVariation,
 	setOpenTimeVariation,
-	setTimeVariation,
-	timeVariation,
 	openTime,
 	setOpenTime,
-	setTime,
-	time,
 	handleFormatAge,
 	handleUnformatAge,
 	handleChangeMaxAge,
 	handleChangeMinAge,
 	handleSetYOffset,
+	handleChangeTime,
+	initalAgeLoad,
+	setInitalAgeLoad,
+	finalAgeLoad,
+	setFinalAgeLoad,
 }: TReferenceValueView) {
 	return (
 		<View
@@ -157,14 +151,16 @@ export function ReferenceValueView({
 
 			{Boolean(!currentReferenceValue?.condition) && (
 				<View style={{ zIndex: 1 }}>
-					{Boolean(ageVariation === 'CUSTOM') && (
+					{Boolean(currentReferenceValue?.ageVariation === 'CUSTOM') && (
 						<Text style={[styles.label, styles.padding]}>
 							Intervalo de Idade
 						</Text>
 					)}
 					<View
 						style={
-							ageVariation === 'CUSTOM' ? styles.paddingBorder : styles.padding
+							currentReferenceValue?.ageVariation === 'CUSTOM'
+								? styles.paddingBorder
+								: styles.padding
 						}
 					>
 						<View style={{ marginBottom: 10 }}>
@@ -177,14 +173,14 @@ export function ReferenceValueView({
 									currentReferenceValue?.minAgeError ||
 									currentReferenceValue?.maxAgeError
 								}
-								value={ageVariation}
-								setValue={setAgeVariation}
+								value={currentReferenceValue?.ageVariation}
+								setValue={() => {}}
 								onSelect={handleChangeAgeVariation}
 								onlyBottom
 								noError
 							/>
 						</View>
-						{Boolean(ageVariation === 'CUSTOM') && (
+						{Boolean(currentReferenceValue?.ageVariation === 'CUSTOM') && (
 							<View
 								style={{
 									display: 'flex',
@@ -201,21 +197,10 @@ export function ReferenceValueView({
 										open={openTime}
 										setOpen={setOpenTime}
 										items={TIME_SELECT_LIST}
-										value={time}
-										setValue={setTime}
-										onSelect={() => {
-											if (timeVariation === 'BETWEEN') {
-												handleChangeMinAge(0);
-												handleChangeMaxAge(0);
-											}
-											if (timeVariation === 'OR_MORE') {
-												handleChangeMinAge(0);
-												handleChangeMaxAge(undefined);
-											}
-											if (timeVariation === 'OR_LESS') {
-												handleChangeMinAge(undefined);
-												handleChangeMaxAge(0);
-											}
+										value={currentReferenceValue?.time}
+										setValue={() => {}}
+										onSelect={value => {
+											handleChangeTime(value);
 										}}
 									/>
 								</View>
@@ -237,8 +222,12 @@ export function ReferenceValueView({
 											error={currentReferenceValue?.minAgeError}
 											value={handleFormatAge(currentReferenceValue?.minAge)}
 											onChangeText={(_, rawText) => {
-												if (currentReferenceValue?.minAge !== undefined)
-													handleChangeMinAge(handleUnformatAge(rawText));
+												if (
+													currentReferenceValue?.minAge !== undefined &&
+													!initalAgeLoad
+												)
+													handleChangeMinAge(handleUnformatAge(rawText || '0'));
+												if (initalAgeLoad) setInitalAgeLoad(false);
 											}}
 										/>
 									)}
@@ -251,8 +240,12 @@ export function ReferenceValueView({
 											error={currentReferenceValue?.maxAgeError}
 											value={handleFormatAge(currentReferenceValue?.maxAge)}
 											onChangeText={(_, rawText) => {
-												if (currentReferenceValue?.maxAge !== undefined)
-													handleChangeMaxAge(handleUnformatAge(rawText));
+												if (
+													currentReferenceValue?.maxAge !== undefined &&
+													!finalAgeLoad
+												)
+													handleChangeMaxAge(handleUnformatAge(rawText || '0'));
+												if (finalAgeLoad) setFinalAgeLoad(false);
 											}}
 										/>
 									)}
@@ -271,8 +264,8 @@ export function ReferenceValueView({
 										open={openTimeVariation}
 										setOpen={setOpenTimeVariation}
 										items={VARIATION_SELECT_LIST}
-										value={timeVariation}
-										setValue={setTimeVariation}
+										value={currentReferenceValue?.timeVariation}
+										setValue={() => {}}
 										onSelect={handleChangeTimeVariation}
 										dropDownContainerStyle={{ minWidth: 120 }}
 										onlyBottom
@@ -292,8 +285,12 @@ export function ReferenceValueView({
 											error={currentReferenceValue?.maxAgeError}
 											value={handleFormatAge(currentReferenceValue?.maxAge)}
 											onChangeText={(_, rawText) => {
-												if (currentReferenceValue?.maxAge !== undefined)
-													handleChangeMaxAge(handleUnformatAge(rawText));
+												if (
+													currentReferenceValue?.maxAge !== undefined &&
+													!finalAgeLoad
+												)
+													handleChangeMaxAge(handleUnformatAge(rawText || '0'));
+												if (finalAgeLoad) setFinalAgeLoad(false);
 											}}
 										/>
 									</View>
@@ -371,8 +368,8 @@ export function ReferenceValueView({
 							open={openValueVariation}
 							setOpen={setOpenValueVariation}
 							items={VARIATION_SELECT_LIST}
-							value={valueVariation}
-							setValue={setValueVariation}
+							value={currentReferenceValue?.valueVariation}
+							setValue={() => {}}
 							onSelect={handleChangeValueVariation}
 							dropDownContainerStyle={{ minWidth: 120 }}
 							onlyBottom

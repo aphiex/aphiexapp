@@ -84,7 +84,7 @@ export async function updateTestType(testType: TestType) {
 			tx.executeSql(
 				'UPDATE test_type SET ' +
 					'test_type_name = (?), ' +
-					'test_type_measurement_unit = (?), ' +
+					'test_type_measurement_unit = (?) ' +
 					'WHERE test_type_id = (?)',
 				[
 					testType?.name || '',

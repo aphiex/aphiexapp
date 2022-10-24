@@ -219,22 +219,18 @@ export const HistoricalChartContainer = ({
 							let reference = undefined;
 
 							reference = referenceValues?.find(ref => {
-								// ABRIR O BANCO E FAZER TESTE DE MESA COM AS CONDIÇÕES ABAIXO
 								const gender = Boolean(
-									// TRUE
 									ref?.gender === currentProfile?.gender || ref?.gender === 'A'
 								);
 
 								const condition = Boolean(
-									// FALSE
 									ref?.condition === testFromDB?.condition &&
 										ref?.condition &&
 										testFromDB?.condition
 								);
 
-								if (gender && condition) return ref; // FALSE
+								if (gender && condition) return ref;
 
-								// the checks below are only valid if there is no condition
 								if (!ref?.condition) {
 									const allAges = Boolean(!ref?.minAge && !ref?.maxAge);
 
