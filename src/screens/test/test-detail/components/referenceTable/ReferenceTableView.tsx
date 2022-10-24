@@ -45,7 +45,7 @@ export function ReferenceTableView({
 							<View style={styles.contentContainer}>
 								{Boolean(reference?.condition) && (
 									<Text numberOfLines={1} style={styles.tableContent}>
-										{`reference?.condition ${handleShowGender(
+										{`${reference?.condition} ${handleShowGender(
 											reference.gender
 										)}`}
 									</Text>
@@ -60,7 +60,10 @@ export function ReferenceTableView({
 							</View>
 							<View style={styles.contentContainer}>
 								<Text numberOfLines={1} style={styles.tableContent}>
-									{handleShowValueRange(reference.minValue, reference.maxValue)}
+									{handleShowValueRange(
+										Number(reference?.minValue),
+										Number(reference?.maxValue)
+									)}
 								</Text>
 							</View>
 						</View>
