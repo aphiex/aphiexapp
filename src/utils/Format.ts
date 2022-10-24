@@ -99,11 +99,13 @@ export const ageClassification = (
 	// 12 to 60 years if women
 	if (minAge === 4381 && maxAge === 21899 && gender === 'F') return 'Adulto';
 	// 12 to 65 years if men
-	if (minAge === 4381 && maxAge === 23724 && gender === 'M') return 'Adulto';
+	if (minAge === 4381 && maxAge === 23724 && (gender === 'M' || gender === 'A'))
+		return 'Adulto';
 	// over 60 years if women
 	if (minAge === 21900 && !maxAge && gender === 'F') return 'Idoso';
 	// over 65 years if men
-	if (minAge === 23725 && !maxAge && gender === 'M') return 'Idoso';
+	if (minAge === 23725 && !maxAge && (gender === 'M' || gender === 'A'))
+		return 'Idoso';
 
 	return undefined;
 };

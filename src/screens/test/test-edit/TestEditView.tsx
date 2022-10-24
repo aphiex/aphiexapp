@@ -122,44 +122,49 @@ export function TestEditView({
 							style={{ marginTop: 20 }}
 						/>
 					)}
-					{!referenceLoading && referenceValues?.length > 0 && (
-						<View style={styles.subContainer}>
-							<Text style={styles.subTitle}>Informações adicionais</Text>
-							{referenceValues.map(referenceValue => (
-								<View key={referenceValue.id} style={styles.section}>
-									<Checkbox
-										style={styles.checkbox}
-										value={referenceValue.condition === condition}
-										onValueChange={() =>
-											handleChangeCondition(referenceValue.condition)
-										}
-										color={
-											referenceValue.condition === condition
-												? theme.colors.primary
-												: theme.colors.grey
-										}
-									/>
-									<Text
-										numberOfLines={1}
-										onPress={() =>
-											handleChangeCondition(referenceValue.condition)
-										}
-										style={[
-											styles.checkBoxLabel,
-											{
-												color:
-													referenceValue.condition === condition
-														? theme.colors.black
-														: theme.colors.grey,
-											},
-										]}
-									>
-										{referenceValue.condition}
-									</Text>
-								</View>
-							))}
-						</View>
-					)}
+					{!referenceLoading &&
+						referenceValues?.length > 0 &&
+						referenceValues.some(reference => reference?.condition) && (
+							<View style={styles.subContainer}>
+								<Text style={styles.subTitle}>Informações adicionais</Text>
+								{referenceValues.map(referenceValue => {
+									if (referenceValue?.condition)
+										return (
+											<View key={referenceValue.id} style={styles.section}>
+												<Checkbox
+													style={styles.checkbox}
+													value={referenceValue.condition === condition}
+													onValueChange={() =>
+														handleChangeCondition(referenceValue.condition)
+													}
+													color={
+														referenceValue.condition === condition
+															? theme.colors.primary
+															: theme.colors.grey
+													}
+												/>
+												<Text
+													numberOfLines={1}
+													onPress={() =>
+														handleChangeCondition(referenceValue.condition)
+													}
+													style={[
+														styles.checkBoxLabel,
+														{
+															color:
+																referenceValue.condition === condition
+																	? theme.colors.black
+																	: theme.colors.grey,
+														},
+													]}
+												>
+													{referenceValue.condition}
+												</Text>
+											</View>
+										);
+								})}
+							</View>
+						)}
 				</View>
 			)}
 		</View>

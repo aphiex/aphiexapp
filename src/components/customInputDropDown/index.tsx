@@ -7,6 +7,8 @@ import { styles } from './styles';
 interface ICustomInput extends TextInputProps {
 	error?: string;
 	label?: string;
+	noError?: boolean;
+	noLabel?: boolean;
 	setValue: React.Dispatch<React.SetStateAction<string>>;
 	setError?: React.Dispatch<React.SetStateAction<string>>;
 	items: {
@@ -21,6 +23,8 @@ interface ICustomInput extends TextInputProps {
 export function CustomInputDropDown({
 	error,
 	label,
+	noError,
+	noLabel,
 	setValue,
 	setError,
 	items,
@@ -39,7 +43,9 @@ export function CustomInputDropDown({
 
 	return (
 		<>
-			<Text style={[styles.label, { color: handleSetColor() }]}>{label}</Text>
+			{!noLabel && (
+				<Text style={[styles.label, { color: handleSetColor() }]}>{label}</Text>
+			)}
 
 			<View style={[styles.inputContainer, { borderColor: handleSetColor() }]}>
 				<TextInput
@@ -82,7 +88,7 @@ export function CustomInputDropDown({
 				</View>
 			</View>
 
-			<Text style={styles.error}>{error}</Text>
+			{!noError && <Text style={styles.error}>{error}</Text>}
 		</>
 	);
 }

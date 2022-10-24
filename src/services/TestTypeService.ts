@@ -7,6 +7,7 @@ import {
 	getTestTypeById,
 	updateTestType,
 	TestTypeCreate,
+	TestFromDB,
 } from '../utils';
 
 async function handleGetTestTypes(): Promise<TestType[]> {
@@ -53,15 +54,13 @@ async function handleGetTestTypeById(id: number): Promise<TestType> {
 	});
 }
 
-async function handleCreateTestType(
-	testType: TestTypeCreate
-): Promise<boolean> {
+async function handleCreateTestType(testType: TestTypeCreate): Promise<number> {
 	return new Promise(async (resolve, reject) => {
 		createTestTypeTable()
 			.then(() => {
 				createTestType(testType)
-					.then(() => {
-						resolve(true);
+					.then(result => {
+						resolve(result);
 					})
 					.catch(() => reject(new Error('Falha ao criar novo tipo de exame')));
 			})

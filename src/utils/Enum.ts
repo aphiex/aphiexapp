@@ -34,16 +34,14 @@ export const AGE_SELECT_LIST: SelectItem[] = [
 	{ label: 'Definir intervalo', value: 'CUSTOM' },
 	{ label: 'Todas as idades', value: 'ALL' },
 	{ label: 'Criança', value: 'CHILD' },
-	{ label: 'Adulto (Feminino)', value: 'ADULT_F' },
-	{ label: 'Adulto (Masculino)', value: 'ADULT_M' },
-	{ label: 'Idoso (Feminino)', value: 'ELDER_F' },
-	{ label: 'Idoso (Masculino)', value: 'ELDER_M' },
+	{ label: 'Adulto', value: 'ADULT' },
+	{ label: 'Idoso', value: 'ELDER' },
 ];
 
 export const VARIATION_SELECT_LIST: SelectItem[] = [
 	{ label: 'a', value: 'BETWEEN' },
-	{ label: 'ou mais', value: 'AGE_OVER' },
-	{ label: 'ou menos', value: 'AGE_UNDER' },
+	{ label: 'ou mais', value: 'OR_MORE' },
+	{ label: 'ou menos', value: 'OR_LESS' },
 ];
 
 export const TIME_SELECT_LIST: SelectItem[] = [

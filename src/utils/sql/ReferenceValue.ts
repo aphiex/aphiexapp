@@ -120,7 +120,7 @@ export async function createReferenceValue(
 	try {
 		(await database).transaction(tx => {
 			tx.executeSql(
-				'INSERT INTO test (' +
+				'INSERT INTO reference_value (' +
 					'reference_value_gender, ' +
 					'reference_value_min_value, ' +
 					'reference_value_max_value, ' +
@@ -128,7 +128,7 @@ export async function createReferenceValue(
 					'reference_value_max_age, ' +
 					'reference_value_condition, ' +
 					'test_type_id' +
-					') VALUES (?,?,?,?,?,?)',
+					') VALUES (?,?,?,?,?,?,?)',
 				[
 					referenceValue?.gender || '',
 					referenceValue?.minValue || '',
@@ -149,7 +149,7 @@ export async function updateReferenceValue(referenceValue: ReferenceValue) {
 	try {
 		(await database).transaction(tx => {
 			tx.executeSql(
-				'UPDATE test SET ' +
+				'UPDATE reference_value SET ' +
 					'reference_value_gender = (?), ' +
 					'reference_value_min_value = (?), ' +
 					'reference_value_max_value = (?), ' +

@@ -7,7 +7,7 @@ import {
 	PageTitle,
 } from '../../../components';
 import theme from '../../../styles/theme';
-import { ReferenceValueCreate, SelectItem } from '../../../utils';
+import { ReferenceValueCreation, SelectItem } from '../../../utils';
 import { ReferenceValueContainer } from '../reference-value';
 import { styles } from './styles';
 
@@ -19,12 +19,12 @@ type TTestTypeCreate = {
 	loading: boolean;
 	openSelect: boolean;
 	measurementUnitList: SelectItem[];
-	referenceValues: ReferenceValueCreate[];
+	referenceValues: ReferenceValueCreation[];
 	setOpenSelect: React.Dispatch<React.SetStateAction<boolean>>;
 	setMeasurementUnit: React.Dispatch<React.SetStateAction<string>>;
 	setMeasurementUnitError: React.Dispatch<React.SetStateAction<string>>;
 	setReferenceValues: React.Dispatch<
-		React.SetStateAction<ReferenceValueCreate[]>
+		React.SetStateAction<ReferenceValueCreation[]>
 	>;
 	handleChangeName: (value: string) => void;
 	handleChangeMeasurementUnit: (value: string) => void;
@@ -110,9 +110,10 @@ export function TestTypeCreateView({
 					<ReferenceValueContainer
 						key={index}
 						index={index}
+						measurementUnit={measurementUnit}
+						zIndex={referenceValues?.length + 100 - index}
 						currentReferenceValue={currentReferenceValue}
 						setReferenceValues={setReferenceValues}
-						referenceValues={referenceValues}
 					/>
 				))}
 

@@ -13,8 +13,8 @@ export type ReferenceValue = {
 
 export type ReferenceValueCreate = {
 	gender?: string;
-	minValue?: number;
-	maxValue?: number;
+	minValue?: string;
+	maxValue?: string;
 	minAge?: number;
 	maxAge?: number;
 	condition?: string;

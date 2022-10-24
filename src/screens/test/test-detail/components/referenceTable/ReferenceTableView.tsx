@@ -45,7 +45,9 @@ export function ReferenceTableView({
 							<View style={styles.contentContainer}>
 								{Boolean(reference?.condition) && (
 									<Text numberOfLines={1} style={styles.tableContent}>
-										{reference?.condition}
+										{`reference?.condition ${handleShowGender(
+											reference.gender
+										)}`}
 									</Text>
 								)}
 								{Boolean(!reference?.condition) && (

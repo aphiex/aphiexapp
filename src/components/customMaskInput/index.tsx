@@ -7,9 +7,17 @@ import { styles } from './styles';
 interface ICustomInput extends MaskedTextInputProps {
 	error?: string;
 	label?: string;
+	noLabel?: boolean;
+	noError?: boolean;
 }
 
-export function CustomMaskInput({ error, label, ...rest }: ICustomInput) {
+export function CustomMaskInput({
+	error,
+	label,
+	noError,
+	noLabel,
+	...rest
+}: ICustomInput) {
 	const [isFocused, setIsFocused] = useState<boolean>(false);
 
 	function handleSetColor() {
@@ -20,7 +28,9 @@ export function CustomMaskInput({ error, label, ...rest }: ICustomInput) {
 
 	return (
 		<View style={styles.container}>
-			<Text style={[styles.label, { color: handleSetColor() }]}>{label}</Text>
+			{!noLabel && (
+				<Text style={[styles.label, { color: handleSetColor() }]}>{label}</Text>
+			)}
 
 			<MaskedTextInput
 				{...rest}
@@ -30,7 +40,7 @@ export function CustomMaskInput({ error, label, ...rest }: ICustomInput) {
 				style={[styles.input, { borderColor: handleSetColor() }]}
 			/>
 
-			<Text style={styles.error}>{error}</Text>
+			{!noError && <Text style={styles.error}>{error}</Text>}
 		</View>
 	);
 }

@@ -6,8 +6,6 @@ export async function getAllTests(
 	ordination: 'DESC' | 'ASC'
 ): Promise<TestFromDB[] | null> {
 	return new Promise(async (resolve, reject) => {
-		// para fazer os filtros de ordenação basta setar o oderBy como test_date e o ordination DESC como default
-		// para os filtros de condições basta manter o 'WHERE profile_id = (?) ' e adicionar 'AND blablabla' de acordo com a necessidade
 		(await database).transaction(tx => {
 			tx.executeSql(
 				'SELECT * FROM test ' +

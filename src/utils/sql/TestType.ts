@@ -55,21 +55,29 @@ export const createTestTypeTable = async () => {
 	}
 };
 
-export async function createTestType(testType: TestTypeCreate) {
-	try {
+export async function createTestType(
+	testType: TestTypeCreate
+): Promise<number | null> {
+	return new Promise(async (resolve, reject) => {
 		(await database).transaction(tx => {
 			tx.executeSql(
 				'INSERT INTO test_type (' +
 					'test_type_name, ' +
 					'test_type_measurement_unit' +
 					') VALUES (?,?)',
-				[testType?.name || '', testType?.measurementUnit || '']
+				[testType?.name || '', testType?.measurementUnit || ''],
+				(txObj, { insertId }) => {
+					resolve(insertId);
+				},
+				(txObj, error) => {
+					reject(null);
+					return false;
+				}
 			);
 		});
-	} catch (error) {
-		return error;
-	}
+	});
 }
+
 export async function updateTestType(testType: TestType) {
 	try {
 		(await database).transaction(tx => {

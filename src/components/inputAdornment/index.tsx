@@ -13,12 +13,16 @@ import { styles } from './styles';
 interface IInputAdornment extends TextInputProps {
 	error?: string;
 	label?: string;
+	noError?: boolean;
+	noLabel?: boolean;
 	adornment?: string;
 }
 
 export function InputAdornment({
 	error,
 	label,
+	noError,
+	noLabel,
 	adornment,
 	...rest
 }: IInputAdornment) {
@@ -32,7 +36,9 @@ export function InputAdornment({
 
 	return (
 		<>
-			<Text style={[styles.label, { color: handleSetColor() }]}>{label}</Text>
+			{!noLabel && (
+				<Text style={[styles.label, { color: handleSetColor() }]}>{label}</Text>
+			)}
 
 			<View style={[styles.inputContainer, { borderColor: handleSetColor() }]}>
 				<TextInput
@@ -46,7 +52,7 @@ export function InputAdornment({
 				<Text style={styles.adornment}>{adornment}</Text>
 			</View>
 
-			<Text style={styles.error}>{error}</Text>
+			{!noError && <Text style={styles.error}>{error}</Text>}
 		</>
 	);
 }

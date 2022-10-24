@@ -20,6 +20,7 @@ type TCustomSelectInput = {
 	disabled?: boolean;
 	noError?: boolean;
 	noLabel?: boolean;
+	onlyBottom?: boolean;
 	onChangeValue?: (e?: any) => void;
 	onSelect?: (value: string) => void;
 	dropDownContainerStyle?: StyleProp<ViewStyle>;
@@ -41,6 +42,7 @@ export function CustomSelectInput({
 	noLabel,
 	onSelect,
 	dropDownContainerStyle,
+	onlyBottom,
 }: TCustomSelectInput) {
 	function handleSetColor() {
 		if (disabled) return theme.colors.softGray;
@@ -68,7 +70,7 @@ export function CustomSelectInput({
 					if (setError) setError('');
 					if (onChangeValue) onChangeValue(e);
 				}}
-				dropDownDirection="AUTO"
+				dropDownDirection={onlyBottom ? 'BOTTOM' : 'AUTO'}
 				style={[styles.input, { borderColor: handleSetColor() }]}
 				labelStyle={{
 					color: theme.colors.softBlack,
@@ -76,7 +78,7 @@ export function CustomSelectInput({
 				disabled={disabled}
 				searchable={items?.length > 10}
 				searchPlaceholder="Pesquisar"
-				dropDownContainerStyle={dropDownContainerStyle}
+				dropDownContainerStyle={[dropDownContainerStyle]}
 				listMode={items?.length > 30 ? 'MODAL' : 'SCROLLVIEW'}
 				onSelectItem={({ value }) => {
 					if (onSelect) onSelect(value);

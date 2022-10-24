@@ -48,6 +48,12 @@ export function TestCreateContainer({
 			.replace(/\-/g, '')
 			.replace(/\./g, '');
 		if (formatedValue[0] === ',') formatedValue = '0' + formatedValue;
+		if (
+			formatedValue[0] === '0' &&
+			formatedValue[1] &&
+			formatedValue[1] !== ','
+		)
+			formatedValue = formatedValue.substring(1);
 
 		const onlyOneComma = Boolean(formatedValue.split(',').length - 1 < 2);
 

@@ -8,12 +8,10 @@ export const styles = StyleSheet.create({
 		backgroundColor: theme.colors.lightGray,
 		position: 'relative',
 		paddingVertical: 10,
-		zIndex: 100,
 	},
 	index: {
 		fontFamily: theme.fonts.medium500,
 		fontSize: 20,
-		color: theme.colors.black,
 		marginBottom: 4,
 	},
 	padding: {
