@@ -66,10 +66,10 @@ export const ReferenceValueContainer = ({
 						gender: value,
 						conditionError: '',
 						genderError: '',
-						minAge:
-							prevReference?.ageVariation === 'CUSTOM'
-								? prevReference?.minAge
-								: handleSetMinAge(prevReference?.ageVariation, value),
+						// minAge:
+						// 	prevReference?.ageVariation === 'CUSTOM'
+						// 		? prevReference?.minAge
+						// 		: handleSetMinAge(prevReference?.ageVariation, value),
 						maxAge:
 							prevReference?.ageVariation === 'CUSTOM'
 								? prevReference?.maxAge
@@ -125,7 +125,7 @@ export const ReferenceValueContainer = ({
 				if (prevIndex === index) {
 					const newReference: ReferenceValueCreation = {
 						...prevReference,
-						minAge: handleSetMinAge(value, prevReference?.gender),
+						// minAge: handleSetMinAge(value, prevReference?.gender),
 						maxAge: handleSetMaxAge(value, prevReference?.gender),
 						minAgeError: '',
 						maxAgeError: '',
@@ -246,11 +246,17 @@ export const ReferenceValueContainer = ({
 	};
 
 	const handleFormatAge = (value: number) => {
-		if (currentReferenceValue?.time === 'YEAR')
-			return (value / 365)?.toString();
-		if (currentReferenceValue?.time === 'MONTH')
-			return (value / 30)?.toString();
-		return value ? value?.toString() : '0';
+		console.log('reference: ', currentReferenceValue);
+		console.log('handleFormatAge: ', value);
+
+		if (value) {
+			if (currentReferenceValue?.time === 'YEAR')
+				return Math.floor(value / 365)?.toString();
+			if (currentReferenceValue?.time === 'MONTH')
+				return Math.floor(value / 30)?.toString();
+			return value?.toString();
+		}
+		return '0';
 	};
 
 	const handleUnformatAge = (value: string) => {

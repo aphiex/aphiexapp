@@ -89,29 +89,39 @@ export const dotToComma = (value?: string) => {
 	return value;
 };
 
+export const isAgeEmpty = (value?: number) => {
+	if (value || value === 0) return false;
+
+	return true;
+};
+
 export const ageClassification = (
 	minAge?: number,
 	maxAge?: number,
 	gender?: string
 ) => {
 	// 0 to 12 years
-	if ((!minAge || minAge === 0) && maxAge === 4380) return 'Criança';
+	if ((isAgeEmpty(minAge) || minAge === 0) && maxAge === 4380) return 'Criança';
 	// 12 to 60 years if women
 	if (minAge === 4381 && maxAge === 21899 && gender === 'F') return 'Adulto';
 	// 12 to 65 years if men
 	if (minAge === 4381 && maxAge === 23724 && (gender === 'M' || gender === 'A'))
 		return 'Adulto';
 	// over 60 years if women
-	if (minAge === 21900 && !maxAge && gender === 'F') return 'Idoso';
+	if (minAge === 21900 && isAgeEmpty(maxAge) && gender === 'F') return 'Idoso';
 	// over 65 years if men
-	if (minAge === 23725 && !maxAge && (gender === 'M' || gender === 'A'))
+	if (
+		minAge === 23725 &&
+		isAgeEmpty(maxAge) &&
+		(gender === 'M' || gender === 'A')
+	)
 		return 'Idoso';
 
 	return undefined;
 };
 
 export const setTimeLabel = (minDays?: number, maxDays?: number) => {
-	if (!minDays && minDays !== 0 && maxDays) {
+	if (isAgeEmpty(minDays) && maxDays) {
 		const years = maxDays / 365;
 		if (Math.round(years) > 1) return 'anos';
 		if (Math.round(years) === 1) return 'ano';

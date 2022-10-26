@@ -6,6 +6,7 @@ export const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		paddingHorizontal: 20,
+		marginBottom: 40,
 	},
 	form: {
 		marginTop: 50,

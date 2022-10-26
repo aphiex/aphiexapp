@@ -15,6 +15,7 @@ import {
 	TIME_SELECT_LIST,
 	VARIATION_SELECT_LIST,
 	AGE_SELECT_LIST,
+	isAgeEmpty,
 } from '../../../utils';
 import { styles } from './styles';
 
@@ -207,13 +208,13 @@ export function ReferenceValueView({
 								<View
 									style={{
 										width:
-											currentReferenceValue?.maxAge === undefined ||
-											currentReferenceValue?.minAge === undefined
+											isAgeEmpty(currentReferenceValue?.maxAge) ||
+											isAgeEmpty(currentReferenceValue?.minAge)
 												? '35%'
 												: '26%',
 									}}
 								>
-									{Boolean(currentReferenceValue?.minAge !== undefined) && (
+									{!isAgeEmpty(currentReferenceValue?.minAge) && (
 										<CustomMaskInput
 											noLabel
 											noError
@@ -223,7 +224,7 @@ export function ReferenceValueView({
 											value={handleFormatAge(currentReferenceValue?.minAge)}
 											onChangeText={(_, rawText) => {
 												if (
-													currentReferenceValue?.minAge !== undefined &&
+													!isAgeEmpty(currentReferenceValue?.minAge) &&
 													!initalAgeLoad
 												)
 													handleChangeMinAge(handleUnformatAge(rawText || '0'));
@@ -231,7 +232,7 @@ export function ReferenceValueView({
 											}}
 										/>
 									)}
-									{Boolean(currentReferenceValue?.minAge === undefined) && (
+									{isAgeEmpty(currentReferenceValue?.minAge) && (
 										<CustomMaskInput
 											noLabel
 											noError
@@ -241,7 +242,7 @@ export function ReferenceValueView({
 											value={handleFormatAge(currentReferenceValue?.maxAge)}
 											onChangeText={(_, rawText) => {
 												if (
-													currentReferenceValue?.maxAge !== undefined &&
+													!isAgeEmpty(currentReferenceValue?.maxAge) &&
 													!finalAgeLoad
 												)
 													handleChangeMaxAge(handleUnformatAge(rawText || '0'));
@@ -254,8 +255,8 @@ export function ReferenceValueView({
 								<View
 									style={{
 										width:
-											currentReferenceValue?.maxAge === undefined ||
-											currentReferenceValue?.minAge === undefined
+											isAgeEmpty(currentReferenceValue?.maxAge) ||
+											isAgeEmpty(currentReferenceValue?.minAge)
 												? '35%'
 												: '17%',
 									}}
@@ -272,29 +273,29 @@ export function ReferenceValueView({
 										noLabel
 									/>
 								</View>
-								{!Boolean(
-									currentReferenceValue?.maxAge === undefined ||
-										currentReferenceValue?.minAge === undefined
-								) && (
-									<View style={{ width: '26%' }}>
-										<CustomMaskInput
-											noLabel
-											noError
-											keyboardType="number-pad"
-											mask="9999999999"
-											error={currentReferenceValue?.maxAgeError}
-											value={handleFormatAge(currentReferenceValue?.maxAge)}
-											onChangeText={(_, rawText) => {
-												if (
-													currentReferenceValue?.maxAge !== undefined &&
-													!finalAgeLoad
-												)
-													handleChangeMaxAge(handleUnformatAge(rawText || '0'));
-												if (finalAgeLoad) setFinalAgeLoad(false);
-											}}
-										/>
-									</View>
-								)}
+								{!isAgeEmpty(currentReferenceValue?.maxAge) &&
+									!isAgeEmpty(currentReferenceValue?.minAge) && (
+										<View style={{ width: '26%' }}>
+											<CustomMaskInput
+												noLabel
+												noError
+												keyboardType="number-pad"
+												mask="9999999999"
+												error={currentReferenceValue?.maxAgeError}
+												value={handleFormatAge(currentReferenceValue?.maxAge)}
+												onChangeText={(_, rawText) => {
+													if (
+														!isAgeEmpty(currentReferenceValue?.maxAge) &&
+														!finalAgeLoad
+													)
+														handleChangeMaxAge(
+															handleUnformatAge(rawText || '0')
+														);
+													if (finalAgeLoad) setFinalAgeLoad(false);
+												}}
+											/>
+										</View>
+									)}
 							</View>
 						)}
 					</View>
@@ -316,18 +317,16 @@ export function ReferenceValueView({
 					<View
 						style={{
 							width:
-								currentReferenceValue?.maxValue === undefined ||
-								currentReferenceValue?.minValue === undefined
+								!currentReferenceValue?.maxValue ||
+								!currentReferenceValue?.minValue
 									? '48%'
 									: '38%',
 						}}
 					>
-						{Boolean(currentReferenceValue?.minValue !== undefined) && (
+						{Boolean(currentReferenceValue?.minValue) && (
 							<InputAdornment
 								label={
-									currentReferenceValue?.maxValue === undefined
-										? 'Valor'
-										: 'Valor inicial'
+									!currentReferenceValue?.maxValue ? 'Valor' : 'Valor inicial'
 								}
 								value={currentReferenceValue?.minValue?.toString()}
 								error={currentReferenceValue?.minValueError}
@@ -340,7 +339,7 @@ export function ReferenceValueView({
 								noError
 							/>
 						)}
-						{Boolean(currentReferenceValue?.minValue === undefined) && (
+						{Boolean(!currentReferenceValue?.minValue) && (
 							<InputAdornment
 								label="Valor"
 								value={currentReferenceValue?.maxValue?.toString()}
@@ -358,8 +357,8 @@ export function ReferenceValueView({
 					<View
 						style={{
 							width:
-								currentReferenceValue?.maxValue === undefined ||
-								currentReferenceValue?.minValue === undefined
+								!currentReferenceValue?.maxValue ||
+								!currentReferenceValue?.minValue
 									? '48%'
 									: '20%',
 						}}
@@ -376,8 +375,7 @@ export function ReferenceValueView({
 						/>
 					</View>
 					{!Boolean(
-						currentReferenceValue?.maxValue === undefined ||
-							currentReferenceValue?.minValue === undefined
+						!currentReferenceValue?.maxValue || !currentReferenceValue?.minValue
 					) && (
 						<View style={{ width: '38%' }}>
 							<InputAdornment

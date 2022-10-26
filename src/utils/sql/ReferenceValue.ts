@@ -137,10 +137,18 @@ export async function createReferenceValue(
 					referenceValue?.maxAge,
 					referenceValue?.condition,
 					referenceValue?.testTypeId,
-				]
+				],
+				() => {
+					console.log('Referencia criada com sucesso!');
+				},
+				(txObj, error) => {
+					console.log('Erro criação: ', error);
+					return false;
+				}
 			);
 		});
 	} catch (error) {
+		console.log('Erro criação CATCH: ', error);
 		return error;
 	}
 }
@@ -204,9 +212,12 @@ export async function deleteReferenceValueByTestTypeId(
 				'DELETE FROM reference_value WHERE test_type_id = (?)',
 				[testTypeId],
 				() => {
+					console.log('Referencia deletada!');
+
 					resolve(true);
 				},
 				(txObj, error) => {
+					console.log('Erro ao deletar referencia: ', error);
 					reject(null);
 					return false;
 				}

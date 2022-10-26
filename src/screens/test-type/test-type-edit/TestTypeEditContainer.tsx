@@ -9,6 +9,7 @@ import { referenceValueService } from '../../../services/ReferenceValueService';
 import theme from '../../../styles/theme';
 import {
 	ageClassification,
+	isAgeEmpty,
 	isInvalidAge,
 	isInvalidMaxAge,
 	isInvalidMinAge,
@@ -341,6 +342,7 @@ export function TestTypeEditContainer({
 		setNameError('');
 		setMeasurementUnit('');
 		setMeasurementUnitError('');
+		setTestType('');
 		setReferenceValues([]);
 	};
 
@@ -489,8 +491,8 @@ export function TestTypeEditContainer({
 		if (classification === 'Idoso') return 'ELDER';
 		if (
 			!classification &&
-			referenceValue?.minAge === undefined &&
-			referenceValue?.maxAge === undefined
+			isAgeEmpty(referenceValue?.minAge) &&
+			isAgeEmpty(referenceValue?.maxAge)
 		)
 			return 'ALL';
 
@@ -498,8 +500,16 @@ export function TestTypeEditContainer({
 	};
 
 	const setInitalTimeVariation = (referenceValue: ReferenceValue) => {
-		if (!referenceValue?.minAge && referenceValue?.maxAge) return 'OR_LESS';
-		if (referenceValue?.minAge && !referenceValue?.maxAge) return 'OR_MORE';
+		if (
+			isAgeEmpty(referenceValue?.minAge) &&
+			!isAgeEmpty(referenceValue?.maxAge)
+		)
+			return 'OR_LESS';
+		if (
+			!isAgeEmpty(referenceValue?.minAge) &&
+			isAgeEmpty(referenceValue?.maxAge)
+		)
+			return 'OR_MORE';
 		return 'BETWEEN';
 	};
 
@@ -547,6 +557,7 @@ export function TestTypeEditContainer({
 							valueVariation: setInitalValueVariation(reference),
 						});
 					});
+					// console.log('newReferences: ', newReferences);
 					setReferenceValues(newReferences);
 					setReferenceLoading(false);
 				})

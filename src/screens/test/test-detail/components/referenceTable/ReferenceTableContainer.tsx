@@ -3,6 +3,7 @@ import React from 'react';
 import {
 	ageClassification,
 	formatQuantity,
+	isAgeEmpty,
 	ReferenceValue,
 	setTimeLabel,
 	setTimeValue,
@@ -43,13 +44,13 @@ export const ReferenceTableContainer = ({
 
 		if (classification) return classification;
 
-		if (reference?.minAge === undefined && reference?.maxAge === undefined)
+		if (isAgeEmpty(reference?.minAge) && isAgeEmpty(reference?.maxAge))
 			return 'Todas as idades';
 
 		if (!reference?.minAge && reference?.maxAge)
 			return `até ${setTimeValue(reference?.maxAge, timeLabel)} ${timeLabel}`;
 
-		if (reference?.minAge && !reference?.maxAge)
+		if (!isAgeEmpty(reference?.minAge) && !reference?.maxAge)
 			return `acima de ${setTimeValue(
 				reference?.minAge,
 				timeLabel
@@ -58,14 +59,10 @@ export const ReferenceTableContainer = ({
 		if (reference?.minAge === reference?.maxAge)
 			return `${setTimeValue(reference?.minAge, timeLabel)} ${timeLabel}`;
 
-		if (
-			(reference?.minAge || reference?.minAge === 0) &&
-			(reference?.maxAge || reference?.maxAge === 0)
-		)
-			return `${setTimeValue(reference?.minAge, timeLabel)} a ${setTimeValue(
-				reference?.maxAge,
-				timeLabel
-			)} ${timeLabel}`;
+		return `${setTimeValue(reference?.minAge, timeLabel)} a ${setTimeValue(
+			reference?.maxAge,
+			timeLabel
+		)} ${timeLabel}`;
 	};
 
 	return (

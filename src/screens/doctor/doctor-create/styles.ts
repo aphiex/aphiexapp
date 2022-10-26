@@ -4,6 +4,7 @@ export const styles = StyleSheet.create({
 	container: {
 		alignItems: 'center',
 		justifyContent: 'center',
+		marginBottom: 40,
 	},
 	form: {
 		marginTop: 40,

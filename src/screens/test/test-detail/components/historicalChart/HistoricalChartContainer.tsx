@@ -89,9 +89,10 @@ export const HistoricalChartContainer = ({
 	const handleMinReferenceValues = () => {
 		if (tests?.length > 0 && referenceValues?.length > 0) {
 			const minValues = tests?.map(test => {
-				return Number(test?.referenceValue?.minValue);
+				return Number(test?.referenceValue?.minValue || 0);
 			});
-			minValues.push(Number(tests[tests.length - 1]?.referenceValue?.minValue));
+			const lastValue = tests[tests.length - 1]?.referenceValue?.minValue;
+			minValues.push(Number(lastValue || 0));
 			return minValues;
 		}
 		return [];
@@ -100,9 +101,10 @@ export const HistoricalChartContainer = ({
 	const handleMaxReferenceValues = () => {
 		if (tests?.length > 0 && referenceValues?.length > 0) {
 			const maxValues = tests?.map(test => {
-				return Number(test?.referenceValue?.maxValue);
+				return Number(test?.referenceValue?.maxValue || 0);
 			});
-			maxValues.push(Number(tests[tests.length - 1]?.referenceValue?.maxValue));
+			const lastValue = tests[tests.length - 1]?.referenceValue?.maxValue;
+			maxValues.push(Number(lastValue || 0));
 			return maxValues;
 		}
 		return [];

@@ -82,8 +82,6 @@ async function handleGetReferenceValueByTestType(
 	return new Promise(async (resolve, reject) => {
 		getReferenceValueByTestType(testTypeId)
 			.then(results => {
-				console.log(results);
-
 				if (results) {
 					const referenceValues: ReferenceValue[] = [];
 
@@ -103,7 +101,6 @@ async function handleGetReferenceValueByTestType(
 							},
 						});
 					});
-
 					resolve(referenceValues);
 				} else reject(new Error('Falha ao obter valores de referência'));
 			})
