@@ -27,7 +27,7 @@ export function SettingsContainer({
 			</ScreenContainer>
 			<FooterContainer
 				btnMiddleTitle="Menu Principal"
-				btnMiddleOnPress={() => navigation.navigate('Menu')}
+				btnMiddleOnPress={() => navigation.goBack()}
 				btnMiddleIcon={<HeartPulse size={24} color={theme.colors.primary} />}
 				btnMiddleVariant="primary"
 			/>

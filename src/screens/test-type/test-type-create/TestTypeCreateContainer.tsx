@@ -344,12 +344,12 @@ export function TestTypeCreateContainer({
 						text: 'Sim',
 						onPress: () => {
 							clearForm();
-							navigation.navigate('Settings');
+							navigation.goBack();
 						},
 					},
 				]
 			);
-		} else navigation.navigate('Settings');
+		} else navigation.goBack();
 	};
 
 	const handleSubmit = () => {
@@ -394,13 +394,13 @@ export function TestTypeCreateContainer({
 											} else {
 												Alert.alert(name, 'Tipo de exame criado com sucesso');
 											}
-											navigation.replace('Settings');
+											navigation.goBack();
 										}
 									});
 							});
 						} else {
 							Alert.alert(name, 'Tipo de exame criado com sucesso');
-							navigation.replace('Settings');
+							navigation.goBack();
 						}
 					})
 					.catch(error => {

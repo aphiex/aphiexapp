@@ -21,7 +21,7 @@ export function DoctorDetailContainer({
 	const [loading, setLoading] = useState<boolean>(false);
 
 	const handleGoBack = () => {
-		navigation.navigate('DoctorList');
+		navigation.goBack();
 	};
 
 	const handleEdit = () => {
@@ -65,7 +65,7 @@ export function DoctorDetailContainer({
 					.handleDeleteDoctor(doctorId)
 					.then(() => {
 						Alert.alert('Médico deletado com sucesso!');
-						navigation.replace('DoctorList');
+						navigation.goBack();
 					})
 					.catch(error => {
 						Alert.alert(

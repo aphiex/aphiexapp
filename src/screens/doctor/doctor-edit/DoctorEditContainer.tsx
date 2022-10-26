@@ -165,12 +165,12 @@ export function DoctorEditContainer({
 						text: 'Sim',
 						onPress: () => {
 							resetForm();
-							navigation.navigate('DoctorDetail', { doctorId });
+							navigation.goBack();
 						},
 					},
 				]
 			);
-		} else navigation.navigate('DoctorDetail', { doctorId });
+		} else navigation.goBack();
 	};
 
 	const handleGetCities = (state: string) => {
@@ -266,7 +266,7 @@ export function DoctorEditContainer({
 					)
 					.then(() => {
 						Alert.alert('Médico atualizado com sucesso!');
-						navigation.replace('DoctorDetail', { doctorId });
+						navigation.goBack();
 					})
 					.catch(error => {
 						Alert.alert(

@@ -148,12 +148,12 @@ export function PlaceEditContainer({
 						text: 'Sim',
 						onPress: () => {
 							resetForm();
-							navigation.navigate('PlaceDetail', { placeId });
+							navigation.goBack();
 						},
 					},
 				]
 			);
-		} else navigation.navigate('PlaceDetail', { placeId });
+		} else navigation.goBack();
 	};
 
 	const handleGetCities = (state: string) => {
@@ -245,7 +245,7 @@ export function PlaceEditContainer({
 					)
 					.then(() => {
 						Alert.alert('Local atualizado com sucesso!');
-						navigation.replace('PlaceDetail', { placeId });
+						navigation.goBack();
 					})
 					.catch(error => {
 						Alert.alert(

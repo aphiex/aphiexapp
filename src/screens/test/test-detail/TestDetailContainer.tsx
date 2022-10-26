@@ -24,7 +24,7 @@ export function TestDetailContainer({
 	const [loading, setLoading] = useState<boolean>(false);
 
 	const handleGoBack = () => {
-		navigation.navigate('TestList');
+		navigation.goBack();
 	};
 
 	const handleGoToEditProfile = () => {
@@ -35,7 +35,7 @@ export function TestDetailContainer({
 		navigation.navigate('TestEdit', { testId: testId });
 	};
 
-	const handleGetTest = (id: number) => {
+	const getTest = (id: number) => {
 		setLoading(true);
 		try {
 			if (id && auth?.key) {
@@ -82,7 +82,7 @@ export function TestDetailContainer({
 					.handleDeleteTest(testId)
 					.then(() => {
 						Alert.alert('Exame deletado com sucesso!');
-						navigation.replace('TestList');
+						navigation.goBack();
 					})
 					.catch(error => {
 						Alert.alert(
@@ -102,8 +102,13 @@ export function TestDetailContainer({
 	};
 
 	useEffect(() => {
-		if (testId) handleGetTest(testId);
-	}, [testId]);
+		getTest(testId);
+		const willFocusSubscription = navigation.addListener('focus', () => {
+			getTest(testId);
+		});
+
+		return willFocusSubscription;
+	}, []);
 
 	return (
 		<>

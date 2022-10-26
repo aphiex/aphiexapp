@@ -65,12 +65,12 @@ export function ProfileCreateContainer({
 						text: 'Sim',
 						onPress: () => {
 							clearForm();
-							navigation.navigate('ProfileList');
+							navigation.goBack();
 						},
 					},
 				]
 			);
-		} else navigation.navigate('ProfileList');
+		} else navigation.goBack();
 	};
 
 	const handleSubmit = () => {
@@ -88,7 +88,7 @@ export function ProfileCreateContainer({
 						auth?.key || ''
 					)
 					.then(() => {
-						navigation.replace('ProfileList');
+						navigation.goBack();
 					})
 					.catch(error => {
 						Alert.alert(

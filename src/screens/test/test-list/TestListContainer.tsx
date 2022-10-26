@@ -26,7 +26,7 @@ export function TestListContainer({
 	};
 
 	const handleGoBack = () => {
-		navigation.navigate('Menu');
+		navigation.goBack();
 	};
 
 	const getTests = async () => {
@@ -44,6 +44,11 @@ export function TestListContainer({
 
 	useEffect(() => {
 		getTests();
+		const willFocusSubscription = navigation.addListener('focus', () => {
+			getTests();
+		});
+
+		return willFocusSubscription;
 	}, []);
 
 	return (

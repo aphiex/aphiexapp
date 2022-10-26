@@ -361,12 +361,12 @@ export function TestTypeEditContainer({
 						text: 'Sim',
 						onPress: () => {
 							clearForm();
-							navigation.navigate('Settings');
+							navigation.goBack();
 						},
 					},
 				]
 			);
-		} else navigation.navigate('Settings');
+		} else navigation.goBack();
 	};
 
 	const handleSubmit = () => {
@@ -418,7 +418,7 @@ export function TestTypeEditContainer({
 															'Tipo de exame atualizado com sucesso'
 														);
 													}
-													navigation.replace('Settings');
+													navigation.goBack();
 												}
 											});
 									});
@@ -432,7 +432,7 @@ export function TestTypeEditContainer({
 								});
 						} else {
 							Alert.alert(name, 'Tipo de exame atualizado com sucesso');
-							navigation.replace('Settings');
+							navigation.goBack();
 						}
 					})
 					.catch(error => {
@@ -557,7 +557,6 @@ export function TestTypeEditContainer({
 							valueVariation: setInitalValueVariation(reference),
 						});
 					});
-					// console.log('newReferences: ', newReferences);
 					setReferenceValues(newReferences);
 					setReferenceLoading(false);
 				})

@@ -136,12 +136,12 @@ export function TestCreateContainer({
 						text: 'Sim',
 						onPress: () => {
 							clearForm();
-							navigation.navigate('TestList');
+							navigation.goBack();
 						},
 					},
 				]
 			);
-		} else navigation.navigate('TestList');
+		} else navigation.goBack();
 	};
 
 	const handleGetTestTypes = () => {
@@ -210,7 +210,7 @@ export function TestCreateContainer({
 						auth.key
 					)
 					.then(() => {
-						navigation.replace('TestList');
+						navigation.goBack();
 					})
 					.catch(error => {
 						Alert.alert(

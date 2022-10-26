@@ -1,10 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Alert } from 'react-native';
-import {
-	ageClassification,
-	MEASUREMENT_UNITS,
-	ReferenceValueCreation,
-} from '../../../utils';
+import { ReferenceValueCreation } from '../../../utils';
 import { ReferenceValueView } from './ReferenceValueView';
 
 type TReferenceValueContainer = {

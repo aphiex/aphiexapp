@@ -21,7 +21,7 @@ export function PlaceDetailContainer({
 	const [loading, setLoading] = useState<boolean>(false);
 
 	const handleGoBack = () => {
-		navigation.navigate('PlaceList');
+		navigation.goBack();
 	};
 
 	const handleEdit = () => {
@@ -65,7 +65,7 @@ export function PlaceDetailContainer({
 					.handleDeletePlace(placeId)
 					.then(() => {
 						Alert.alert('Local deletado com sucesso!');
-						navigation.replace('PlaceList');
+						navigation.goBack();
 					})
 					.catch(error => {
 						Alert.alert(

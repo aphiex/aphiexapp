@@ -41,6 +41,11 @@ export function ProfileListContainer({
 
 	useEffect(() => {
 		getProfiles();
+		const willFocusSubscription = navigation.addListener('focus', () => {
+			getProfiles();
+		});
+
+		return willFocusSubscription;
 	}, []);
 
 	return (

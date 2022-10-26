@@ -85,12 +85,12 @@ export function ProfileEditContainer({
 						text: 'Sim',
 						onPress: () => {
 							resetForm();
-							navigation.navigate('ProfileDetail');
+							navigation.goBack();
 						},
 					},
 				]
 			);
-		} else navigation.navigate('ProfileDetail');
+		} else navigation.goBack();
 	};
 
 	const handleSubmit = () => {
@@ -112,7 +112,7 @@ export function ProfileEditContainer({
 					.then(profile => {
 						loadProfile(profile);
 						Alert.alert('Perfil atualizado com sucesso!');
-						navigation.replace('ProfileDetail');
+						navigation.goBack();
 					})
 					.catch(error => {
 						Alert.alert(

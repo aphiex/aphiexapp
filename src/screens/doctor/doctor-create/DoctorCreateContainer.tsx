@@ -159,12 +159,12 @@ export function DoctorCreateContainer({
 						text: 'Sim',
 						onPress: () => {
 							clearForm();
-							navigation.navigate('DoctorList');
+							navigation.goBack();
 						},
 					},
 				]
 			);
-		} else navigation.navigate('DoctorList');
+		} else navigation.goBack();
 	};
 
 	const handleGetCities = (state: string) => {
@@ -217,7 +217,7 @@ export function DoctorCreateContainer({
 						auth?.key || ''
 					)
 					.then(() => {
-						navigation.replace('DoctorList');
+						navigation.goBack();
 					})
 					.catch(error => {
 						Alert.alert(

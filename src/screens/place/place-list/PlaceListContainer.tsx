@@ -25,7 +25,7 @@ export function PlaceListContainer({
 	};
 
 	const handleGoBack = () => {
-		navigation.navigate('Menu');
+		navigation.goBack();
 	};
 
 	const getPlaces = async () => {
@@ -43,6 +43,11 @@ export function PlaceListContainer({
 
 	useEffect(() => {
 		getPlaces();
+		const willFocusSubscription = navigation.addListener('focus', () => {
+			getPlaces();
+		});
+
+		return willFocusSubscription;
 	}, []);
 
 	return (

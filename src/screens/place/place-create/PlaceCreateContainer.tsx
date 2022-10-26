@@ -143,12 +143,12 @@ export function PlaceCreateContainer({
 						text: 'Sim',
 						onPress: () => {
 							clearForm();
-							navigation.navigate('PlaceList');
+							navigation.goBack();
 						},
 					},
 				]
 			);
-		} else navigation.navigate('PlaceList');
+		} else navigation.goBack();
 	};
 
 	const handleGetCities = (state: string) => {
@@ -199,7 +199,7 @@ export function PlaceCreateContainer({
 						auth?.key || ''
 					)
 					.then(() => {
-						navigation.replace('PlaceList');
+						navigation.goBack();
 					})
 					.catch(error => {
 						Alert.alert(

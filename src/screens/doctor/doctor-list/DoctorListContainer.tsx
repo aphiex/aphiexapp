@@ -25,7 +25,7 @@ export function DoctorListContainer({
 	};
 
 	const handleGoBack = () => {
-		navigation.navigate('Menu');
+		navigation.goBack();
 	};
 
 	const getDoctors = async () => {
@@ -43,6 +43,11 @@ export function DoctorListContainer({
 
 	useEffect(() => {
 		getDoctors();
+		const willFocusSubscription = navigation.addListener('focus', () => {
+			getDoctors();
+		});
+
+		return willFocusSubscription;
 	}, []);
 
 	return (

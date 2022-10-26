@@ -17,7 +17,7 @@ export function ProfileDetailContainer({
 	const [loading, setLoading] = useState<boolean>(false);
 
 	const handleGoBack = () => {
-		navigation.replace('Menu');
+		navigation.goBack();
 	};
 
 	const handleEdit = () => {

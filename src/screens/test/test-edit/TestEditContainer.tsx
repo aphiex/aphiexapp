@@ -151,12 +151,12 @@ export function TestEditContainer({
 						text: 'Sim',
 						onPress: () => {
 							resetForm();
-							navigation.navigate('TestDetail', { testId });
+							navigation.goBack();
 						},
 					},
 				]
 			);
-		} else navigation.navigate('TestDetail', { testId });
+		} else navigation.goBack();
 	};
 
 	const handleGetTestTypes = () => {
@@ -262,7 +262,7 @@ export function TestEditContainer({
 					)
 					.then(result => {
 						Alert.alert('Exame atualizado com sucesso!');
-						navigation.replace('TestDetail', { testId });
+						navigation.goBack();
 					})
 					.catch(error => {
 						Alert.alert(
