@@ -20,7 +20,7 @@ import {
 	ReferenceValue,
 	ReferenceValueCreation,
 	SelectItem,
-	setTimeLabel,
+	setTimeLabelEdit,
 	TestType,
 } from '../../../utils';
 import { TestTypeEditView } from './TestTypeEditView';
@@ -520,7 +520,7 @@ export function TestTypeEditContainer({
 	};
 
 	const setInitalTime = (referenceValue: ReferenceValue) => {
-		const timeLabel = setTimeLabel(
+		const timeLabel = setTimeLabelEdit(
 			referenceValue?.minAge,
 			referenceValue?.maxAge
 		);

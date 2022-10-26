@@ -168,6 +168,62 @@ export const setTimeLabel = (minDays?: number, maxDays?: number) => {
 	return 'dias';
 };
 
+export const setTimeLabelEdit = (minDays?: number, maxDays?: number) => {
+	if (isAgeEmpty(minDays) && maxDays) {
+		const years = maxDays / 365;
+		if (Math.round(years) > 1 && maxDays % 365 === 0) return 'anos';
+		if (Math.round(years) === 1 && maxDays % 365 === 0) return 'ano';
+
+		const months = maxDays / 30;
+		if (Math.round(months) > 1 && maxDays % 30 === 0) return 'meses';
+		if (Math.round(months) === 1 && maxDays % 30 === 0) return 'mês';
+
+		if (Math.round(maxDays) === 1) return 'dia';
+		return 'dias';
+	}
+
+	if (minDays >= 0 && !maxDays) {
+		const years = minDays / 365;
+		if (Math.round(years) > 1 && minDays % 365 === 0) return 'anos';
+		if (Math.round(years) === 1 && minDays % 365 === 0) return 'ano';
+
+		const months = minDays / 30;
+		if (Math.round(months) > 1 && minDays % 30 === 0) return 'meses';
+		if (Math.round(months) === 1 && minDays % 30 === 0) return 'mês';
+
+		if (Math.round(minDays) === 1) return 'dia';
+		return 'dias';
+	}
+
+	if (minDays >= 0 && maxDays) {
+		const minYears = minDays / 365;
+		if (
+			Math.round(minYears) >= 1 &&
+			minDays % 365 === 0 &&
+			maxDays % 365 === 0
+		) {
+			const maxYears = maxDays / 365;
+			if (Math.round(maxYears) === 1) return 'ano';
+			return 'anos';
+		}
+
+		const minMonths = minDays / 30;
+		if (
+			Math.round(minMonths) >= 1 &&
+			minDays % 30 === 0 &&
+			maxDays % 30 === 0
+		) {
+			const maxMonths = maxDays / 30;
+			if (Math.round(maxMonths) === 1) return 'mês';
+			return 'meses';
+		}
+
+		if (Math.round(maxDays) === 1) return 'dia';
+	}
+
+	return 'dias';
+};
+
 export const setTimeValue = (days?: number, timeLabel?: string) => {
 	if (timeLabel === 'ano' || timeLabel === 'anos')
 		return Math.round(days / 365);
