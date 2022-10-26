@@ -144,10 +144,10 @@ export function TestDetailView({
 								/>
 							</View>
 
-							<View style={styles.contentContainer}>
+							{/* <View style={styles.contentContainer}>
 								<Text style={styles.title}>Anexos</Text>
 								<Text style={styles.content}>{'-'}</Text>
-							</View>
+							</View> */}
 						</View>
 					</View>
 				</>
