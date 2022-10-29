@@ -155,6 +155,7 @@ export function TestTypeEditView({
 									measurementUnit={measurementUnit}
 									zIndex={referenceValues?.length + 100 - index}
 									currentReferenceValue={currentReferenceValue}
+									referenceValues={referenceValues}
 									setReferenceValues={setReferenceValues}
 								/>
 							))}

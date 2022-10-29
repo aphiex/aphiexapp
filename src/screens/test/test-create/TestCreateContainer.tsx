@@ -5,7 +5,7 @@ import { Restart } from '../../../assets/icons';
 import { FooterContainer, ScreenContainer } from '../../../components';
 import { useAuth, useProfile } from '../../../context';
 import { RootStackParamList } from '../../../routers/PrivateStack';
-import { testService, testTypeService } from '../../../services';
+import { imageService, testService, testTypeService } from '../../../services';
 import { referenceValueService } from '../../../services/ReferenceValueService';
 import theme from '../../../styles/theme';
 import { ReferenceValue, SelectItem, TestType } from '../../../utils';
@@ -15,6 +15,7 @@ export function TestCreateContainer({
 	navigation,
 }: NativeStackScreenProps<RootStackParamList, 'TestCreate'>) {
 	const [description, setDescription] = useState<string>('');
+	const [images, setImages] = useState<string[]>([]);
 
 	const [condition, setCondition] = useState<string>('');
 	const [referenceValues, setreferenceValues] = useState<ReferenceValue[]>([]);
@@ -62,6 +63,14 @@ export function TestCreateContainer({
 		if (valueError) setValueError('');
 	};
 
+	const handleAddImage = (uri: string) => {
+		setImages(prevState => [...prevState, uri]);
+	};
+
+	const handleRemoveImage = (index: number) => {
+		setImages(prev => prev.filter((_, prevIndex) => prevIndex !== index));
+	};
+
 	const handleFixValue = (v: string) => {
 		let newValue = v;
 
@@ -105,7 +114,12 @@ export function TestCreateContainer({
 
 	const isFormDust = () => {
 		return Boolean(
-			value || today !== date || testType || description || condition
+			value ||
+				today !== date ||
+				testType ||
+				description ||
+				condition ||
+				images?.length > 0
 		);
 	};
 
@@ -119,6 +133,7 @@ export function TestCreateContainer({
 		setMeasurementUnit('');
 		setCondition('');
 		setreferenceValues([]);
+		setImages([]);
 	};
 
 	const handleCancel = () => {
@@ -201,16 +216,50 @@ export function TestCreateContainer({
 						{
 							description: description?.trim() || '',
 							date: date?.toISOString() || '',
-							image: '',
 							profileId: currentProfile?.id,
 							testTypeId: testType ? parseInt(testType) : undefined,
 							value: value ? handleFixValue(value) : undefined,
 							condition,
+							hasImage: images?.length > 0 ? 'Y' : 'N',
 						},
 						auth.key
 					)
-					.then(() => {
-						navigation.goBack();
+					.then(testId => {
+						if (images.length > 0) {
+							let errors: number[] = [];
+							images.forEach((image, index) => {
+								imageService
+									.handleCreateImage(
+										{
+											testId,
+											uri: image,
+										},
+										auth.key
+									)
+									.catch(() => {
+										errors.push(index + 1);
+									})
+									.finally(() => {
+										if (index === images?.length - 1) {
+											if (errors?.length > 0) {
+												Alert.alert(
+													'Criação finalizada',
+													'Exame criado com sucesso, entretanto houve erro ao cadastrar uma ou mais imagens'
+												);
+											} else {
+												Alert.alert(
+													'Criação finalizada',
+													'Exame criado com sucesso'
+												);
+											}
+											navigation.goBack();
+										}
+									});
+							});
+						} else {
+							Alert.alert('Criação finalizada', 'Exame criado com sucesso');
+							navigation.goBack();
+						}
 					})
 					.catch(error => {
 						Alert.alert(
@@ -262,6 +311,9 @@ export function TestCreateContainer({
 					condition={condition}
 					referenceValues={referenceValues}
 					referenceLoading={referenceLoading}
+					images={images}
+					handleAddImage={handleAddImage}
+					handleRemoveImage={handleRemoveImage}
 				/>
 			</ScreenContainer>
 			<FooterContainer

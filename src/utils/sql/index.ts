@@ -6,3 +6,4 @@ export * from './Auth';
 export * from './Test';
 export * from './TestType';
 export * from './ReferenceValue';
+export * from './Images';

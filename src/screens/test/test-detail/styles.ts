@@ -124,4 +124,15 @@ export const styles = StyleSheet.create({
 		marginBottom: 15,
 		textAlign: 'center',
 	},
+	image: {
+		width: '100%',
+		borderRadius: 8,
+	},
+	imageContainer: {
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		flexWrap: 'wrap',
+		paddingHorizontal: 28,
+	},
 });

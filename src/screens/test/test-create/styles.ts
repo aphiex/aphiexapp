@@ -22,7 +22,7 @@ export const styles = StyleSheet.create({
 		marginLeft: 10,
 	},
 	subContainer: {
-		marginTop: 10,
+		marginVertical: 10,
 		width: '100%',
 	},
 	section: {
@@ -34,5 +34,23 @@ export const styles = StyleSheet.create({
 	checkbox: {
 		width: 25,
 		height: 25,
+	},
+	imageBtnContainer: {
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-evenly',
+		marginTop: 20,
+	},
+	imageBtnContainerText: {
+		fontFamily: theme.fonts.medium500,
+		fontSize: 18,
+		color: theme.colors.grey,
+	},
+	imageContainer: {
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		flexWrap: 'wrap',
 	},
 });

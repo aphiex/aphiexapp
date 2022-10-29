@@ -4,8 +4,10 @@ import { ActivityIndicator, View, Text } from 'react-native';
 import { FolderPlus } from '../../../assets/icons';
 import {
 	CustomDateInput,
+	CustomImagePicker,
 	CustomInput,
 	CustomSelectInput,
+	ImageViewer,
 	InputAdornment,
 	LoadingState,
 	PageTitle,
@@ -32,10 +34,13 @@ type TTestEdit = {
 	measurementUnit: string;
 	condition: string;
 	referenceValues: ReferenceValue[];
+	images: string[];
 	handleChangeValue: (v: string) => void;
 	handleChangeDescription: (value: string) => void;
 	handleChangeMeasurementUnit: (testTypeId: string) => void;
 	handleChangeCondition: (v: string) => void;
+	handleAddImage: (uri: string) => void;
+	handleRemoveImage: (index: number) => void;
 };
 
 export function TestEditView({
@@ -60,6 +65,9 @@ export function TestEditView({
 	handleChangeCondition,
 	referenceLoading,
 	referenceValues,
+	handleAddImage,
+	handleRemoveImage,
+	images,
 }: TTestEdit) {
 	return (
 		<View style={styles.container}>
@@ -165,6 +173,33 @@ export function TestEditView({
 								})}
 							</View>
 						)}
+
+					<View style={styles.subContainer}>
+						<Text style={styles.subTitle}>Adicionar imagem</Text>
+						<View style={styles.imageContainer}>
+							{images?.map((image, index) => (
+								<ImageViewer
+									deletable
+									currentImage={image}
+									index={index}
+									images={images}
+									key={index}
+									onRemoveImage={index => handleRemoveImage(index)}
+								/>
+							))}
+						</View>
+						<View style={styles.imageBtnContainer}>
+							<CustomImagePicker
+								saveCameraImage
+								onTakePhoto={uri => handleAddImage(uri)}
+							/>
+							<Text style={styles.imageBtnContainerText}>ou</Text>
+							<CustomImagePicker
+								usePhotoFromLibrary
+								onTakePhoto={uri => handleAddImage(uri)}
+							/>
+						</View>
+					</View>
 				</View>
 			)}
 		</View>

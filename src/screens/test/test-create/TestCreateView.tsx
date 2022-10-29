@@ -1,11 +1,20 @@
 import Checkbox from 'expo-checkbox';
+import ImageView from 'react-native-image-viewing';
 import React from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import {
+	View,
+	Text,
+	ActivityIndicator,
+	Image,
+	TouchableOpacity,
+} from 'react-native';
 import { FolderPlus } from '../../../assets/icons';
 import {
 	CustomDateInput,
+	CustomImagePicker,
 	CustomInput,
 	CustomSelectInput,
+	ImageViewer,
 	InputAdornment,
 	LoadingState,
 	PageTitle,
@@ -32,10 +41,13 @@ type TTestCreate = {
 	measurementUnit: string;
 	condition: string;
 	referenceValues: ReferenceValue[];
+	images: string[];
 	handleChangeValue: (v: string) => void;
 	handleChangeDescription: (value: string) => void;
 	handleChangeMeasurementUnit: (testTypeId: string) => void;
 	handleChangeCondition: (v: string) => void;
+	handleAddImage: (uri: string) => void;
+	handleRemoveImage: (index: number) => void;
 };
 
 export function TestCreateView({
@@ -60,6 +72,9 @@ export function TestCreateView({
 	handleChangeCondition,
 	referenceValues,
 	referenceLoading,
+	handleAddImage,
+	images,
+	handleRemoveImage,
 }: TTestCreate) {
 	return (
 		<View style={styles.container}>
@@ -165,6 +180,33 @@ export function TestCreateView({
 								})}
 							</View>
 						)}
+
+					<View style={styles.subContainer}>
+						<Text style={styles.subTitle}>Adicionar imagem</Text>
+						<View style={styles.imageContainer}>
+							{images?.map((image, index) => (
+								<ImageViewer
+									deletable
+									currentImage={image}
+									index={index}
+									images={images}
+									key={index}
+									onRemoveImage={index => handleRemoveImage(index)}
+								/>
+							))}
+						</View>
+						<View style={styles.imageBtnContainer}>
+							<CustomImagePicker
+								saveCameraImage
+								onTakePhoto={uri => handleAddImage(uri)}
+							/>
+							<Text style={styles.imageBtnContainerText}>ou</Text>
+							<CustomImagePicker
+								usePhotoFromLibrary
+								onTakePhoto={uri => handleAddImage(uri)}
+							/>
+						</View>
+					</View>
 				</View>
 			)}
 		</View>

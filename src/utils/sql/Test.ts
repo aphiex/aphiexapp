@@ -87,8 +87,8 @@ export const createTestTable = async () => {
 					'test_value TEXT, ' +
 					'test_date TEXT, ' +
 					'test_description TEXT, ' +
-					'test_image TEXT, ' +
 					'test_condition TEXT, ' +
+					'test_has_image CHAR (1), ' +
 					'profile_id INTEGER, ' +
 					'test_type_id INTEGER, ' +
 					'FOREIGN KEY(profile_id) REFERENCES profile(profile_id), ' +
@@ -100,16 +100,16 @@ export const createTestTable = async () => {
 	}
 };
 
-export async function createTest(test: TestCreate) {
-	try {
+export async function createTest(test: TestCreate): Promise<number | null> {
+	return new Promise(async (resolve, reject) => {
 		(await database).transaction(tx => {
 			tx.executeSql(
 				'INSERT INTO test (' +
 					'test_value, ' +
 					'test_date, ' +
 					'test_description, ' +
-					'test_image, ' +
 					'test_condition, ' +
+					'test_has_image, ' +
 					'profile_id, ' +
 					'test_type_id' +
 					') VALUES (?,?,?,?,?,?,?)',
@@ -117,16 +117,21 @@ export async function createTest(test: TestCreate) {
 					test?.value || '',
 					test?.date || '',
 					test?.description || '',
-					test?.image || '',
 					test?.condition || '',
+					test?.hasImage || '',
 					test?.profileId || '',
 					test?.testTypeId || '',
-				]
+				],
+				(txObj, { insertId }) => {
+					resolve(insertId);
+				},
+				(txObj, error) => {
+					reject(null);
+					return false;
+				}
 			);
 		});
-	} catch (error) {
-		return error;
-	}
+	});
 }
 
 export async function updateTest(test: TestEdit) {
@@ -137,8 +142,8 @@ export async function updateTest(test: TestEdit) {
 					'test_value = (?), ' +
 					'test_date = (?), ' +
 					'test_description = (?), ' +
-					'test_image = (?), ' +
 					'test_condition = (?), ' +
+					'test_has_image = (?), ' +
 					'profile_id = (?), ' +
 					'test_type_id = (?)' +
 					'WHERE test_id = (?)',
@@ -146,8 +151,8 @@ export async function updateTest(test: TestEdit) {
 					test?.value || '',
 					test?.date || '',
 					test?.description || '',
-					test?.image || '',
 					test?.condition || '',
+					test?.hasImage || '',
 					test?.profileId || '',
 					test?.testTypeId || '',
 					test?.id || '',

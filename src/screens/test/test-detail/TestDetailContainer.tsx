@@ -5,10 +5,10 @@ import { AccountEdit } from '../../../assets/icons';
 import { FooterContainer, ScreenContainer } from '../../../components';
 import { useAuth, useProfile } from '../../../context';
 import { RootStackParamList } from '../../../routers/PrivateStack';
-import { testService } from '../../../services';
+import { imageService, testService } from '../../../services';
 import { referenceValueService } from '../../../services/ReferenceValueService';
 import theme from '../../../styles/theme';
-import { ReferenceValue, Test } from '../../../utils';
+import { Image, ReferenceValue, Test } from '../../../utils';
 import { TestDetailView } from './TestDetailView';
 
 export function TestDetailContainer({
@@ -22,6 +22,8 @@ export function TestDetailContainer({
 	const [referenceValues, setReferenceValues] = useState<ReferenceValue[]>([]);
 	const [modalVisible, setModalVisible] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(false);
+	const [loadingImages, setLoadingImages] = useState<boolean>(false);
+	const [images, setImages] = useState<Image[]>([]);
 
 	const handleGoBack = () => {
 		navigation.goBack();
@@ -74,6 +76,25 @@ export function TestDetailContainer({
 		}
 	};
 
+	const getTestImages = (id: number) => {
+		setLoadingImages(true);
+		if (id && auth?.key) {
+			imageService
+				.handleGetImagesByTest(id, auth?.key)
+				.then(result => {
+					setImages(result);
+					setLoadingImages(false);
+				})
+				.catch(error => {
+					Alert.alert(
+						error?.message || error,
+						'Reinicie o aplicativo e tente novamente.'
+					);
+					setLoadingImages(false);
+				});
+		}
+	};
+
 	const handleDelete = () => {
 		if (testId) {
 			setLoading(true);
@@ -103,8 +124,10 @@ export function TestDetailContainer({
 
 	useEffect(() => {
 		getTest(testId);
+		getTestImages(testId);
 		const willFocusSubscription = navigation.addListener('focus', () => {
 			getTest(testId);
+			getTestImages(testId);
 		});
 
 		return willFocusSubscription;
@@ -118,9 +141,10 @@ export function TestDetailContainer({
 					handleDelete={handleDelete}
 					modalVisible={modalVisible}
 					setModalVisible={setModalVisible}
-					loading={loading}
+					loading={loading || loadingImages}
 					referenceValues={referenceValues}
 					handleGoToEditProfile={handleGoToEditProfile}
+					images={images}
 				/>
 			</ScreenContainer>
 			<FooterContainer

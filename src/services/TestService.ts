@@ -26,14 +26,14 @@ async function handleGetTests(
 					results.forEach(result => {
 						decryptedData.push({
 							id: result?.test_id,
-							date: result?.test_date || '',
-							description: result?.test_description
-								? CryptoES.AES.decrypt(result?.test_description, key).toString(
+							hasImage: result?.test_has_image || '',
+							date: result?.test_date
+								? CryptoES.AES.decrypt(result?.test_date, key).toString(
 										CryptoES.enc.Utf8
 								  )
 								: '',
-							image: result?.test_image
-								? CryptoES.AES.decrypt(result?.test_image, key).toString(
+							description: result?.test_description
+								? CryptoES.AES.decrypt(result?.test_description, key).toString(
 										CryptoES.enc.Utf8
 								  )
 								: '',
@@ -83,14 +83,14 @@ async function handleGetHistoricalTests(
 					results.forEach(result => {
 						decryptedData.push({
 							id: result?.test_id,
-							date: result?.test_date || '',
-							description: result?.test_description
-								? CryptoES.AES.decrypt(result?.test_description, key).toString(
+							hasImage: result?.test_has_image || '',
+							date: result?.test_date
+								? CryptoES.AES.decrypt(result?.test_date, key).toString(
 										CryptoES.enc.Utf8
 								  )
 								: '',
-							image: result?.test_image
-								? CryptoES.AES.decrypt(result?.test_image, key).toString(
+							description: result?.test_description
+								? CryptoES.AES.decrypt(result?.test_description, key).toString(
 										CryptoES.enc.Utf8
 								  )
 								: '',
@@ -137,14 +137,14 @@ async function handleGetTestById(
 				if (result) {
 					const decryptedData: Test = {
 						id: result?.test_id,
-						date: result?.test_date || '',
-						description: result?.test_description
-							? CryptoES.AES.decrypt(result?.test_description, key).toString(
+						hasImage: result?.test_has_image || '',
+						date: result?.test_date
+							? CryptoES.AES.decrypt(result?.test_date, key).toString(
 									CryptoES.enc.Utf8
 							  )
 							: '',
-						image: result?.test_image
-							? CryptoES.AES.decrypt(result?.test_image, key).toString(
+						description: result?.test_description
+							? CryptoES.AES.decrypt(result?.test_description, key).toString(
 									CryptoES.enc.Utf8
 							  )
 							: '',
@@ -178,20 +178,20 @@ async function handleGetTestById(
 async function handleCreateTest(
 	test: TestCreate,
 	key: string
-): Promise<boolean> {
+): Promise<number> {
 	return new Promise(async (resolve, reject) => {
 		createTestTable()
 			.then(() => {
 				const encryptedTest: TestCreate = {
+					hasImage: test?.hasImage || '',
 					condition: test?.condition
 						? CryptoES.AES.encrypt(test?.condition, key).toString()
 						: '',
 					description: test?.description
 						? CryptoES.AES.encrypt(test?.description, key).toString()
 						: '',
-					date: test?.date || '',
-					image: test?.image
-						? CryptoES.AES.encrypt(test?.image, key).toString()
+					date: test?.date
+						? CryptoES.AES.encrypt(test?.date, key).toString()
 						: '',
 					value: test?.value
 						? CryptoES.AES.encrypt(test?.value, key).toString()
@@ -201,8 +201,8 @@ async function handleCreateTest(
 				};
 
 				createTest(encryptedTest)
-					.then(() => {
-						resolve(true);
+					.then(result => {
+						resolve(result);
 					})
 					.catch(() => reject(new Error('Falha ao criar exame')));
 			})
@@ -217,16 +217,14 @@ async function handleUpdateTest(
 	return new Promise(async (resolve, reject) => {
 		const encryptedTest: TestEdit = {
 			id: test?.id,
+			hasImage: test?.hasImage || '',
 			condition: test?.condition
 				? CryptoES.AES.encrypt(test?.condition, key).toString()
 				: '',
 			description: test?.description
 				? CryptoES.AES.encrypt(test?.description, key).toString()
 				: '',
-			date: test?.date || '',
-			image: test?.image
-				? CryptoES.AES.encrypt(test?.image, key).toString()
-				: '',
+			date: test?.date ? CryptoES.AES.encrypt(test?.date, key).toString() : '',
 			value: test?.value
 				? CryptoES.AES.encrypt(test?.value, key).toString()
 				: '',

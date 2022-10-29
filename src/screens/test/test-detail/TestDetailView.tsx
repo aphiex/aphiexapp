@@ -1,14 +1,21 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import { FolderPlus, TrashCan } from '../../../assets/icons';
 import {
 	IconButton,
+	ImageViewer,
 	LoadingModal,
 	PageTitle,
 	PasswordRequestModalContainer,
 } from '../../../components';
 import theme from '../../../styles/theme';
-import { dateMask, formatQuantity, ReferenceValue, Test } from '../../../utils';
+import {
+	dateMask,
+	formatQuantity,
+	ReferenceValue,
+	Test,
+	Image as ImageType,
+} from '../../../utils';
 import {
 	HistoricalChartContainer,
 	ReferenceTableContainer,
@@ -20,6 +27,7 @@ type TTestDetail = {
 	setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 	modalVisible: boolean;
 	loading: boolean;
+	images: ImageType[];
 	referenceValues?: ReferenceValue[];
 	handleDelete: () => void;
 	handleGoToEditProfile: () => void;
@@ -33,6 +41,7 @@ export function TestDetailView({
 	loading,
 	referenceValues,
 	handleGoToEditProfile,
+	images,
 }: TTestDetail) {
 	return (
 		<>
@@ -113,10 +122,12 @@ export function TestDetailView({
 								</View>
 							</View>
 
-							<View style={styles.contentContainer}>
-								<Text style={styles.title}>Descrição</Text>
-								<Text style={styles.content}>{test?.description || '-'}</Text>
-							</View>
+							{Boolean(test?.description) && (
+								<View style={styles.contentContainer}>
+									<Text style={styles.title}>Descrição</Text>
+									<Text style={styles.content}>{test?.description || '-'}</Text>
+								</View>
+							)}
 
 							{Boolean(test?.condition) && (
 								<View style={styles.contentContainer}>
@@ -144,10 +155,23 @@ export function TestDetailView({
 								/>
 							</View>
 
-							{/* <View style={styles.contentContainer}>
-								<Text style={styles.title}>Anexos</Text>
-								<Text style={styles.content}>{'-'}</Text>
-							</View> */}
+							{Boolean(images?.length > 0) && (
+								<View style={styles.contentContainer}>
+									<Text style={styles.title}>Imagens Anexadas</Text>
+									<View style={styles.imageContainer}>
+										{images?.map((image, index) => (
+											<ImageViewer
+												currentImage={image?.uri}
+												index={index}
+												images={images?.map(img => {
+													return img?.uri;
+												})}
+												key={index}
+											/>
+										))}
+									</View>
+								</View>
+							)}
 						</View>
 					</View>
 				</>

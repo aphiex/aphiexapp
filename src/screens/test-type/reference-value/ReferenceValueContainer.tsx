@@ -8,6 +8,7 @@ type TReferenceValueContainer = {
 	zIndex: number;
 	measurementUnit: string;
 	currentReferenceValue: ReferenceValueCreation;
+	referenceValues?: ReferenceValueCreation[];
 	setReferenceValues: React.Dispatch<
 		React.SetStateAction<ReferenceValueCreation[]>
 	>;
@@ -19,6 +20,7 @@ export const ReferenceValueContainer = ({
 	zIndex,
 	setReferenceValues,
 	currentReferenceValue,
+	referenceValues,
 }: TReferenceValueContainer) => {
 	const [openCondition, setOpenCondition] = useState<boolean>(false);
 	const [openGender, setOpenGender] = useState<boolean>(false);

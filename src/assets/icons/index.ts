@@ -23,3 +23,5 @@ export * from './LogoutVariant';
 export * from './NotePlusOutline';
 export * from './NoteEditOutline';
 export * from './TestTube';
+export * from './Camera';
+export * from './Image';

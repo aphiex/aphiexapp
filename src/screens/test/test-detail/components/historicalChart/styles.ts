@@ -27,7 +27,7 @@ export const styles = StyleSheet.create({
 	legendContainer: {
 		display: 'flex',
 		flexDirection: 'column',
-		paddingHorizontal: '7%',
+		paddingHorizontal: 38,
 	},
 	legendContent: {
 		display: 'flex',

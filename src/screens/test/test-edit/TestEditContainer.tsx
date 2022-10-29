@@ -5,7 +5,7 @@ import { Restart } from '../../../assets/icons';
 import { FooterContainer, ScreenContainer } from '../../../components';
 import { useAuth, useProfile } from '../../../context';
 import { RootStackParamList } from '../../../routers/PrivateStack';
-import { testService, testTypeService } from '../../../services';
+import { imageService, testService, testTypeService } from '../../../services';
 import { referenceValueService } from '../../../services/ReferenceValueService';
 import theme from '../../../styles/theme';
 import {
@@ -29,6 +29,10 @@ export function TestEditContainer({
 	const [referenceLoading, setreferenceLoading] = useState<boolean>(false);
 
 	const [description, setDescription] = useState<string>('');
+
+	const [images, setImages] = useState<string[]>([]);
+	const [initialImages, setInitialImages] = useState<string[]>([]);
+	const [loadingImages, setLoadingImages] = useState<boolean>(false);
 
 	const [value, setValue] = useState<string>('');
 	const [valueError, setValueError] = useState<string>('');
@@ -72,6 +76,14 @@ export function TestEditContainer({
 		if (valueError) setValueError('');
 	};
 
+	const handleAddImage = (uri: string) => {
+		setImages(prevState => [...prevState, uri]);
+	};
+
+	const handleRemoveImage = (index: number) => {
+		setImages(prev => prev.filter((_, prevIndex) => prevIndex !== index));
+	};
+
 	const handleFixValue = (v: string) => {
 		let newValue = v;
 
@@ -113,6 +125,20 @@ export function TestEditContainer({
 		return true;
 	};
 
+	const handleDustImages = () => {
+		if (initialImages?.length === 0 && images?.length === 0) return false;
+		if (initialImages?.length !== images?.length) return true;
+
+		let result = false;
+		for (let index = 0; index < initialImages?.length; index++) {
+			if (images[index] !== initialImages[index]) {
+				result = true;
+				return;
+			}
+		}
+		return result;
+	};
+
 	const isFormDust = () => {
 		return Boolean(
 			value !== (test?.value ? dotToComma(test?.value.toString()) : '') ||
@@ -121,7 +147,8 @@ export function TestEditContainer({
 				testType !==
 					(test?.testType?.id ? test?.testType?.id.toString() : '') ||
 				condition !== (test?.condition ? test?.condition : '') ||
-				description !== (test?.description ? test?.description : '')
+				description !== (test?.description ? test?.description : '') ||
+				handleDustImages()
 		);
 	};
 
@@ -134,6 +161,7 @@ export function TestEditContainer({
 		setTestTypeError('');
 		setMeasurementUnit(test?.testType?.measurementUnit || '');
 		setCondition(test?.condition || '');
+		setImages(initialImages);
 	};
 
 	const handleCancel = () => {
@@ -221,6 +249,39 @@ export function TestEditContainer({
 		}
 	};
 
+	const getTestImages = (id: number) => {
+		setLoadingImages(true);
+		if (id && auth?.key) {
+			imageService
+				.handleGetImagesByTest(id, auth?.key)
+				.then(result => {
+					if (result?.length > 0) {
+						setInitialImages(
+							result?.map(img => {
+								return img?.uri;
+							})
+						);
+						setImages(
+							result?.map(img => {
+								return img?.uri;
+							})
+						);
+					} else {
+						setInitialImages([]);
+						setImages([]);
+					}
+					setLoadingImages(false);
+				})
+				.catch(error => {
+					Alert.alert(
+						error?.message || error,
+						'Reinicie o aplicativo e tente novamente.'
+					);
+					setLoadingImages(false);
+				});
+		}
+	};
+
 	const handleGetReferenceValues = (testTypeId: string) => {
 		setreferenceLoading(true);
 		try {
@@ -252,7 +313,7 @@ export function TestEditContainer({
 							id: testId,
 							description: description?.trim() || '',
 							date: date?.toISOString() || '',
-							image: '',
+							hasImage: images?.length > 0 ? 'Y' : 'N',
 							profileId: currentProfile?.id,
 							testTypeId: testType ? parseInt(testType) : undefined,
 							value: value ? handleFixValue(value) : undefined,
@@ -260,9 +321,50 @@ export function TestEditContainer({
 						},
 						auth?.key || ''
 					)
-					.then(result => {
-						Alert.alert('Exame atualizado com sucesso!');
-						navigation.goBack();
+					.then(() => {
+						imageService
+							.handleDeleteImagesByTestId(testId)
+							.then(() => {
+								if (images.length > 0) {
+									let errors: number[] = [];
+									images.forEach((image, index) => {
+										imageService
+											.handleCreateImage(
+												{
+													testId,
+													uri: image,
+												},
+												auth.key
+											)
+											.catch(() => {
+												errors.push(index + 1);
+											})
+											.finally(() => {
+												if (index === images?.length - 1) {
+													if (errors?.length > 0) {
+														Alert.alert(
+															'Exame atualizado com sucesso',
+															'Entretanto houve erro ao cadastrar uma ou mais imagens'
+														);
+													} else {
+														Alert.alert('Exame atualizado com sucesso');
+													}
+													navigation.goBack();
+												}
+											});
+									});
+								} else {
+									Alert.alert('Exame atualizado com sucesso');
+									navigation.goBack();
+								}
+							})
+							.catch(error => {
+								Alert.alert(
+									'Erro ao atualizar Valores de Referência',
+									'Reinicie o aplicativo e tente novamente.'
+								);
+								setLoading(false);
+							});
 					})
 					.catch(error => {
 						Alert.alert(
@@ -285,6 +387,7 @@ export function TestEditContainer({
 		if (testId) {
 			handleGetTestTypes();
 			handleGetTest(testId);
+			getTestImages(testId);
 		}
 	}, [testId]);
 
@@ -301,7 +404,7 @@ export function TestEditContainer({
 					description={description}
 					value={value}
 					valueError={valueError}
-					loading={loading || loadingTestTypes}
+					loading={loading || loadingTestTypes || loadingImages}
 					openTestTypeDropdown={openTestTypeDropdown}
 					setOpenTestTypeDropdown={setOpenTestTypeDropdown}
 					testType={testType}
@@ -317,6 +420,9 @@ export function TestEditContainer({
 					condition={condition}
 					referenceValues={referenceValues}
 					referenceLoading={referenceLoading}
+					images={images}
+					handleAddImage={handleAddImage}
+					handleRemoveImage={handleRemoveImage}
 				/>
 			</ScreenContainer>
 			<FooterContainer

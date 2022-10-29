@@ -51,7 +51,7 @@ export function TestListView({
 								</Text>
 								<Text numberOfLines={1} style={styles.description}>
 									{`${test?.date ? dateMask(new Date(test?.date)) : ''}${
-										test?.image ? '  • Possui imagem' : ''
+										test?.hasImage === 'Y' ? '  • Possui imagem' : ''
 									}`}
 								</Text>
 							</View>

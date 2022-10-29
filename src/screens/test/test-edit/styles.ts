@@ -35,4 +35,22 @@ export const styles = StyleSheet.create({
 		width: 25,
 		height: 25,
 	},
+	imageBtnContainer: {
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-evenly',
+		marginTop: 20,
+	},
+	imageBtnContainerText: {
+		fontFamily: theme.fonts.medium500,
+		fontSize: 18,
+		color: theme.colors.grey,
+	},
+	imageContainer: {
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		flexWrap: 'wrap',
+	},
 });

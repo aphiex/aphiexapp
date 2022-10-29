@@ -380,10 +380,10 @@ export function TestTypeEditContainer({
 						id: parseInt(testType),
 					})
 					.then(() => {
-						if (referenceValues.length > 0) {
-							referenceValueService
-								.handleDeleteReferenceValueByTestTypeId(parseInt(testType))
-								.then(() => {
+						referenceValueService
+							.handleDeleteReferenceValueByTestTypeId(parseInt(testType))
+							.then(() => {
+								if (referenceValues?.length > 0) {
 									let errors: number[] = [];
 									referenceValues.forEach((reference, index) => {
 										referenceValueService
@@ -422,18 +422,18 @@ export function TestTypeEditContainer({
 												}
 											});
 									});
-								})
-								.catch(error => {
-									Alert.alert(
-										'Erro ao atualizar Valores de Referência',
-										'Reinicie o aplicativo e tente novamente.'
-									);
-									setLoading(false);
-								});
-						} else {
-							Alert.alert(name, 'Tipo de exame atualizado com sucesso');
-							navigation.goBack();
-						}
+								} else {
+									Alert.alert(name, 'Tipo de exame atualizado com sucesso');
+									navigation.goBack();
+								}
+							})
+							.catch(error => {
+								Alert.alert(
+									'Erro ao atualizar Valores de Referência',
+									'Reinicie o aplicativo e tente novamente.'
+								);
+								setLoading(false);
+							});
 					})
 					.catch(error => {
 						Alert.alert(

@@ -4,7 +4,7 @@ import { Plus } from '../../../assets/icons';
 import { FooterContainer, ScreenContainer } from '../../../components';
 import { useAuth, useProfile } from '../../../context';
 import { RootStackParamList } from '../../../routers/PrivateStack';
-import { placeService, testService } from '../../../services';
+import { testService } from '../../../services';
 import theme from '../../../styles/theme';
 import { Test } from '../../../utils/Types';
 import { TestListView } from './TestListView';
