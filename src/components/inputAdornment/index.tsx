@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import {
-	TextInput,
-	Text,
-	TextInputProps,
-	View,
-	TouchableOpacity,
-} from 'react-native';
-import { EyeOffOutline, EyeOutline } from '../../assets/icons';
+import { TextInput, Text, TextInputProps, View } from 'react-native';
 import theme from '../../styles/theme';
 import { styles } from './styles';
 

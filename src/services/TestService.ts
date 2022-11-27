@@ -27,11 +27,7 @@ async function handleGetTests(
 						decryptedData.push({
 							id: result?.test_id,
 							hasImage: result?.test_has_image || '',
-							date: result?.test_date
-								? CryptoES.AES.decrypt(result?.test_date, key).toString(
-										CryptoES.enc.Utf8
-								  )
-								: '',
+							date: result?.test_date || '',
 							description: result?.test_description
 								? CryptoES.AES.decrypt(result?.test_description, key).toString(
 										CryptoES.enc.Utf8
@@ -84,11 +80,7 @@ async function handleGetHistoricalTests(
 						decryptedData.push({
 							id: result?.test_id,
 							hasImage: result?.test_has_image || '',
-							date: result?.test_date
-								? CryptoES.AES.decrypt(result?.test_date, key).toString(
-										CryptoES.enc.Utf8
-								  )
-								: '',
+							date: result?.test_date || '',
 							description: result?.test_description
 								? CryptoES.AES.decrypt(result?.test_description, key).toString(
 										CryptoES.enc.Utf8
@@ -138,11 +130,7 @@ async function handleGetTestById(
 					const decryptedData: Test = {
 						id: result?.test_id,
 						hasImage: result?.test_has_image || '',
-						date: result?.test_date
-							? CryptoES.AES.decrypt(result?.test_date, key).toString(
-									CryptoES.enc.Utf8
-							  )
-							: '',
+						date: result?.test_date || '',
 						description: result?.test_description
 							? CryptoES.AES.decrypt(result?.test_description, key).toString(
 									CryptoES.enc.Utf8
@@ -190,9 +178,7 @@ async function handleCreateTest(
 					description: test?.description
 						? CryptoES.AES.encrypt(test?.description, key).toString()
 						: '',
-					date: test?.date
-						? CryptoES.AES.encrypt(test?.date, key).toString()
-						: '',
+					date: test?.date || '',
 					value: test?.value
 						? CryptoES.AES.encrypt(test?.value, key).toString()
 						: '',
@@ -224,7 +210,7 @@ async function handleUpdateTest(
 			description: test?.description
 				? CryptoES.AES.encrypt(test?.description, key).toString()
 				: '',
-			date: test?.date ? CryptoES.AES.encrypt(test?.date, key).toString() : '',
+			date: test?.date || '',
 			value: test?.value
 				? CryptoES.AES.encrypt(test?.value, key).toString()
 				: '',

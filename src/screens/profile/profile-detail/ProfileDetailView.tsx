@@ -65,7 +65,7 @@ export function ProfileDetailView({
 						}}
 					>
 						<View>
-							<Text style={styles.title}>Gênero</Text>
+							<Text style={styles.title}>Sexo</Text>
 							<Text style={styles.content}>
 								{profile?.gender ? formatGender(profile?.gender) : '-'}
 							</Text>

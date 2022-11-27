@@ -3,7 +3,7 @@ import { View, Text, ScrollView, ActivityIndicator } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import { Rect, Text as TextSVG, Svg } from 'react-native-svg';
 import theme from '../../../../../styles/theme';
-import { ReferenceValue, shortDateMask, TestType } from '../../../../../utils';
+import { ReferenceValue, TestType } from '../../../../../utils';
 import { styles } from './styles';
 import {
 	TChartDot,
