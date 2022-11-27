@@ -145,6 +145,7 @@ export function PlaceCreateView({
 							display: 'flex',
 							flexDirection: 'row',
 							justifyContent: 'space-between',
+							zIndex: openStateDropdown ? 10 : 1,
 						}}
 					>
 						<View style={{ width: '48%' }}>
@@ -171,22 +172,28 @@ export function PlaceCreateView({
 						</View>
 					</View>
 
-					<CustomSelectInput
-						open={openCityDropdown}
-						value={city}
-						items={citiesList}
-						setOpen={setOpenCityDropdown}
-						setValue={setCity}
-						error={cityError}
-						setError={setCityError}
-						label="Cidade"
-						placeholder={
-							!Boolean(state)
-								? 'Primeiro selecione um estado'
-								: 'Selecionar cidade'
-						}
-						disabled={!Boolean(state)}
-					/>
+					<View
+						style={{
+							zIndex: openCityDropdown ? 10 : 1,
+						}}
+					>
+						<CustomSelectInput
+							open={openCityDropdown}
+							value={city}
+							items={citiesList}
+							setOpen={setOpenCityDropdown}
+							setValue={setCity}
+							error={cityError}
+							setError={setCityError}
+							label="Cidade"
+							placeholder={
+								!Boolean(state)
+									? 'Primeiro selecione um estado'
+									: 'Selecionar cidade'
+							}
+							disabled={!Boolean(state)}
+						/>
+					</View>
 				</View>
 			)}
 		</View>
