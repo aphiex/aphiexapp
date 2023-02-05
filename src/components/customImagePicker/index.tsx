@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import * as ImagePicker from 'expo-image-picker';
-import * as MediaLibrary from 'expo-media-library';
 import { IconButton } from '../iconButton';
 import { Camera, Image } from '../../assets/icons';
 
@@ -14,7 +13,6 @@ type TCustomImagePicker = {
 export function CustomImagePicker({
 	onCancelTakePhoto,
 	onTakePhoto,
-	saveCameraImage,
 	usePhotoFromLibrary,
 }: TCustomImagePicker) {
 	function getPermission() {
@@ -28,11 +26,8 @@ export function CustomImagePicker({
 			result = await ImagePicker?.launchImageLibraryAsync();
 		else result = await ImagePicker?.launchCameraAsync();
 		if (result) {
-			if (!result?.cancelled) {
-				let uri = result?.uri;
-				if (saveCameraImage && !usePhotoFromLibrary)
-					uri = (await MediaLibrary?.createAssetAsync(uri))?.uri;
-				if (onTakePhoto) onTakePhoto(uri);
+			if (!result?.canceled) {
+				if (onTakePhoto) onTakePhoto(result?.assets[0]?.uri);
 				else if (onCancelTakePhoto) onCancelTakePhoto();
 			}
 		}
