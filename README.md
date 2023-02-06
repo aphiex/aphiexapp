@@ -23,6 +23,12 @@
   <img src="image/exame imagem.png" width="200" alt="imagens">
 </p>
 
+Aphiex é um aplicativo que permite o cadastro de exames laboratoriais, possibilitando a visualização do histórico destes exames em forma de gráfico. Os tipos de exames cadastrados contam também com valores de referência, fornecidos pela Labtest, e é possível cadastrar novos tipos de exames de acordo com a sua necessidade.
+
+O aplicativo também permite o cadastro de médicos e locais, a fim de facilitar a consulta destas informações.
+
+Seus dados ficam armazenados em seu dispositivo e somente você terá acesso a eles. As informações cadastradas são criptografadas e, por ser um aplicativo offline, nenhuma informação é coletada ou compartilhada com terceiros (seus dados estarão seguros 😉).
+
 
 ## Principais Funcionalidades
 
