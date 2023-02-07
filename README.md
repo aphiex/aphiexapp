@@ -10,6 +10,7 @@
 <h4 align="center">Aplicativo de histórico de exames laboratoriais para uso pessoal.</h4>
 
 <p align="center">
+  <a href="#sobre">Sobre</a> •
   <a href="#principais-funcionalidades">Principais Funcionalidades</a> •
   <a href="#como-usar">Como Usar</a> •
   <a href="#download">Download</a> •
@@ -22,6 +23,8 @@
   <img src="image/app_exame_tabela.png" width="200" alt="tabela">
   <img src="image/exame imagem.png" width="200" alt="imagens">
 </p>
+
+## Sobre
 
 Aphiex é um aplicativo que permite o cadastro de exames laboratoriais, possibilitando a visualização do histórico destes exames em forma de gráfico. Os tipos de exames cadastrados contam também com valores de referência, fornecidos pela Labtest, e é possível cadastrar novos tipos de exames de acordo com a sua necessidade.
 
