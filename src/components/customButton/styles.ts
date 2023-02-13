@@ -1,22 +1,23 @@
 import theme from '../../styles/theme';
 import { StyleSheet } from 'react-native';
+import { proportionalResize } from '../../utils';
 
 export const styles = StyleSheet.create({
 	text: {
 		fontFamily: `${theme.fonts.medium500}`,
-		fontSize: 14,
+		fontSize: proportionalResize(14),
 	},
 	button: {
-		borderRadius: 8,
-		paddingHorizontal: 16,
-		paddingVertical: 10,
-		minWidth: 120,
+		borderRadius: proportionalResize(8),
+		paddingHorizontal: proportionalResize(16),
+		paddingVertical: proportionalResize(10),
+		minWidth: proportionalResize(120),
 		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
 	icon: {
-		marginRight: 4,
+		marginRight: proportionalResize(4),
 	},
 });

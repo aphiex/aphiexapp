@@ -1,5 +1,6 @@
 import theme from '../../styles/theme';
 import { StyleSheet } from 'react-native';
+import { proportionalResize } from '../../utils';
 
 export const styles = StyleSheet.create({
 	centeredView: {
@@ -17,10 +18,10 @@ export const styles = StyleSheet.create({
 		opacity: 0.2,
 	},
 	modalView: {
-		margin: 20,
+		margin: proportionalResize(20),
 		backgroundColor: 'white',
-		borderRadius: 20,
-		padding: 32,
+		borderRadius: proportionalResize(20),
+		padding: proportionalResize(32),
 		alignItems: 'center',
 		shadowColor: '#000',
 		shadowOffset: {

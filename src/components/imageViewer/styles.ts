@@ -1,21 +1,22 @@
 import { StyleSheet } from 'react-native';
 import theme from '../../styles/theme';
+import { proportionalResize } from '../../utils';
 
 export const styles = StyleSheet.create({
 	image: {
-		height: 150,
+		height: proportionalResize(150),
 		width: '100%',
-		borderRadius: 10,
+		borderRadius: proportionalResize(10),
 	},
 	imageItem: {
 		position: 'relative',
-		marginTop: 20,
+		marginTop: proportionalResize(20),
 		width: '48%',
 		boxSizing: 'border-box',
 	},
 	deleteButton: {
 		backgroundColor: theme.colors.white,
-		padding: 8,
-		borderRadius: 100,
+		padding: proportionalResize(8),
+		borderRadius: proportionalResize(100),
 	},
 });

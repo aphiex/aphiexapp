@@ -2,6 +2,7 @@ import React from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import theme from '../../styles/theme';
 import { TIconProps } from '.';
+import { proportionalResize } from '../../utils';
 
 export const NoteEditOutline: React.FC<TIconProps> = ({
 	size = 64,
@@ -10,7 +11,7 @@ export const NoteEditOutline: React.FC<TIconProps> = ({
 	return (
 		<MaterialCommunityIcons
 			name="note-edit-outline"
-			size={size}
+			size={proportionalResize(size)}
 			color={color}
 		/>
 	);

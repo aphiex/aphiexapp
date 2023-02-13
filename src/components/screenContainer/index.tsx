@@ -16,8 +16,13 @@ export const ScreenContainer: React.FC<TScreenContainer> = ({
 }) => {
 	return (
 		<SafeAreaView style={styles.container}>
-			<ScrollView style={hasPadding && styles.scroll} ref={scrollRef}>
-				<View style={{ marginBottom: hasFooter ? 80 : 0 }}>{children}</View>
+			<ScrollView
+				contentContainerStyle={hasPadding && styles.scroll}
+				ref={scrollRef}
+			>
+				<View style={{ marginBottom: hasFooter ? 80 : 0, flex: 1 }}>
+					{children}
+				</View>
 			</ScrollView>
 		</SafeAreaView>
 	);

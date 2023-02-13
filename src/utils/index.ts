@@ -7,3 +7,4 @@ export * from './types';
 export * from './sql';
 export * from './Enum';
 export * from './TestType';
+export * from './Responsivity';

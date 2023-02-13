@@ -1,5 +1,6 @@
 import theme from '../../styles/theme';
 import { StatusBar, StyleSheet } from 'react-native';
+import { proportionalResize } from '../../utils';
 
 export const styles = StyleSheet.create({
 	container: {
@@ -8,7 +9,8 @@ export const styles = StyleSheet.create({
 		backgroundColor: `${theme.colors.white}`,
 	},
 	scroll: {
-		paddingHorizontal: 18,
-		paddingTop: 20,
+		flex: 1,
+		paddingHorizontal: proportionalResize(18),
+		paddingTop: proportionalResize(20),
 	},
 });

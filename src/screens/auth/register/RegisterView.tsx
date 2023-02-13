@@ -27,7 +27,7 @@ export function RegisterView({
 			<PageTitle icon={<Lock />} title="Definir senha" />
 
 			<View style={styles.textContainer}>
-				<Text style={[styles.text, { marginBottom: 15 }]}>
+				<Text style={styles.textMb}>
 					Antes de criar seu primeiro perfil é necessário definir uma senha,
 					dessa forma seus dados estarão mais seguros.
 				</Text>
@@ -36,7 +36,7 @@ export function RegisterView({
 				</Text>
 			</View>
 
-			<View style={{ marginBottom: 5, width: '100%' }}>
+			<View style={styles.password}>
 				<PasswordInput
 					label="Senha*"
 					value={password}
@@ -46,7 +46,7 @@ export function RegisterView({
 				/>
 			</View>
 
-			<View style={{ marginBottom: 30, width: '100%' }}>
+			<View style={styles.passwordConfirm}>
 				<PasswordInput
 					label="Confirmar senha*"
 					value={passwordConfirm}

@@ -24,7 +24,7 @@ export function LoginView({
 	hasPassword,
 }: TLogin) {
 	return (
-		<View style={[styles?.container, { justifyContent: 'center' }]}>
+		<View style={[styles?.container]}>
 			{loading && <LoadingState />}
 			{!loading && (
 				<>
@@ -37,7 +37,7 @@ export function LoginView({
 
 					{hasPassword && (
 						<>
-							<View style={{ marginVertical: 30, width: '100%' }}>
+							<View style={styles?.password}>
 								<PasswordInput
 									label="Senha*"
 									placeholder="Digite sua senha"
@@ -47,7 +47,7 @@ export function LoginView({
 								/>
 							</View>
 
-							<View style={{ marginBottom: 20 }}>
+							<View style={styles?.button}>
 								<CustomButton
 									title="Entrar"
 									onPress={() => handleSignIn(password)}

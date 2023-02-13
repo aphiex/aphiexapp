@@ -1,18 +1,19 @@
 import theme from '../../styles/theme';
 import { StyleSheet } from 'react-native';
+import { proportionalResize } from '../../utils';
 
 export const styles = StyleSheet.create({
 	title: {
 		fontFamily: theme.fonts.medium500,
-		fontSize: 18,
+		fontSize: proportionalResize(18),
 		color: theme.colors.black,
-		marginBottom: 16,
+		marginBottom: proportionalResize(16),
 	},
 	text: {
 		fontFamily: theme.fonts.regular400,
-		fontSize: 16,
+		fontSize: proportionalResize(16),
 		color: theme.colors.softBlack,
-		marginBottom: 16,
+		marginBottom: proportionalResize(16),
 	},
 	centeredView: {
 		position: 'absolute',
@@ -29,10 +30,10 @@ export const styles = StyleSheet.create({
 		opacity: 0.2,
 	},
 	modalView: {
-		margin: 20,
+		margin: proportionalResize(20),
 		backgroundColor: 'white',
-		borderRadius: 20,
-		padding: 32,
+		borderRadius: proportionalResize(20),
+		padding: proportionalResize(32),
 		alignItems: 'center',
 		shadowColor: '#000',
 		shadowOffset: {
@@ -47,6 +48,6 @@ export const styles = StyleSheet.create({
 		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'space-between',
-		marginTop: 10,
+		marginTop: proportionalResize(10),
 	},
 });

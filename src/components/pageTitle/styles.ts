@@ -1,5 +1,6 @@
 import theme from '../../styles/theme';
 import { StyleSheet } from 'react-native';
+import { proportionalResize } from '../../utils';
 
 export const styles = StyleSheet.create({
 	container: {
@@ -9,6 +10,6 @@ export const styles = StyleSheet.create({
 	title: {
 		fontFamily: `${theme.fonts.regular400}`,
 		color: `${theme.colors.black}`,
-		fontSize: 30,
+		fontSize: proportionalResize(30),
 	},
 });
