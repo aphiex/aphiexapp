@@ -34,4 +34,18 @@ export const styles = StyleSheet.create({
 		justifyContent: 'flex-start',
 		width: '100%',
 	},
+	placeholder: {
+		color: theme.colors.grey,
+		fontSize: proportionalResize(14),
+	},
+	labelStyle: {
+		color: theme.colors.softBlack,
+		fontSize: proportionalResize(14),
+	},
+	arrowIcon: {
+		width: proportionalResize(14),
+	},
+	dropDownContent: {
+		fontSize: proportionalResize(14),
+	},
 });

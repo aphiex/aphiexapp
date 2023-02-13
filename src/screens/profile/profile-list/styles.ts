@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import theme from '../../../styles/theme';
+import { proportionalResize } from '../../../utils';
 
 export const styles = StyleSheet.create({
 	container: {
@@ -7,56 +8,58 @@ export const styles = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	button: {
-		marginTop: '50%',
+		height: '50%',
+		alignItems: 'center',
+		justifyContent: 'center',
 	},
 	listContainer: {
-		marginTop: 18,
+		marginTop: proportionalResize(18),
 		width: '100%',
 	},
 	listItem: {
 		borderBottomColor: theme.colors.softGray,
-		borderBottomWidth: 2,
-		paddingHorizontal: 16,
-		paddingVertical: 12,
+		borderBottomWidth: proportionalResize(2),
+		paddingHorizontal: proportionalResize(16),
+		paddingVertical: proportionalResize(12),
 		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
 		width: '100%',
 	},
 	title: {
-		fontSize: 30,
+		fontSize: proportionalResize(30),
 		fontFamily: theme.fonts.regular400,
 		color: theme.colors.black,
 		textAlign: 'center',
-		marginTop: 10,
+		marginTop: proportionalResize(10),
 	},
 	icon: {
 		backgroundColor: theme.colors.primary,
-		height: 40,
-		width: 40,
+		height: proportionalResize(40),
+		width: proportionalResize(40),
 		display: 'flex',
 		alignItems: 'center',
 		justifyContent: 'center',
-		borderRadius: 180,
+		borderRadius: proportionalResize(180),
 	},
 	text: {
-		fontSize: 16,
+		fontSize: proportionalResize(16),
 		fontFamily: theme.fonts.regular400,
 		color: theme.colors.black,
 	},
 	textIcon: {
-		fontSize: 14,
+		fontSize: proportionalResize(14),
 		fontFamily: theme.fonts.medium500,
 		color: theme.colors.white,
 	},
 	description: {
-		fontSize: 14,
+		fontSize: proportionalResize(14),
 		fontFamily: theme.fonts.regular400,
 		color: theme.colors.grey,
-		marginTop: 2,
+		marginTop: proportionalResize(2),
 	},
 	textContainer: {
-		marginLeft: 14,
+		marginLeft: proportionalResize(14),
 		display: 'flex',
 		flexDirection: 'column',
 	},

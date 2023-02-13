@@ -63,18 +63,16 @@ export function CustomSelectInput({
 				setOpen={setOpen}
 				setValue={setValue}
 				placeholder={placeholder}
-				placeholderStyle={{
-					color: theme.colors.grey,
-				}}
+				placeholderStyle={styles.placeholder}
+				arrowIconStyle={styles.arrowIcon}
 				onChangeValue={e => {
 					if (setError) setError('');
 					if (onChangeValue) onChangeValue(e);
 				}}
+				listItemLabelStyle={styles.dropDownContent}
 				dropDownDirection={onlyBottom ? 'BOTTOM' : 'AUTO'}
 				style={[styles.input, { borderColor: handleSetColor() }]}
-				labelStyle={{
-					color: theme.colors.softBlack,
-				}}
+				labelStyle={styles.labelStyle}
 				disabled={disabled}
 				searchable={items?.length > 10}
 				searchPlaceholder="Pesquisar"

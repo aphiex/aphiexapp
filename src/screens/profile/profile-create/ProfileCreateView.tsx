@@ -59,14 +59,8 @@ export function ProfileCreateView({
 						placeholder="Ex.: Pai da família"
 					/>
 
-					<View
-						style={{
-							display: 'flex',
-							flexDirection: 'row',
-							justifyContent: 'space-between',
-						}}
-					>
-						<View style={{ width: '48%' }}>
+					<View style={styles.contentContainer}>
+						<View style={styles.contentContainerItem}>
 							<CustomSelectInput
 								open={openDropdown}
 								value={gender}
@@ -80,7 +74,7 @@ export function ProfileCreateView({
 								label="Sexo"
 							/>
 						</View>
-						<View style={{ width: '48%' }}>
+						<View style={styles.contentContainerItem}>
 							<CustomDateInput
 								value={birthdate}
 								setValue={setBirthdate}
