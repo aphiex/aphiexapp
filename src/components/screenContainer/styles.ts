@@ -1,6 +1,8 @@
 import theme from '../../styles/theme';
-import { StatusBar, StyleSheet } from 'react-native';
+import { Dimensions, StatusBar, StyleSheet } from 'react-native';
 import { proportionalResize } from '../../utils';
+
+const { height } = Dimensions.get('screen');
 
 export const styles = StyleSheet.create({
 	container: {
@@ -9,7 +11,7 @@ export const styles = StyleSheet.create({
 		backgroundColor: `${theme.colors.white}`,
 	},
 	scroll: {
-		flex: 1,
+		minHeight: height,
 		paddingHorizontal: proportionalResize(18),
 		paddingTop: proportionalResize(20),
 	},

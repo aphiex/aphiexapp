@@ -1,5 +1,6 @@
 import React from 'react';
 import { SafeAreaView, ScrollView, View } from 'react-native';
+import { proportionalResize } from '../../utils';
 import { styles } from './styles';
 
 type TScreenContainer = {
@@ -20,7 +21,12 @@ export const ScreenContainer: React.FC<TScreenContainer> = ({
 				contentContainerStyle={hasPadding && styles.scroll}
 				ref={scrollRef}
 			>
-				<View style={{ marginBottom: hasFooter ? 80 : 0, flex: 1 }}>
+				<View
+					style={{
+						marginBottom: hasFooter ? proportionalResize(80) : 0,
+						flex: 1,
+					}}
+				>
 					{children}
 				</View>
 			</ScrollView>
