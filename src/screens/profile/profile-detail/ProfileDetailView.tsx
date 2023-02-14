@@ -35,7 +35,7 @@ export function ProfileDetailView({
 				onConfirm={handleDelete}
 				loading={loading}
 			/>
-			<View style={{ position: 'absolute', right: 0, top: 0 }}>
+			<View style={styles.delete}>
 				<IconButton
 					title="Deletar"
 					color={theme.colors.softRed}
@@ -57,13 +57,7 @@ export function ProfileDetailView({
 						<Text style={styles.desciption}>{profile?.description || '-'}</Text>
 					</View>
 
-					<View
-						style={{
-							display: 'flex',
-							flexDirection: 'row',
-							justifyContent: 'space-between',
-						}}
-					>
+					<View style={styles.column}>
 						<View>
 							<Text style={styles.title}>Sexo</Text>
 							<Text style={styles.content}>

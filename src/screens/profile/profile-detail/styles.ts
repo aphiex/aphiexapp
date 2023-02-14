@@ -1,34 +1,35 @@
 import { StyleSheet } from 'react-native';
 import theme from '../../../styles/theme';
+import { proportionalResize } from '../../../utils';
 
 export const styles = StyleSheet.create({
 	container: {
 		alignItems: 'center',
 		justifyContent: 'center',
-		paddingHorizontal: 20,
-		marginBottom: 40,
+		paddingHorizontal: proportionalResize(20),
+		marginBottom: proportionalResize(40),
 	},
 	form: {
-		marginTop: 50,
+		marginTop: proportionalResize(50),
 		width: '100%',
 	},
 	title: {
 		fontFamily: theme.fonts.regular400,
-		fontSize: 24,
+		fontSize: proportionalResize(24),
 		color: theme.colors.primary,
 	},
 	content: {
 		fontFamily: theme.fonts.regular400,
-		fontSize: 19,
+		fontSize: proportionalResize(19),
 		color: theme.colors.black,
 	},
 	desciption: {
 		fontFamily: theme.fonts.regular400,
-		fontSize: 14,
+		fontSize: proportionalResize(14),
 		color: theme.colors.black,
 	},
 	contentContainer: {
-		marginBottom: 40,
+		marginBottom: proportionalResize(40),
 	},
 
 	modalContainer: {
@@ -49,10 +50,10 @@ export const styles = StyleSheet.create({
 		opacity: 0.2,
 	},
 	modalView: {
-		margin: 20,
+		margin: proportionalResize(20),
 		backgroundColor: 'white',
-		borderRadius: 20,
-		padding: 35,
+		borderRadius: proportionalResize(20),
+		padding: proportionalResize(35),
 		alignItems: 'center',
 		shadowColor: '#000',
 		shadowOffset: {
@@ -64,8 +65,8 @@ export const styles = StyleSheet.create({
 		elevation: 5,
 	},
 	button: {
-		borderRadius: 20,
-		padding: 10,
+		borderRadius: proportionalResize(20),
+		padding: proportionalResize(10),
 		elevation: 2,
 	},
 	buttonOpen: {
@@ -80,7 +81,16 @@ export const styles = StyleSheet.create({
 		textAlign: 'center',
 	},
 	modalText: {
-		marginBottom: 15,
+		marginBottom: proportionalResize(15),
 		textAlign: 'center',
+	},
+	delete: {
+		position: 'absolute',
+		right: 0,
+		top: 0,
+	},
+	column: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
 	},
 });
