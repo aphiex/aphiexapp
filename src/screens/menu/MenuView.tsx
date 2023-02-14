@@ -33,44 +33,39 @@ export function MenuView({
 	return (
 		<View style={styles.container}>
 			<Logo />
+
 			<Text style={styles.title}>Menu Principal</Text>
+
 			<View style={styles.row}>
 				<View style={styles.column}>
-					<View style={styles.columnSpace}>
-						<IconButton
-							title="Perfil"
-							icon={<Account size={70} />}
-							onPress={handleGoToProfile}
-						/>
-					</View>
-					<View style={styles.columnSpace}>
-						<IconButton
-							title="Locais"
-							icon={<HospitalBuilding size={70} />}
-							onPress={handleGoToPlace}
-						/>
-					</View>
+					<IconButton
+						title="Perfil"
+						icon={<Account size={70} />}
+						onPress={handleGoToProfile}
+					/>
+					<IconButton
+						title="Locais"
+						icon={<HospitalBuilding size={70} />}
+						onPress={handleGoToPlace}
+					/>
 					<IconButton
 						title="Configurações"
 						icon={<Settings size={70} />}
 						onPress={handleGoToSettings}
 					/>
 				</View>
+
 				<View style={styles.column}>
-					<View style={styles.columnSpace}>
-						<IconButton
-							title="Exames"
-							icon={<FolderPlus size={70} />}
-							onPress={handleGoToExam}
-						/>
-					</View>
-					<View style={styles.columnSpace}>
-						<IconButton
-							title="Médicos"
-							icon={<CardAccountDetails size={70} />}
-							onPress={handleGoToDoctor}
-						/>
-					</View>
+					<IconButton
+						title="Exames"
+						icon={<FolderPlus size={70} />}
+						onPress={handleGoToExam}
+					/>
+					<IconButton
+						title="Médicos"
+						icon={<CardAccountDetails size={70} />}
+						onPress={handleGoToDoctor}
+					/>
 					<IconButton
 						title="Sair"
 						icon={<LogoutVariant size={70} color={theme.colors.softRed} />}
