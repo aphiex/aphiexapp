@@ -103,14 +103,8 @@ export function DoctorEditView({
 						placeholder="Digite o nome"
 					/>
 
-					<View
-						style={{
-							display: 'flex',
-							flexDirection: 'row',
-							justifyContent: 'space-between',
-						}}
-					>
-						<View style={{ width: '48%' }}>
+					<View style={styles.contentContainer}>
+						<View style={styles.contentContainerItem}>
 							<CustomMaskInput
 								label="Telefone"
 								keyboardType="number-pad"
@@ -118,12 +112,10 @@ export function DoctorEditView({
 								value={fixedPhone}
 								error={fixedPhoneError}
 								defaultValue={fixedPhone}
-								onChangeText={(text, rawText) =>
-									handleChangeFixedPhone(rawText)
-								}
+								onChangeText={(_, rawText) => handleChangeFixedPhone(rawText)}
 							/>
 						</View>
-						<View style={{ width: '48%' }}>
+						<View style={styles.contentContainerItem}>
 							<CustomMaskInput
 								label="Celular"
 								keyboardType="number-pad"
@@ -131,9 +123,7 @@ export function DoctorEditView({
 								value={mobilePhone}
 								defaultValue={mobilePhone}
 								error={mobilePhoneError}
-								onChangeText={(text, rawText) =>
-									handleChangeMobilePhone(rawText)
-								}
+								onChangeText={(_, rawText) => handleChangeMobilePhone(rawText)}
 							/>
 						</View>
 					</View>
@@ -166,14 +156,14 @@ export function DoctorEditView({
 					/>
 
 					<View
-						style={{
-							display: 'flex',
-							flexDirection: 'row',
-							justifyContent: 'space-between',
-							zIndex: openStateDropdown ? 10 : 1,
-						}}
+						style={[
+							styles.contentContainer,
+							{
+								zIndex: openStateDropdown ? 10 : 1,
+							},
+						]}
 					>
-						<View style={{ width: '48%' }}>
+						<View style={styles.contentContainerItem}>
 							<CustomInput
 								label="Número"
 								keyboardType="number-pad"
@@ -183,7 +173,7 @@ export function DoctorEditView({
 								}
 							/>
 						</View>
-						<View style={{ width: '48%' }}>
+						<View style={styles.contentContainerItem}>
 							<CustomSelectInput
 								open={openStateDropdown}
 								value={state}

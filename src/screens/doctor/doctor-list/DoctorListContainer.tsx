@@ -60,6 +60,7 @@ export function DoctorListContainer({
 					goToCreateDoctor={goToCreateDoctor}
 				/>
 			</ScreenContainer>
+
 			{!loading && (
 				<FooterContainer
 					btnLeftTitle="Voltar"

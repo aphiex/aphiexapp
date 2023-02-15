@@ -36,7 +36,7 @@ export function DoctorDetailView({
 				onConfirm={handleDelete}
 				loading={loading}
 			/>
-			<View style={{ position: 'absolute', right: 0, top: 0 }}>
+			<View style={styles.delete}>
 				<IconButton
 					title="Deletar"
 					color={theme.colors.softRed}
@@ -53,15 +53,8 @@ export function DoctorDetailView({
 						<Text style={styles.content}>{doctor?.name || '-'}</Text>
 					</View>
 
-					<View
-						style={{
-							display: 'flex',
-							flexDirection: 'row',
-							justifyContent: 'space-between',
-							marginBottom: 40,
-						}}
-					>
-						<View>
+					<View style={styles.contentContainerRow}>
+						<View style={styles.contentContainerRowItem}>
 							<Text style={styles.title}>Telefone</Text>
 							{doctor?.fixedPhone ? (
 								<MaskedText
@@ -75,7 +68,7 @@ export function DoctorDetailView({
 							)}
 						</View>
 
-						<View>
+						<View style={styles.contentContainerRowItem}>
 							<Text style={styles.title}>Celular</Text>
 							{doctor?.mobilePhone ? (
 								<MaskedText
