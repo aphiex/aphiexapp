@@ -99,14 +99,8 @@ export function TestCreateView({
 						}}
 					/>
 
-					<View
-						style={{
-							display: 'flex',
-							flexDirection: 'row',
-							justifyContent: 'space-between',
-						}}
-					>
-						<View style={{ width: '48%' }}>
+					<View style={styles.contentContainerRow}>
+						<View style={styles.contentContainerRowItem}>
 							<InputAdornment
 								label="Valor*"
 								value={value}
@@ -120,10 +114,12 @@ export function TestCreateView({
 								adornment={measurementUnit || ''}
 							/>
 						</View>
-						<View style={{ width: '48%' }}>
+
+						<View style={styles.contentContainerRowItem}>
 							<CustomDateInput value={date} setValue={setDate} label="Data" />
 						</View>
 					</View>
+
 					<CustomInput
 						label="Descrição"
 						value={description}
@@ -137,6 +133,7 @@ export function TestCreateView({
 							style={{ marginTop: 20 }}
 						/>
 					)}
+
 					{!referenceLoading &&
 						referenceValues?.length > 0 &&
 						referenceValues.some(reference => reference?.condition) && (
@@ -158,6 +155,7 @@ export function TestCreateView({
 															: theme.colors.grey
 													}
 												/>
+
 												<Text
 													numberOfLines={1}
 													onPress={() =>
@@ -183,6 +181,7 @@ export function TestCreateView({
 
 					<View style={styles.subContainer}>
 						<Text style={styles.subTitle}>Adicionar imagem</Text>
+
 						<View style={styles.imageContainer}>
 							{images?.map((image, index) => (
 								<ImageViewer
@@ -195,12 +194,15 @@ export function TestCreateView({
 								/>
 							))}
 						</View>
+
 						<View style={styles.imageBtnContainer}>
 							<CustomImagePicker
 								saveCameraImage
 								onTakePhoto={uri => handleAddImage(uri)}
 							/>
+
 							<Text style={styles.imageBtnContainerText}>ou</Text>
+
 							<CustomImagePicker
 								usePhotoFromLibrary
 								onTakePhoto={uri => handleAddImage(uri)}

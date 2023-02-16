@@ -5,6 +5,7 @@ import { proportionalResize } from '../../utils';
 export const styles = StyleSheet.create({
 	input: {
 		flex: 1,
+		fontSize: proportionalResize(12),
 	},
 	error: {
 		fontFamily: `${theme.fonts.regular400}`,

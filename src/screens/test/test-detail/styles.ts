@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import theme from '../../../styles/theme';
+import { proportionalResize } from '../../../utils';
 
 export const styles = StyleSheet.create({
 	container: {
@@ -7,20 +8,20 @@ export const styles = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	form: {
-		marginTop: 50,
+		marginTop: proportionalResize(50),
 		width: '100%',
 	},
 	title: {
 		fontFamily: theme.fonts.regular400,
-		fontSize: 24,
+		fontSize: proportionalResize(24),
 		color: theme.colors.primary,
-		paddingHorizontal: 38,
+		paddingHorizontal: proportionalResize(38),
 	},
 	content: {
 		fontFamily: theme.fonts.regular400,
-		fontSize: 19,
+		fontSize: proportionalResize(19),
 		color: theme.colors.black,
-		paddingHorizontal: 38,
+		paddingHorizontal: proportionalResize(38),
 	},
 	legendContainer: {
 		display: 'flex',
@@ -35,41 +36,41 @@ export const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 	blueCircle: {
-		width: 10,
-		height: 10,
+		width: proportionalResize(10),
+		height: proportionalResize(10),
 		backgroundColor: theme.colors.primary,
-		borderRadius: 100,
-		marginRight: 4,
+		borderRadius: proportionalResize(100),
+		marginRight: proportionalResize(4),
 	},
 	redCircle: {
-		width: 10,
-		height: 10,
+		width: proportionalResize(10),
+		height: proportionalResize(10),
 		backgroundColor: theme.colors.red,
-		borderRadius: 100,
-		marginRight: 4,
+		borderRadius: proportionalResize(100),
+		marginRight: proportionalResize(4),
 	},
 	measurement: {
 		fontFamily: theme.fonts.regular400,
-		fontSize: 14,
+		fontSize: proportionalResize(14),
 		color: theme.colors.primary,
 	},
 	measurementValue: {
 		fontFamily: theme.fonts.regular400,
-		fontSize: 12,
+		fontSize: proportionalResize(12),
 		color: theme.colors.black,
 	},
 	legend: {
 		fontFamily: theme.fonts.regular400,
-		fontSize: 14,
+		fontSize: proportionalResize(14),
 		color: theme.colors.black,
 	},
 	desciption: {
 		fontFamily: theme.fonts.regular400,
-		fontSize: 14,
+		fontSize: proportionalResize(14),
 		color: theme.colors.black,
 	},
 	contentContainer: {
-		marginBottom: 40,
+		marginBottom: proportionalResize(40),
 	},
 
 	modalContainer: {
@@ -90,10 +91,10 @@ export const styles = StyleSheet.create({
 		opacity: 0.2,
 	},
 	modalView: {
-		margin: 20,
+		margin: proportionalResize(20),
 		backgroundColor: 'white',
-		borderRadius: 20,
-		padding: 35,
+		borderRadius: proportionalResize(20),
+		padding: proportionalResize(35),
 		alignItems: 'center',
 		shadowColor: '#000',
 		shadowOffset: {
@@ -105,8 +106,8 @@ export const styles = StyleSheet.create({
 		elevation: 5,
 	},
 	button: {
-		borderRadius: 20,
-		padding: 10,
+		borderRadius: proportionalResize(20),
+		padding: proportionalResize(10),
 		elevation: 2,
 	},
 	buttonOpen: {
@@ -121,18 +122,38 @@ export const styles = StyleSheet.create({
 		textAlign: 'center',
 	},
 	modalText: {
-		marginBottom: 15,
+		marginBottom: proportionalResize(15),
 		textAlign: 'center',
 	},
 	image: {
 		width: '100%',
-		borderRadius: 8,
+		borderRadius: proportionalResize(8),
 	},
 	imageContainer: {
 		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		flexWrap: 'wrap',
-		paddingHorizontal: 28,
+		paddingHorizontal: proportionalResize(28),
+	},
+	delete: {
+		position: 'absolute',
+		right: 0,
+		top: 0,
+		paddingHorizontal: proportionalResize(18),
+		paddingTop: proportionalResize(20),
+	},
+	pageTitle: {
+		paddingHorizontal: proportionalResize(18),
+		paddingTop: proportionalResize(20),
+	},
+	contentContainerRow: {
+		flexDirection: 'row',
+		marginHorizontal: proportionalResize(-4),
+		marginBottom: proportionalResize(40),
+	},
+	contentContainerRowItem: {
+		flex: 1,
+		marginHorizontal: proportionalResize(4),
 	},
 });

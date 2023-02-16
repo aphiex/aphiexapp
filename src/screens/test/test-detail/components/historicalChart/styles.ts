@@ -1,23 +1,24 @@
 import { StyleSheet } from 'react-native';
 import theme from '../../../../../styles/theme';
+import { proportionalResize } from '../../../../../utils';
 
 export const styles = StyleSheet.create({
 	content: {
 		fontFamily: theme.fonts.regular400,
-		fontSize: 14,
+		fontSize: proportionalResize(14),
 		color: theme.colors.grey,
-		paddingHorizontal: 38,
-		marginTop: 8,
+		paddingHorizontal: proportionalResize(38),
+		marginTop: proportionalResize(8),
 	},
 	link: {
 		fontFamily: theme.fonts.regular400,
-		fontSize: 14,
+		fontSize: proportionalResize(14),
 		color: theme.colors.primary,
-		paddingHorizontal: 38,
-		marginTop: 8,
+		paddingHorizontal: proportionalResize(38),
+		marginTop: proportionalResize(8),
 	},
 	infoContainer: {
-		marginTop: 24,
+		marginTop: proportionalResize(24),
 		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
@@ -27,43 +28,49 @@ export const styles = StyleSheet.create({
 	legendContainer: {
 		display: 'flex',
 		flexDirection: 'column',
-		paddingHorizontal: 38,
+		paddingHorizontal: proportionalResize(38),
 	},
 	legendContent: {
 		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
 	},
+	lastLegendContent: {
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+		marginTop: proportionalResize(10),
+	},
 	blueCircle: {
-		width: 10,
-		height: 10,
+		width: proportionalResize(10),
+		height: proportionalResize(10),
 		backgroundColor: theme.colors.primary,
-		borderRadius: 100,
-		marginRight: 4,
+		borderRadius: proportionalResize(100),
+		marginRight: proportionalResize(4),
 	},
 	redCircle: {
-		width: 10,
-		height: 10,
+		width: proportionalResize(10),
+		height: proportionalResize(10),
 		backgroundColor: theme.colors.red,
-		borderRadius: 100,
-		marginRight: 4,
+		borderRadius: proportionalResize(100),
+		marginRight: proportionalResize(4),
 	},
 	greyCircle: {
-		width: 10,
-		height: 10,
+		width: proportionalResize(10),
+		height: proportionalResize(10),
 		backgroundColor: theme.colors.grey,
-		borderRadius: 100,
-		marginRight: 4,
+		borderRadius: proportionalResize(100),
+		marginRight: proportionalResize(4),
 	},
 	redLine: {
-		width: 10,
-		height: 1.5,
+		width: proportionalResize(10),
+		height: proportionalResize(1.5),
 		backgroundColor: theme.colors.red,
-		marginRight: 4,
+		marginRight: proportionalResize(4),
 	},
 	measurement: {
 		fontFamily: theme.fonts.regular400,
-		fontSize: 14,
+		fontSize: proportionalResize(14),
 		color: theme.colors.primary,
 	},
 	measurementContainer: {
@@ -84,7 +91,7 @@ export const styles = StyleSheet.create({
 		zIndex: 9,
 		backgroundColor: theme.colors.white,
 		width: 35,
-		height: 240,
+		height: proportionalResize(240),
 	},
 	rightBackground: {
 		position: 'absolute',
@@ -92,17 +99,27 @@ export const styles = StyleSheet.create({
 		top: 11,
 		zIndex: 10,
 		backgroundColor: theme.colors.white,
-		height: 185,
-		width: 60,
+		height: proportionalResize(185),
+		width: proportionalResize(60),
 	},
 	measurementValue: {
 		fontFamily: theme.fonts.regular400,
-		fontSize: 12,
+		fontSize: proportionalResize(12),
 		color: theme.colors.black,
 	},
 	legend: {
 		fontFamily: theme.fonts.regular400,
-		fontSize: 14,
+		fontSize: proportionalResize(14),
 		color: theme.colors.black,
+	},
+	loading: {
+		marginTop: proportionalResize(20),
+	},
+	measurementPosition: {
+		position: 'relative',
+	},
+	lineChart: {
+		marginVertical: proportionalResize(8),
+		borderRadius: proportionalResize(16),
 	},
 });

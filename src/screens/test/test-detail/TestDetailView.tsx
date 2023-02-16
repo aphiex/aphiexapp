@@ -56,15 +56,7 @@ export function TestDetailView({
 						onConfirm={handleDelete}
 						loading={loading}
 					/>
-					<View
-						style={{
-							position: 'absolute',
-							right: 0,
-							top: 0,
-							paddingHorizontal: 18,
-							paddingTop: 20,
-						}}
-					>
+					<View style={styles.delete}>
 						<IconButton
 							title="Deletar"
 							color={theme.colors.softRed}
@@ -73,7 +65,7 @@ export function TestDetailView({
 						/>
 					</View>
 					<View style={styles.container}>
-						<View style={{ paddingHorizontal: 18, paddingTop: 20 }}>
+						<View style={styles.pageTitle}>
 							<PageTitle title="Visualizar Exame" icon={<FolderPlus />} />
 						</View>
 
@@ -85,15 +77,8 @@ export function TestDetailView({
 								</Text>
 							</View>
 
-							<View
-								style={{
-									display: 'flex',
-									flexDirection: 'row',
-									justifyContent: 'space-between',
-									marginBottom: 40,
-								}}
-							>
-								<View>
+							<View style={styles.contentContainerRow}>
+								<View style={styles.contentContainerRowItem}>
 									<Text style={styles.title}>Resultado</Text>
 									{test?.value ? (
 										<Text style={styles.content}>
@@ -110,7 +95,7 @@ export function TestDetailView({
 									)}
 								</View>
 
-								<View>
+								<View style={styles.contentContainerRowItem}>
 									<Text style={styles.title}>Data</Text>
 									{test?.date ? (
 										<Text style={styles.content}>

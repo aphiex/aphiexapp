@@ -1,26 +1,27 @@
 import { StyleSheet } from 'react-native';
 import theme from '../../../../../styles/theme';
+import { proportionalResize } from '../../../../../utils';
 
 export const styles = StyleSheet.create({
 	container: {
-		paddingHorizontal: 28,
-		marginTop: 14,
+		paddingHorizontal: proportionalResize(28),
+		marginTop: proportionalResize(14),
 	},
 	content: {
 		fontFamily: theme.fonts.regular400,
-		fontSize: 14,
+		fontSize: proportionalResize(14),
 		color: theme.colors.grey,
-		paddingHorizontal: 38,
-		marginTop: 8,
+		paddingHorizontal: proportionalResize(38),
+		marginTop: proportionalResize(8),
 	},
 	tableContent: {
 		fontFamily: theme.fonts.regular400,
-		fontSize: 14,
+		fontSize: proportionalResize(14),
 		color: theme.colors.black,
 	},
 	tableTitle: {
 		fontFamily: theme.fonts.medium500,
-		fontSize: 14,
+		fontSize: proportionalResize(14),
 		color: theme.colors.primary,
 	},
 	rowContainer: {
@@ -29,7 +30,7 @@ export const styles = StyleSheet.create({
 		flexWrap: 'wrap',
 		flexGrow: 0,
 		justifyContent: 'space-between',
-		borderBottomWidth: 2,
+		borderBottomWidth: proportionalResize(2),
 		borderBottomColor: theme.colors.softGray,
 	},
 	rowTitleContainer: {
@@ -38,7 +39,7 @@ export const styles = StyleSheet.create({
 		flexWrap: 'wrap',
 		flexGrow: 0,
 		justifyContent: 'space-between',
-		borderBottomWidth: 2,
+		borderBottomWidth: proportionalResize(2),
 		borderBottomColor: theme.colors.softGray,
 		backgroundColor: theme.colors.lightGray,
 	},
@@ -47,6 +48,6 @@ export const styles = StyleSheet.create({
 		width: '50%',
 		justifyContent: 'center',
 		alignItems: 'center',
-		marginVertical: 14,
+		marginVertical: proportionalResize(14),
 	},
 });

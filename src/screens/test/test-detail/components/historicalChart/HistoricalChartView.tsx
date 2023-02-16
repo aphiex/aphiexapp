@@ -3,7 +3,11 @@ import { View, Text, ScrollView, ActivityIndicator } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import { Rect, Text as TextSVG, Svg } from 'react-native-svg';
 import theme from '../../../../../styles/theme';
-import { ReferenceValue, TestType } from '../../../../../utils';
+import {
+	proportionalResize,
+	ReferenceValue,
+	TestType,
+} from '../../../../../utils';
 import { styles } from './styles';
 import {
 	TChartDot,
@@ -64,33 +68,39 @@ export function HistoricalChartView({
 				<ActivityIndicator
 					size="large"
 					color={theme.colors.primary}
-					style={{ marginTop: 20 }}
+					style={styles.loading}
 				/>
 			)}
+
 			{!loading && incompleteProfile && (
 				<View>
 					<Text style={styles.content}>
 						Para visualizar este conteúdo é necessário que os campos 'Sexo' e
 						'Data de Nascimento' do seu perfil estejam preenchidos
 					</Text>
+
 					<Text onPress={() => handleGoToEditProfile()} style={styles.link}>
 						Clique aqui para editar seu perfil!
 					</Text>
 				</View>
 			)}
+
 			{!loading && (!tests || tests?.length === 0) && !incompleteProfile && (
 				<Text style={styles.content}>Não foi possível gerar o gráfico</Text>
 			)}
+
 			{!loading && !incompleteProfile && tests?.length === 1 && (
 				<Text style={styles.content}>
 					Para gerar o gráfico é necessário que ao menos dois exames do mesmo
 					tipo estejam cadastrados
 				</Text>
 			)}
+
 			{!loading && !incompleteProfile && tests?.length > 1 && (
 				<View>
 					<View style={styles.infoContainer}>
 						<Text style={styles.legend}>{testType?.measurementUnit || ''}</Text>
+
 						{!referenceValues ||
 							(referenceValues?.length === 0 && (
 								<Text style={styles.legend}>
@@ -99,14 +109,14 @@ export function HistoricalChartView({
 							))}
 					</View>
 
-					<View style={{ position: 'relative' }}>
+					<View style={styles.measurementPosition}>
 						<View style={styles.measurementContainer}>
 							{segmentsIndexs?.map(index => (
 								<Text
 									key={index}
 									style={[
 										styles.measurementValue,
-										{ marginTop: index === 0 ? 0 : 16.9 },
+										{ marginTop: index === 0 ? 0 : proportionalResize(16.9) },
 									]}
 								>
 									{handleSetMeasurementSegments(index)}
@@ -118,32 +128,34 @@ export function HistoricalChartView({
 
 						<ScrollView horizontal={true}>
 							<View style={styles.rightBackground} />
+
 							<LineChart
 								data={{
 									labels: handleLabels(),
 									datasets: [
 										{
 											data: handleTestValues(),
+											strokeWidth: proportionalResize(2),
 										},
 										{
 											data: handleMaxReferenceValues(),
 											withDots: false,
 											color: () => theme.colors.red,
-											strokeWidth: 1,
+											strokeWidth: proportionalResize(1),
 										},
 										{
 											data: handleMinReferenceValues(),
 											withDots: false,
 											color: () => theme.colors.red,
-											strokeWidth: 1,
+											strokeWidth: proportionalResize(1),
 										},
 									],
 								}}
 								segments={segments}
 								width={handleSetChartSize()}
-								height={220}
+								height={proportionalResize(220)}
 								bezier
-								style={{ marginVertical: 8, borderRadius: 16 }}
+								style={styles.lineChart}
 								withVerticalLines={false}
 								fromZero
 								getDotColor={(dataPoint, index) =>
@@ -157,9 +169,15 @@ export function HistoricalChartView({
 									fillShadowGradient: '#fff',
 									fillShadowGradientTo: '#fff',
 									color: (opacity = 255) => `rgba(0, 0, 0, ${opacity})`,
+									propsForLabels: {
+										fontSize: proportionalResize(12),
+									},
+									propsForBackgroundLines: {
+										strokeWidth: proportionalResize(1),
+									},
 									propsForDots: {
-										r: '6',
-										strokeWidth: '2',
+										r: proportionalResize(6),
+										strokeWidth: proportionalResize(1),
 										stroke: theme.colors.white,
 									},
 								}}
@@ -170,8 +188,10 @@ export function HistoricalChartView({
 												<Rect
 													x={setTooltipPositionX()}
 													y={setTooltipPositionY()}
-													width={tooltipPos?.value?.toFixed(2).length * 10}
-													height="30"
+													width={proportionalResize(
+														tooltipPos?.value?.toFixed(2)?.length * 10
+													)}
+													height={proportionalResize(30)}
 													stroke={handleDotColor(
 														tooltipPos?.value,
 														tooltipPos?.index
@@ -182,7 +202,7 @@ export function HistoricalChartView({
 													x={setTooltipTextPositionX()}
 													y={setTooltipTextPositionY()}
 													fill="black"
-													fontSize="16"
+													fontSize={proportionalResize(16)}
 													fontWeight="bold"
 													textAnchor="middle"
 												>
@@ -201,21 +221,25 @@ export function HistoricalChartView({
 									<View style={styles.blueCircle} />
 									<Text style={styles.legend}>Normal</Text>
 								</View>
+
 								<View style={styles.legendContent}>
 									<View style={styles.redCircle} />
 									<Text style={styles.legend}>Fora do padrão</Text>
 								</View>
+
 								<View style={styles.legendContent}>
 									<View style={styles.greyCircle} />
 									<Text style={styles.legend}>Sem valor de referência</Text>
 								</View>
+
 								<View style={styles.legendContent}>
 									<View style={styles.redLine} />
 									<Text style={styles.legend}>
 										Intervalo desejado de acordo com o seu perfil
 									</Text>
 								</View>
-								<View style={[styles.legendContent, { marginTop: 10 }]}>
+
+								<View style={styles.lastLegendContent}>
 									<Text style={styles.legend}>
 										*Clique nos pontos para ver os valores
 									</Text>

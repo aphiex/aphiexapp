@@ -6,6 +6,7 @@ import { testService } from '../../../../../services';
 import theme from '../../../../../styles/theme';
 import {
 	formatAgeInDays,
+	proportionalResize,
 	ReferenceValue,
 	shortDateMask,
 	Test,
@@ -51,7 +52,7 @@ export const HistoricalChartContainer = ({
 	const [loading, setLoading] = useState<boolean>(true);
 	const [maxValue, setMaxValue] = useState<number>(0);
 	const screenSize = Dimensions.get('window').width;
-	const elementSpace = 80;
+	const elementSpace = proportionalResize(80);
 	const segments = 5;
 	const segmentsIndexs = [0, 1, 2, 3, 4, 5];
 
@@ -143,27 +144,35 @@ export const HistoricalChartContainer = ({
 	const setTooltipPositionX = () => {
 		if (tooltipPos.index === 0) return tooltipPos.x;
 		if (tooltipPos.index === tests.length - 1)
-			return tooltipPos.x - tooltipPos.value.toFixed(2).length * 10;
-		return tooltipPos.x - tooltipPos.value.toFixed(2).length * 5;
+			return (
+				tooltipPos.x -
+				tooltipPos.value.toFixed(2).length * proportionalResize(10)
+			);
+		return (
+			tooltipPos.x - tooltipPos.value.toFixed(2).length * proportionalResize(5)
+		);
 	};
 
 	const setTooltipTextPositionX = () => {
-		if (tooltipPos.index === 0) return tooltipPos.x + 25;
+		if (tooltipPos.index === 0) return tooltipPos.x + proportionalResize(25);
 		if (tooltipPos.index === tests.length - 1)
-			return tooltipPos.x - tooltipPos.value.toFixed(2).length * 5;
+			return (
+				tooltipPos.x -
+				tooltipPos.value.toFixed(2).length * proportionalResize(5)
+			);
 		return tooltipPos.x;
 	};
 
 	const setTooltipPositionY = () => {
 		if (tooltipPos.value > maxValue - maxValue / segments)
-			return tooltipPos.y + 10;
-		return tooltipPos.y - 40;
+			return tooltipPos.y + proportionalResize(10);
+		return tooltipPos.y - proportionalResize(40);
 	};
 
 	const setTooltipTextPositionY = () => {
 		if (tooltipPos.value > maxValue - maxValue / segments)
-			return tooltipPos.y + 30;
-		return tooltipPos.y - 20;
+			return tooltipPos.y + proportionalResize(30);
+		return tooltipPos.y - proportionalResize(20);
 	};
 
 	const handleDotColor = (dataPoint: number, index: number) => {
@@ -270,7 +279,7 @@ export const HistoricalChartContainer = ({
 						);
 					setLoading(false);
 				})
-				.catch(error => {
+				.catch(() => {
 					setTests([]);
 					setLoading(false);
 				});

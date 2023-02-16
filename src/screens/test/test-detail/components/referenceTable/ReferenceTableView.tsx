@@ -26,6 +26,7 @@ export function ReferenceTableView({
 					Não foi possivel encontrar valores de referência para este exame
 				</Text>
 			)}
+
 			{referenceValues && referenceValues.length > 0 && (
 				<View style={styles.container}>
 					<View style={styles.rowTitleContainer}>
@@ -34,12 +35,14 @@ export function ReferenceTableView({
 								Idade/Condição
 							</Text>
 						</View>
+
 						<View style={styles.contentContainer}>
 							<Text numberOfLines={1} style={styles.tableTitle}>
 								{measurementUnit || '-'}
 							</Text>
 						</View>
 					</View>
+
 					{referenceValues.map(reference => (
 						<View key={reference?.id} style={styles.rowContainer}>
 							<View style={styles.contentContainer}>
@@ -50,6 +53,7 @@ export function ReferenceTableView({
 										)}`}
 									</Text>
 								)}
+
 								{Boolean(!reference?.condition) && (
 									<Text numberOfLines={1} style={styles.tableContent}>
 										{`${handleShowAge(reference)} ${handleShowGender(
@@ -58,6 +62,7 @@ export function ReferenceTableView({
 									</Text>
 								)}
 							</View>
+
 							<View style={styles.contentContainer}>
 								<Text numberOfLines={1} style={styles.tableContent}>
 									{handleShowValueRange(
