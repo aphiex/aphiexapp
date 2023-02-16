@@ -93,35 +93,26 @@ export function PlaceCreateView({
 						placeholder="Digite o nome"
 					/>
 
-					<View
-						style={{
-							display: 'flex',
-							flexDirection: 'row',
-							justifyContent: 'space-between',
-						}}
-					>
-						<View style={{ width: '48%' }}>
+					<View style={styles.contentContainer}>
+						<View style={styles.contentContainerItem}>
 							<CustomMaskInput
 								label="Telefone"
 								keyboardType="number-pad"
 								mask="(99) 9999-9999"
 								value={fixedPhone}
 								error={fixedPhoneError}
-								onChangeText={(text, rawText) =>
-									handleChangeFixedPhone(rawText)
-								}
+								onChangeText={(_, rawText) => handleChangeFixedPhone(rawText)}
 							/>
 						</View>
-						<View style={{ width: '48%' }}>
+
+						<View style={styles.contentContainerItem}>
 							<CustomMaskInput
 								label="Celular"
 								keyboardType="number-pad"
 								mask="(99) 99999-9999"
 								value={mobilePhone}
 								error={mobilePhoneError}
-								onChangeText={(text, rawText) =>
-									handleChangeMobilePhone(rawText)
-								}
+								onChangeText={(_, rawText) => handleChangeMobilePhone(rawText)}
 							/>
 						</View>
 					</View>
@@ -141,14 +132,12 @@ export function PlaceCreateView({
 					/>
 
 					<View
-						style={{
-							display: 'flex',
-							flexDirection: 'row',
-							justifyContent: 'space-between',
-							zIndex: openStateDropdown ? 10 : 1,
-						}}
+						style={[
+							styles.contentContainer,
+							{ zIndex: openStateDropdown ? 10 : 1 },
+						]}
 					>
-						<View style={{ width: '48%' }}>
+						<View style={styles.contentContainerItem}>
 							<CustomInput
 								label="Número"
 								keyboardType="number-pad"
@@ -158,7 +147,8 @@ export function PlaceCreateView({
 								}
 							/>
 						</View>
-						<View style={{ width: '48%' }}>
+
+						<View style={styles.contentContainerItem}>
 							<CustomSelectInput
 								open={openStateDropdown}
 								value={state}
@@ -172,11 +162,7 @@ export function PlaceCreateView({
 						</View>
 					</View>
 
-					<View
-						style={{
-							zIndex: openCityDropdown ? 10 : 1,
-						}}
-					>
+					<View style={{ zIndex: openCityDropdown ? 10 : 1 }}>
 						<CustomSelectInput
 							open={openCityDropdown}
 							value={city}

@@ -95,14 +95,8 @@ export function PlaceEditView({
 						placeholder="Digite o nome"
 					/>
 
-					<View
-						style={{
-							display: 'flex',
-							flexDirection: 'row',
-							justifyContent: 'space-between',
-						}}
-					>
-						<View style={{ width: '48%' }}>
+					<View style={styles.contentContainer}>
+						<View style={styles.contentContainerItem}>
 							<CustomMaskInput
 								label="Telefone"
 								keyboardType="number-pad"
@@ -115,7 +109,8 @@ export function PlaceEditView({
 								}
 							/>
 						</View>
-						<View style={{ width: '48%' }}>
+
+						<View style={styles.contentContainerItem}>
 							<CustomMaskInput
 								label="Celular"
 								keyboardType="number-pad"
@@ -145,14 +140,12 @@ export function PlaceEditView({
 					/>
 
 					<View
-						style={{
-							display: 'flex',
-							flexDirection: 'row',
-							justifyContent: 'space-between',
-							zIndex: openStateDropdown ? 10 : 1,
-						}}
+						style={[
+							styles.contentContainer,
+							{ zIndex: openStateDropdown ? 10 : 1 },
+						]}
 					>
-						<View style={{ width: '48%' }}>
+						<View style={styles.contentContainerItem}>
 							<CustomInput
 								label="Número"
 								keyboardType="number-pad"
@@ -162,7 +155,8 @@ export function PlaceEditView({
 								}
 							/>
 						</View>
-						<View style={{ width: '48%' }}>
+
+						<View style={styles.contentContainerItem}>
 							<CustomSelectInput
 								open={openStateDropdown}
 								value={state}

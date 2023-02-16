@@ -36,7 +36,7 @@ export function PlaceDetailView({
 				onConfirm={handleDelete}
 				loading={loading}
 			/>
-			<View style={{ position: 'absolute', right: 0, top: 0 }}>
+			<View style={styles.delete}>
 				<IconButton
 					title="Deletar"
 					color={theme.colors.softRed}
@@ -53,15 +53,8 @@ export function PlaceDetailView({
 						<Text style={styles.content}>{place?.name || '-'}</Text>
 					</View>
 
-					<View
-						style={{
-							display: 'flex',
-							flexDirection: 'row',
-							justifyContent: 'space-between',
-							marginBottom: 40,
-						}}
-					>
-						<View>
+					<View style={styles.contentContainerRow}>
+						<View style={styles.contentContainerRowItem}>
 							<Text style={styles.title}>Telefone</Text>
 							{place?.fixedPhone ? (
 								<MaskedText
@@ -75,7 +68,7 @@ export function PlaceDetailView({
 							)}
 						</View>
 
-						<View>
+						<View style={styles.contentContainerRowItem}>
 							<Text style={styles.title}>Celular</Text>
 							{place?.mobilePhone ? (
 								<MaskedText
