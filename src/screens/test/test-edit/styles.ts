@@ -1,25 +1,26 @@
 import { StyleSheet } from 'react-native';
 import theme from '../../../styles/theme';
+import { proportionalResize } from '../../../utils';
 
 export const styles = StyleSheet.create({
 	container: {
 		alignItems: 'center',
 		justifyContent: 'center',
-		marginBottom: 40,
+		marginBottom: proportionalResize(40),
 	},
 	form: {
-		marginTop: 40,
+		marginTop: proportionalResize(40),
 		width: '100%',
 	},
 	subTitle: {
 		fontFamily: theme.fonts.medium500,
-		fontSize: 24,
+		fontSize: proportionalResize(24),
 		color: theme.colors.grey,
 	},
 	checkBoxLabel: {
 		fontFamily: theme.fonts.regular400,
-		fontSize: 16,
-		marginLeft: 10,
+		fontSize: proportionalResize(16),
+		marginLeft: proportionalResize(10),
 	},
 	subContainer: {
 		marginTop: 10,
@@ -29,22 +30,22 @@ export const styles = StyleSheet.create({
 		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
-		marginTop: 20,
+		marginTop: proportionalResize(20),
 	},
 	checkbox: {
-		width: 25,
-		height: 25,
+		width: proportionalResize(25),
+		height: proportionalResize(25),
 	},
 	imageBtnContainer: {
 		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'space-evenly',
-		marginTop: 20,
+		marginTop: proportionalResize(20),
 	},
 	imageBtnContainerText: {
 		fontFamily: theme.fonts.medium500,
-		fontSize: 18,
+		fontSize: proportionalResize(18),
 		color: theme.colors.grey,
 	},
 	imageContainer: {
@@ -52,5 +53,16 @@ export const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		flexWrap: 'wrap',
+	},
+	contentContainerRow: {
+		flexDirection: 'row',
+		marginHorizontal: proportionalResize(-4),
+	},
+	contentContainerRowItem: {
+		flex: 1,
+		marginHorizontal: proportionalResize(4),
+	},
+	loading: {
+		marginTop: 20,
 	},
 });
