@@ -68,22 +68,6 @@ export const styles = StyleSheet.create({
 		backgroundColor: theme.colors.red,
 		marginRight: proportionalResize(4),
 	},
-	measurement: {
-		fontFamily: theme.fonts.regular400,
-		fontSize: proportionalResize(14),
-		color: theme.colors.primary,
-	},
-	measurementContainer: {
-		position: 'absolute',
-		left: 0,
-		top: 11,
-		zIndex: 10,
-		backgroundColor: theme.colors.white,
-		width: 54,
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'flex-end',
-	},
 	leftBackground: {
 		position: 'absolute',
 		left: 0,
@@ -102,11 +86,6 @@ export const styles = StyleSheet.create({
 		height: proportionalResize(185),
 		width: proportionalResize(60),
 	},
-	measurementValue: {
-		fontFamily: theme.fonts.regular400,
-		fontSize: proportionalResize(12),
-		color: theme.colors.black,
-	},
 	legend: {
 		fontFamily: theme.fonts.regular400,
 		fontSize: proportionalResize(14),
@@ -115,11 +94,28 @@ export const styles = StyleSheet.create({
 	loading: {
 		marginTop: proportionalResize(20),
 	},
+	measurement: {
+		fontFamily: theme.fonts.regular400,
+		fontSize: proportionalResize(14),
+		color: theme.colors.primary,
+	},
+	measurementValue: {
+		fontFamily: theme.fonts.regular400,
+		fontSize: proportionalResize(12),
+		color: theme.colors.black,
+	},
 	measurementPosition: {
-		position: 'relative',
+		flexDirection: 'row',
+	},
+	measurementContainer: {
+		marginTop: proportionalResize(9),
+		marginLeft: proportionalResize(36),
 	},
 	lineChart: {
 		marginVertical: proportionalResize(8),
 		borderRadius: proportionalResize(16),
+		paddingTop: proportionalResize(5),
+		paddingRight: proportionalResize(30),
+		paddingBottom: proportionalResize(25),
 	},
 });

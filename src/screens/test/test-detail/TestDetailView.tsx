@@ -121,7 +121,7 @@ export function TestDetailView({
 								</View>
 							)}
 
-							<View style={styles.contentContainer}>
+							<View style={styles.contentContainerChart}>
 								<Text style={styles.title}>Histórico de Resultados</Text>
 
 								<HistoricalChartContainer

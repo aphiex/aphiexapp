@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions } from 'react-native';
 import { Dataset } from 'react-native-chart-kit/dist/HelperTypes';
 import { useAuth, useProfile } from '../../../../../context';
 import { testService } from '../../../../../services';
@@ -51,8 +50,6 @@ export const HistoricalChartContainer = ({
 	const [tests, setTests] = useState<TTestWithReferenceValue[]>();
 	const [loading, setLoading] = useState<boolean>(true);
 	const [maxValue, setMaxValue] = useState<number>(0);
-	const screenSize = Dimensions.get('window').width;
-	const elementSpace = proportionalResize(80);
 	const segments = 5;
 	const segmentsIndexs = [0, 1, 2, 3, 4, 5];
 
@@ -69,12 +66,6 @@ export const HistoricalChartContainer = ({
 			return false;
 
 		return true;
-	};
-
-	const handleSetChartSize = () => {
-		const chartSize = (tests.length + 1) * elementSpace;
-		if (chartSize > screenSize) return chartSize;
-		return screenSize;
 	};
 
 	const handleTestValues = () => {
@@ -211,6 +202,29 @@ export const HistoricalChartContainer = ({
 			  });
 	};
 
+	const setLabelFontSize = () => {
+		if (!tests?.length || tests?.length <= 4) return proportionalResize(12);
+
+		if (tests?.length <= 5 && tests?.length >= 6) {
+			const newSize = (12 / tests?.length) * 5;
+			return proportionalResize(newSize);
+		}
+
+		return proportionalResize(10);
+	};
+
+	const setLabelRotation = () => {
+		if (!tests?.length || tests?.length < 7) return 0;
+
+		return 270;
+	};
+
+	const setLabelOffset = () => {
+		if (!tests?.length || tests?.length < 7) return proportionalResize(10);
+
+		return proportionalResize(35);
+	};
+
 	const getTests = async () => {
 		if (isIncompleteProfile()) {
 			setLoading(false);
@@ -297,7 +311,6 @@ export const HistoricalChartContainer = ({
 			loading={loading}
 			segments={segments}
 			segmentsIndexs={segmentsIndexs}
-			handleSetChartSize={handleSetChartSize}
 			tooltipPos={tooltipPos}
 			handleDataPointClick={handleDataPointClick}
 			handleDotColor={handleDotColor}
@@ -313,6 +326,9 @@ export const HistoricalChartContainer = ({
 			handleMinReferenceValues={handleMinReferenceValues}
 			handleMaxReferenceValues={handleMaxReferenceValues}
 			handleLabels={handleLabels}
+			setLabelFontSize={setLabelFontSize}
+			setLabelRotation={setLabelRotation}
+			setLabelOffset={setLabelOffset}
 		/>
 	);
 };

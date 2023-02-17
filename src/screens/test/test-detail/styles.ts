@@ -72,7 +72,9 @@ export const styles = StyleSheet.create({
 	contentContainer: {
 		marginBottom: proportionalResize(40),
 	},
-
+	contentContainerChart: {
+		marginBottom: proportionalResize(10),
+	},
 	modalContainer: {
 		position: 'relative',
 	},

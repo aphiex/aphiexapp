@@ -24,7 +24,6 @@ type THistoricalChartView = {
 	segmentsIndexs: number[];
 	incompleteProfile: boolean;
 	referenceValues?: ReferenceValue[];
-	handleSetChartSize: () => number;
 	handleDataPointClick: (data: TDataPoint) => void;
 	handleDotColor: (dataPoint: number, index: number) => string;
 	setTooltipPositionX: () => number;
@@ -37,6 +36,9 @@ type THistoricalChartView = {
 	handleMinReferenceValues: () => number[];
 	handleMaxReferenceValues: () => number[];
 	handleLabels: () => string[];
+	setLabelFontSize: () => number;
+	setLabelRotation: () => number;
+	setLabelOffset: () => number;
 };
 
 export function HistoricalChartView({
@@ -44,7 +46,6 @@ export function HistoricalChartView({
 	loading,
 	segments,
 	segmentsIndexs,
-	handleSetChartSize,
 	incompleteProfile,
 	referenceValues,
 	tooltipPos,
@@ -61,6 +62,9 @@ export function HistoricalChartView({
 	handleMinReferenceValues,
 	handleMaxReferenceValues,
 	handleLabels,
+	setLabelFontSize,
+	setLabelRotation,
+	setLabelOffset,
 }: THistoricalChartView) {
 	return (
 		<>
@@ -124,96 +128,94 @@ export function HistoricalChartView({
 							))}
 						</View>
 
-						<View style={styles.leftBackground} />
-
-						<ScrollView horizontal={true}>
-							<View style={styles.rightBackground} />
-
-							<LineChart
-								data={{
-									labels: handleLabels(),
-									datasets: [
-										{
-											data: handleTestValues(),
-											strokeWidth: proportionalResize(2),
-										},
-										{
-											data: handleMaxReferenceValues(),
-											withDots: false,
-											color: () => theme.colors.red,
-											strokeWidth: proportionalResize(1),
-										},
-										{
-											data: handleMinReferenceValues(),
-											withDots: false,
-											color: () => theme.colors.red,
-											strokeWidth: proportionalResize(1),
-										},
-									],
-								}}
-								segments={segments}
-								width={handleSetChartSize()}
-								height={proportionalResize(220)}
-								bezier
-								style={styles.lineChart}
-								withVerticalLines={false}
-								fromZero
-								getDotColor={(dataPoint, index) =>
-									handleDotColor(dataPoint, index)
-								}
-								onDataPointClick={data => handleDataPointClick(data)}
-								chartConfig={{
-									decimalPlaces: 0,
-									backgroundGradientFrom: '#fff',
-									backgroundGradientTo: '#fff',
-									fillShadowGradient: '#fff',
-									fillShadowGradientTo: '#fff',
-									color: (opacity = 255) => `rgba(0, 0, 0, ${opacity})`,
-									propsForLabels: {
-										fontSize: proportionalResize(12),
+						<LineChart
+							data={{
+								labels: handleLabels(),
+								datasets: [
+									{
+										data: handleTestValues(),
+										strokeWidth: proportionalResize(2),
 									},
-									propsForBackgroundLines: {
+									{
+										data: handleMaxReferenceValues(),
+										withDots: false,
+										color: () => theme.colors.red,
 										strokeWidth: proportionalResize(1),
 									},
-									propsForDots: {
-										r: proportionalResize(6),
+									{
+										data: handleMinReferenceValues(),
+										withDots: false,
+										color: () => theme.colors.red,
 										strokeWidth: proportionalResize(1),
-										stroke: theme.colors.white,
 									},
-								}}
-								decorator={() => {
-									return tooltipPos?.visible ? (
-										<View>
-											<Svg>
-												<Rect
-													x={setTooltipPositionX()}
-													y={setTooltipPositionY()}
-													width={proportionalResize(
-														tooltipPos?.value?.toFixed(2)?.length * 10
-													)}
-													height={proportionalResize(30)}
-													stroke={handleDotColor(
-														tooltipPos?.value,
-														tooltipPos?.index
-													)}
-													fill={theme.colors.white}
-												/>
-												<TextSVG
-													x={setTooltipTextPositionX()}
-													y={setTooltipTextPositionY()}
-													fill="black"
-													fontSize={proportionalResize(16)}
-													fontWeight="bold"
-													textAnchor="middle"
-												>
-													{tooltipPos?.value?.toFixed(2)}
-												</TextSVG>
-											</Svg>
-										</View>
-									) : null;
-								}}
-							/>
-						</ScrollView>
+								],
+							}}
+							chartConfig={{
+								decimalPlaces: 0,
+								backgroundGradientFrom: '#fff',
+								backgroundGradientTo: '#fff',
+								fillShadowGradient: '#fff',
+								fillShadowGradientTo: '#fff',
+								color: (opacity = 255) => `rgba(0, 0, 0, ${opacity})`,
+								propsForLabels: {
+									fontSize: setLabelFontSize(),
+								},
+								propsForBackgroundLines: {
+									strokeWidth: proportionalResize(1),
+									x: proportionalResize(-20),
+								},
+								propsForDots: {
+									r: proportionalResize(6),
+									strokeWidth: proportionalResize(1),
+									stroke: theme.colors.white,
+								},
+							}}
+							decorator={() => {
+								return tooltipPos?.visible ? (
+									<View>
+										<Svg>
+											<Rect
+												x={setTooltipPositionX()}
+												y={setTooltipPositionY()}
+												width={proportionalResize(
+													tooltipPos?.value?.toFixed(2)?.length * 10
+												)}
+												height={proportionalResize(30)}
+												stroke={handleDotColor(
+													tooltipPos?.value,
+													tooltipPos?.index
+												)}
+												fill={theme.colors.white}
+											/>
+											<TextSVG
+												x={setTooltipTextPositionX()}
+												y={setTooltipTextPositionY()}
+												fill="black"
+												fontSize={proportionalResize(16)}
+												fontWeight="bold"
+												textAnchor="middle"
+											>
+												{tooltipPos?.value?.toFixed(2)}
+											</TextSVG>
+										</Svg>
+									</View>
+								) : null;
+							}}
+							getDotColor={(dataPoint, index) =>
+								handleDotColor(dataPoint, index)
+							}
+							verticalLabelRotation={setLabelRotation()}
+							xLabelsOffset={setLabelOffset()}
+							withHorizontalLabels={false}
+							segments={segments}
+							width={proportionalResize(410)}
+							height={proportionalResize(220)}
+							bezier
+							style={styles.lineChart}
+							withVerticalLines={false}
+							fromZero
+							onDataPointClick={data => handleDataPointClick(data)}
+						/>
 
 						{referenceValues?.length > 0 && (
 							<View style={styles.legendContainer}>
