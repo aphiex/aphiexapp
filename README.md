@@ -69,4 +69,29 @@ Apache License 2.0
 
 ---
 
-Autores: [@danielmpadua](https://github.com/danielmpadua) e [@ribeiromarcos](https://github.com/ribeiromarcos)
+<h3 align="center">Autores</h3>
+
+<table align="center">
+<tr>
+<td valign="center">
+<h3 align="center">
+<br>
+<a href="https://github.com/danielmpadua/"><img src="https://avatars.githubusercontent.com/u/43578469?v=4" alt="Daniel Padua" width="200" style="width:100px; border-radius: 50%"></a>
+<br>
+  
+[@danielmpadua](https://github.com/danielmpadua)
+<br>
+</h3>
+</td>
+<td valign="center">
+<h3 align="center">
+<br>
+<a href="https://github.com/ribeiromarcos/"><img src="https://avatars.githubusercontent.com/u/15798744?v=4" alt="Marcos Ribeiro" width="200" style="width:100px; border-radius: 50%"></a>
+<br>
+  
+[@ribeiromarcos](https://github.com/ribeiromarcos)
+<br>
+</h3>
+</td>
+  </tr>
+</table>
