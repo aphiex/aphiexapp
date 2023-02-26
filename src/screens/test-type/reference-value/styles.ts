@@ -1,49 +1,64 @@
 import { StyleSheet } from 'react-native';
 import theme from '../../../styles/theme';
+import { proportionalResize } from '../../../utils';
 
 export const styles = StyleSheet.create({
 	container: {
 		borderColor: theme.colors.primary,
-		borderTopWidth: 2,
+		borderTopWidth: proportionalResize(2),
 		backgroundColor: theme.colors.lightGray,
 		position: 'relative',
-		paddingVertical: 10,
+		paddingVertical: proportionalResize(10),
 	},
 	index: {
 		fontFamily: theme.fonts.medium500,
-		fontSize: 20,
-		marginBottom: 4,
+		fontSize: proportionalResize(20),
+		marginBottom: proportionalResize(4),
 	},
 	padding: {
-		paddingHorizontal: 18,
+		paddingHorizontal: proportionalResize(18),
 	},
 	paddingBorder: {
-		paddingHorizontal: 9,
-		marginHorizontal: 9,
-		paddingTop: 10,
+		paddingHorizontal: proportionalResize(9),
+		marginHorizontal: proportionalResize(9),
+		paddingTop: proportionalResize(10),
 		borderStyle: 'dashed',
 		borderColor: theme.colors.primary,
-		borderWidth: 1,
-		marginBottom: 10,
+		borderWidth: proportionalResize(1),
+		marginBottom: proportionalResize(10),
 	},
 	trash: {
 		position: 'absolute',
 		top: 10,
 		right: 18,
 		backgroundColor: theme.colors.white,
-		width: 40,
-		height: 40,
+		width: proportionalResize(40),
+		height: proportionalResize(40),
 		display: 'flex',
 		alignItems: 'center',
 		justifyContent: 'center',
-		borderRadius: 50,
+		borderRadius: proportionalResize(50),
 	},
 	label: {
 		fontFamily: theme.fonts.regular400,
-		fontSize: 12,
+		fontSize: proportionalResize(12),
 		textAlign: 'left',
-		marginLeft: 5,
-		marginBottom: 4,
+		marginLeft: proportionalResize(5),
+		marginBottom: proportionalResize(4),
 		color: theme.colors.primary,
+	},
+	containerMarginBottom: {
+		marginBottom: proportionalResize(10),
+	},
+	contentContainer: {
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+	},
+	zIndexZero: {
+		zIndex: 0,
+	},
+	dropDownContainer: {
+		minWidth: proportionalResize(120),
 	},
 });

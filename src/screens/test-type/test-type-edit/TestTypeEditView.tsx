@@ -69,6 +69,7 @@ export function TestTypeEditView({
 			{loading && (
 				<View style={styles.container}>
 					<PageTitle title="Editar Tipo de Exame" icon={<FolderPlus />} />
+
 					<LoadingState />
 				</View>
 			)}
@@ -100,14 +101,8 @@ export function TestTypeEditView({
 										placeholder="Digite o nome"
 									/>
 
-									<View
-										style={{
-											display: 'flex',
-											flexDirection: 'row',
-											justifyContent: 'space-between',
-										}}
-									>
-										<View style={{ width: '50%' }}>
+									<View style={styles.contentContainer}>
+										<View style={styles.contentContainerItem}>
 											<CustomInputDropDown
 												label="Unidade de medida*"
 												value={measurementUnit}
@@ -123,6 +118,8 @@ export function TestTypeEditView({
 												placeholder="Ex.: ml"
 											/>
 										</View>
+
+										<View style={styles.contentContainerItem} />
 									</View>
 
 									<Text style={styles.subTitle}>Valores de referência</Text>
@@ -136,6 +133,7 @@ export function TestTypeEditView({
 												tanto no gráfico quanto em forma de tabela na
 												visualização do exame.
 											</Text>
+
 											<Text style={styles.text}>
 												Você pode adicionar valores de referência clicando no
 												botão abaixo.
@@ -146,6 +144,7 @@ export function TestTypeEditView({
 							)}
 						</View>
 					</View>
+
 					{Boolean(testType) && (
 						<View>
 							{referenceValues?.map((currentReferenceValue, index) => (

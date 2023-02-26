@@ -1,21 +1,22 @@
 import { StyleSheet } from 'react-native';
 import theme from '../../../styles/theme';
+import { proportionalResize } from '../../../utils';
 
 export const styles = StyleSheet.create({
 	container: {
 		alignItems: 'center',
 		justifyContent: 'center',
-		paddingTop: 20,
+		paddingTop: proportionalResize(20),
 	},
 	form: {
-		marginTop: 40,
+		marginTop: proportionalResize(40),
 		width: '100%',
-		paddingHorizontal: 18,
+		paddingHorizontal: proportionalResize(18),
 	},
 	button: {
-		borderRadius: 50,
-		width: 56,
-		height: 56,
+		borderRadius: proportionalResize(50),
+		width: proportionalResize(56),
+		height: proportionalResize(56),
 		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
@@ -26,18 +27,24 @@ export const styles = StyleSheet.create({
 		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'center',
-		marginVertical: 20,
+		marginVertical: proportionalResize(20),
 	},
 	subTitle: {
-		marginVertical: 10,
+		marginVertical: proportionalResize(10),
 		fontFamily: theme.fonts.medium500,
-		fontSize: 24,
+		fontSize: proportionalResize(24),
 		color: theme.colors.grey,
 	},
 	text: {
 		fontFamily: theme.fonts.regular400,
-		fontSize: 16,
+		fontSize: proportionalResize(16),
 		color: theme.colors.grey,
-		marginBottom: 10,
+		marginBottom: proportionalResize(10),
+	},
+	contentContainer: {
+		flexDirection: 'row',
+	},
+	contentContainerItem: {
+		flex: 1,
 	},
 });

@@ -62,14 +62,8 @@ export function TestTypeCreateView({
 							placeholder="Digite o nome"
 						/>
 
-						<View
-							style={{
-								display: 'flex',
-								flexDirection: 'row',
-								justifyContent: 'space-between',
-							}}
-						>
-							<View style={{ width: '50%' }}>
+						<View style={styles.contentContainer}>
+							<View style={styles.contentContainerItem}>
 								<CustomInputDropDown
 									label="Unidade de medida*"
 									value={measurementUnit}
@@ -85,6 +79,8 @@ export function TestTypeCreateView({
 									placeholder="Ex.: ml"
 								/>
 							</View>
+
+							<View style={styles.contentContainerItem} />
 						</View>
 
 						<Text style={styles.subTitle}>Valores de referência</Text>
@@ -104,6 +100,7 @@ export function TestTypeCreateView({
 					</View>
 				)}
 			</View>
+
 			<View>
 				{referenceValues?.map((currentReferenceValue, index) => (
 					<ReferenceValueContainer

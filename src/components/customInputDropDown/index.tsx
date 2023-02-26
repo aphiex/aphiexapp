@@ -55,14 +55,7 @@ export function CustomInputDropDown({
 					placeholderTextColor={theme.colors.grey}
 					style={[styles.input, { borderColor: handleSetColor() }]}
 				/>
-				<View
-					style={{
-						position: 'absolute',
-						top: 0,
-						right: 0,
-						width: 50,
-					}}
-				>
+				<View style={styles.dropdownContainer}>
 					<DropDownPicker
 						open={open}
 						value={undefined}
@@ -76,14 +69,12 @@ export function CustomInputDropDown({
 						searchable={items?.length > 10}
 						searchPlaceholder="Pesquisar"
 						listMode={'MODAL'}
-						style={{
-							borderColor: 'transparent',
-							backgroundColor: 'transparent',
-							width: 50,
-						}}
+						style={styles.dropdown}
 						onSelectItem={({ value }) => {
 							if (onSelect) onSelect(value);
 						}}
+						placeholderStyle={styles.placeholder}
+						arrowIconStyle={styles.arrow}
 					/>
 				</View>
 			</View>

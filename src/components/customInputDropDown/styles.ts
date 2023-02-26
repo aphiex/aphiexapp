@@ -5,6 +5,7 @@ import { proportionalResize } from '../../utils';
 export const styles = StyleSheet.create({
 	input: {
 		marginRight: proportionalResize(30),
+		fontSize: proportionalResize(12),
 		width: '100%',
 	},
 	error: {
@@ -41,5 +42,25 @@ export const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		zIndex: 100,
+	},
+	placeholder: {
+		color: theme.colors.grey,
+		fontSize: proportionalResize(14),
+	},
+	dropdown: {
+		borderColor: 'transparent',
+		backgroundColor: 'transparent',
+		width: proportionalResize(50),
+	},
+	dropdownContainer: {
+		position: 'absolute',
+		top: 0,
+		right: 0,
+		width: proportionalResize(50),
+	},
+	arrow: {
+		width: proportionalResize(20),
+		height: proportionalResize(20),
+		marginTop: proportionalResize(12),
 	},
 });

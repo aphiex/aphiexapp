@@ -9,13 +9,13 @@ import {
 } from '../../../components';
 import theme from '../../../styles/theme';
 import {
+	ReferenceValueCreation,
+	isAgeEmpty,
 	CONDITIONS_SELECT_LIST,
 	GENDER_SELECT_LIST,
-	ReferenceValueCreation,
 	TIME_SELECT_LIST,
 	VARIATION_SELECT_LIST,
 	AGE_SELECT_LIST,
-	isAgeEmpty,
 } from '../../../utils';
 import { styles } from './styles';
 
@@ -24,36 +24,36 @@ type TReferenceValueView = {
 	index: number;
 	zIndex: number;
 	measurementUnit: string;
-	handleDelete: () => void;
 	openCondition: boolean;
 	setOpenCondition: React.Dispatch<React.SetStateAction<boolean>>;
-	handleChangeCondition: (value: string) => void;
 	openGender: boolean;
 	setOpenGender: React.Dispatch<React.SetStateAction<boolean>>;
-	handleChangeGender: (value: string) => void;
 	openValueVariation: boolean;
 	setOpenValueVariation: React.Dispatch<React.SetStateAction<boolean>>;
+	openAge: boolean;
+	setOpenAge: React.Dispatch<React.SetStateAction<boolean>>;
+	openTimeVariation: boolean;
+	setOpenTimeVariation: React.Dispatch<React.SetStateAction<boolean>>;
+	openTime: boolean;
+	setOpenTime: React.Dispatch<React.SetStateAction<boolean>>;
+	initalAgeLoad: boolean;
+	setInitalAgeLoad: React.Dispatch<React.SetStateAction<boolean>>;
+	finalAgeLoad: boolean;
+	setFinalAgeLoad: React.Dispatch<React.SetStateAction<boolean>>;
+	handleDelete: () => void;
+	handleChangeCondition: (value: string) => void;
+	handleChangeGender: (value: string) => void;
 	handleChangeValueVariation: (value: string) => void;
 	handleChangeMinValue: (value?: string) => void;
 	handleChangeMaxValue: (value?: string) => void;
-	openAge: boolean;
-	setOpenAge: React.Dispatch<React.SetStateAction<boolean>>;
 	handleChangeAgeVariation: (value: string) => void;
-	openTimeVariation: boolean;
-	setOpenTimeVariation: React.Dispatch<React.SetStateAction<boolean>>;
 	handleChangeTimeVariation: (value: string) => void;
-	openTime: boolean;
-	setOpenTime: React.Dispatch<React.SetStateAction<boolean>>;
 	handleFormatAge: (value: number) => string;
 	handleUnformatAge: (value: string) => number;
 	handleChangeMinAge: (value?: number) => void;
 	handleChangeMaxAge: (value?: number) => void;
 	handleSetYOffset: (value?: number) => void;
 	handleChangeTime: (value: string) => void;
-	initalAgeLoad: boolean;
-	setInitalAgeLoad: React.Dispatch<React.SetStateAction<boolean>>;
-	finalAgeLoad: boolean;
-	setFinalAgeLoad: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export function ReferenceValueView({
@@ -114,12 +114,13 @@ export function ReferenceValueView({
 					},
 				]}
 			>{`# ${index + 1}`}</Text>
+
 			<TouchableOpacity style={styles.trash} onPress={() => handleDelete()}>
 				<TrashCan color={theme.colors.softRed} size={30} />
 			</TouchableOpacity>
 
 			<View style={[styles.padding, { zIndex: 2 }]}>
-				<View style={{ marginBottom: 10 }}>
+				<View style={styles.containerMarginBottom}>
 					<CustomInputDropDown
 						label="Condição (opcional)"
 						value={currentReferenceValue?.condition}
@@ -134,7 +135,8 @@ export function ReferenceValueView({
 						noError
 					/>
 				</View>
-				<View style={{ marginBottom: 10 }}>
+
+				<View style={styles.containerMarginBottom}>
 					<CustomSelectInput
 						label="Sexo"
 						open={openGender}
@@ -157,6 +159,7 @@ export function ReferenceValueView({
 							Intervalo de Idade
 						</Text>
 					)}
+
 					<View
 						style={
 							currentReferenceValue?.ageVariation === 'CUSTOM'
@@ -164,7 +167,7 @@ export function ReferenceValueView({
 								: styles.padding
 						}
 					>
-						<View style={{ marginBottom: 10 }}>
+						<View style={styles.containerMarginBottom}>
 							<CustomSelectInput
 								label="Idade/Categoria"
 								open={openAge}
@@ -181,15 +184,9 @@ export function ReferenceValueView({
 								noError
 							/>
 						</View>
+
 						{Boolean(currentReferenceValue?.ageVariation === 'CUSTOM') && (
-							<View
-								style={{
-									display: 'flex',
-									flexDirection: 'row',
-									justifyContent: 'space-between',
-									zIndex: 0,
-								}}
-							>
+							<View style={[styles.contentContainer, styles.zIndexZero]}>
 								<View style={{ width: '26%' }}>
 									<CustomSelectInput
 										noLabel
@@ -205,6 +202,7 @@ export function ReferenceValueView({
 										}}
 									/>
 								</View>
+
 								<View
 									style={{
 										width:
@@ -232,6 +230,7 @@ export function ReferenceValueView({
 											}}
 										/>
 									)}
+
 									{isAgeEmpty(currentReferenceValue?.minAge) && (
 										<CustomMaskInput
 											noLabel
@@ -268,11 +267,12 @@ export function ReferenceValueView({
 										value={currentReferenceValue?.timeVariation}
 										setValue={() => {}}
 										onSelect={handleChangeTimeVariation}
-										dropDownContainerStyle={{ minWidth: 120 }}
+										dropDownContainerStyle={styles.dropDownContainer}
 										onlyBottom
 										noLabel
 									/>
 								</View>
+
 								{!isAgeEmpty(currentReferenceValue?.maxAge) &&
 									!isAgeEmpty(currentReferenceValue?.minAge) && (
 										<View style={{ width: '26%' }}>
@@ -302,18 +302,10 @@ export function ReferenceValueView({
 				</View>
 			)}
 
-			<View style={{ zIndex: 0 }}>
+			<View style={styles.zIndexZero}>
 				<Text style={[styles.label, styles.padding]}>Intervalo de Valores</Text>
-				<View
-					style={[
-						styles.paddingBorder,
-						{
-							display: 'flex',
-							flexDirection: 'row',
-							justifyContent: 'space-between',
-						},
-					]}
-				>
+
+				<View style={[styles.paddingBorder, styles.contentContainer]}>
 					<View
 						style={{
 							width:
@@ -339,6 +331,7 @@ export function ReferenceValueView({
 								noError
 							/>
 						)}
+
 						{Boolean(!currentReferenceValue?.minValue) && (
 							<InputAdornment
 								label="Valor"
@@ -354,6 +347,7 @@ export function ReferenceValueView({
 							/>
 						)}
 					</View>
+
 					<View
 						style={{
 							width:
@@ -370,10 +364,11 @@ export function ReferenceValueView({
 							value={currentReferenceValue?.valueVariation}
 							setValue={() => {}}
 							onSelect={handleChangeValueVariation}
-							dropDownContainerStyle={{ minWidth: 120 }}
+							dropDownContainerStyle={styles.dropDownContainer}
 							onlyBottom
 						/>
 					</View>
+
 					{!Boolean(
 						!currentReferenceValue?.maxValue || !currentReferenceValue?.minValue
 					) && (
